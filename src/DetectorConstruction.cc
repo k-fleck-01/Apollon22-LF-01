@@ -19,15 +19,14 @@
 #include "G4UniformMagField.hh"
 #include "G4FieldManager.hh"
 
-DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction(), fLogicMagField(0)
-{}
+DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction(), fLogicMagField(0) {
+    DefineMaterials();
+}
 
 DetectorConstruction::~DetectorConstruction()
 {}
 
-G4VPhysicalVolume* DetectorConstruction::Construct() {
-
-    G4bool checkOverlaps = true;
+void DetectorConstruction::DefineMaterials() {
     //
     // Defining necessary materials
     //
@@ -40,25 +39,38 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
 									       kStateGas,
 									       2.73*kelvin,
 									       3.e-18*pascal);
-    // Lead
-    G4Material* g4Lead = nist->FindOrBuildMaterial("G4_Pb");
-    // Aluminium
-    G4Material* g4Aluminium = nist->FindOrBuildMaterial("G4_Al");
-    // Iron
-    G4Material* g4Iron = nist->FindOrBuildMaterial("G4_Fe");
+
     // YAG (yttrium aluminium garnet)
     // Compositional information taken from: https://www.americanelements.com/cerium-doped-yttrium-aluminum-garnet-163584-80-3
- /*   G4Element* elY  = nist->FindOrBuildElement("G4_Y");
+    G4Element* elY  = nist->FindOrBuildElement("G4_Y");
     G4Element* elAl = nist->FindOrBuildElement("G4_Al");
     G4Element* elO  = nist->FindOrBuildElement("G4_O");
     G4Material* g4YAG = new G4Material("YAG", 4.6*g/cm3, 3);
     g4YAG->AddElement(elY,  0.15);
     g4YAG->AddElement(elAl, 0.25);
     g4YAG->AddElement(elO,  0.60);
-*/
-    G4Material* g4gadox = nist->FindOrBuildMaterial("G4_GADOLINIUM_OXYSULFIDE");
+
+}
+
+G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
+    G4bool checkOverlaps = true;
+
+    // Creating list of materials
+    G4NistManager* nist = G4NistManager::Instance();
+    // Vacuum
+    G4Material* g4Vacuum = nist->FindOrBuildMaterial("G4_GALACTIC");
+    // Lead
+    G4Material* g4Lead = nist->FindOrBuildMaterial("G4_Pb");
+    // Aluminium
+    G4Material* g4Aluminium = nist->FindOrBuildMaterial("G4_Al");
+    // Iron
+    G4Material* g4Iron = nist->FindOrBuildMaterial("G4_Fe");
+    // YAG
+    G4Material* g4YAG = nist->FindOrBuildMaterial("YAG");
     // Kapton
     G4Material* g4Kapton = nist->FindOrBuildMaterial("G4_KAPTON");
+
+    
     //
     // Defining geometry
     //
@@ -231,7 +243,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
                                       10.0*cm,
                                       3.8*cm,
                                       0.005*cm);
-    G4LogicalVolume* logicDetScreen = new G4LogicalVolume(solidDetScreen, g4gadox, "lDetScreen");
+    G4LogicalVolume* logicDetScreen = new G4LogicalVolume(solidDetScreen, g4YAG, "lDetScreen");
     G4VPhysicalVolume* physDetScreen = new G4PVPlacement(0,
                                                          G4ThreeVector(14.*cm, -15.*cm, 83.805*cm),
                                                          logicDetScreen,
@@ -258,7 +270,18 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
 
     fLogicMagField = logicMagFld;
 
+    // Print material table
+    G4cout << *(G4Material::GetMaterialTable()) << G4endl;
     return physWorld;
+
+}
+
+G4VPhysicalVolume* DetectorConstruction::Construct() {
+
+    DefineMaterials();
+    G4VPhysicalVolume* world = DefineVolumes();
+
+    return world;
 }
 
 void DetectorConstruction::ConstructSDandField() {

@@ -21,6 +21,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
         virtual G4VPhysicalVolume* Construct();
         virtual void ConstructSDandField();
 
+        void DefineMaterials();
+        G4VPhysicalVolume* DefineVolumes();
+
     private:
         G4LogicalVolume* fLogicMagField;
 
