@@ -77,6 +77,8 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
         detid = 1;
     } else if (vName == "Window") {
         detid = 2;
+    } else if (vName == "LanexScreen") {
+        detid = 3;
     }
     aHit->AddDetectorID(detid);
 

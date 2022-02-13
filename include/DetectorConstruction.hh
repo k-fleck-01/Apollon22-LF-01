@@ -25,7 +25,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
         G4VPhysicalVolume* DefineVolumes();
 
     private:
-        G4LogicalVolume* fLogicMagField;
+        G4LogicalVolume* fLogicChamberMagField;
+        G4LogicalVolume* fLogicSpecMagField;
 
 };
 
