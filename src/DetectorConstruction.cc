@@ -10,6 +10,9 @@
 
 #include "G4VPhysicalVolume.hh"
 #include "G4NistManager.hh"
+#include "G4Material.hh"
+#include "G4Element.hh"
+#include "G4MaterialTable.hh"
 #include "G4Box.hh"
 #include "G4UnionSolid.hh"
 #include "G4LogicalVolume.hh"
@@ -31,6 +34,7 @@ void DetectorConstruction::DefineMaterials() {
     // Defining necessary materials
     //
     G4NistManager* nist = G4NistManager::Instance();
+    G4bool isotopes = false;
     // Vacuum
     G4Material* g4Vacuum = new G4Material("G4_GALACTIC",
 									       1.,
@@ -42,13 +46,14 @@ void DetectorConstruction::DefineMaterials() {
 
     // YAG (yttrium aluminium garnet)
     // Compositional information taken from: https://www.americanelements.com/cerium-doped-yttrium-aluminum-garnet-163584-80-3
-    G4Element* elY  = nist->FindOrBuildElement("G4_Y");
-    G4Element* elAl = nist->FindOrBuildElement("G4_Al");
-    G4Element* elO  = nist->FindOrBuildElement("G4_O");
-    G4Material* g4YAG = new G4Material("YAG", 4.6*g/cm3, 3);
+    G4Element* elY  = nist->FindOrBuildElement("Y", isotopes);
+    G4Element* elAl = nist->FindOrBuildElement("Al", isotopes);
+    G4Element* elO  = nist->FindOrBuildElement("O", isotopes);
+
+    G4Material* g4YAG = new G4Material("YAG", 4.6*g/cm3, 3, kStateSolid);
     g4YAG->AddElement(elY,  0.15);
     g4YAG->AddElement(elAl, 0.25);
-    g4YAG->AddElement(elO,  0.60);
+    g4YAG->AddElement(elO, 0.6);
 
 }
 
@@ -57,20 +62,15 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
 
     // Creating list of materials
     G4NistManager* nist = G4NistManager::Instance();
-    // Vacuum
+
     G4Material* g4Vacuum = nist->FindOrBuildMaterial("G4_GALACTIC");
-    // Lead
+    G4Material* g4Air = nist->FindOrBuildMaterial("G4_AIR");
     G4Material* g4Lead = nist->FindOrBuildMaterial("G4_Pb");
-    // Aluminium
     G4Material* g4Aluminium = nist->FindOrBuildMaterial("G4_Al");
-    // Iron
     G4Material* g4Iron = nist->FindOrBuildMaterial("G4_Fe");
-    // YAG
     G4Material* g4YAG = nist->FindOrBuildMaterial("YAG");
-    // Kapton
     G4Material* g4Kapton = nist->FindOrBuildMaterial("G4_KAPTON");
 
-    
     //
     // Defining geometry
     //
@@ -80,7 +80,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                   worldSize,
                                   worldSize,
                                   worldSize);
-    G4LogicalVolume* logicWorld = new G4LogicalVolume(solidWorld, g4Vacuum, "lWorld");
+    G4LogicalVolume* logicWorld = new G4LogicalVolume(solidWorld, g4Air, "lWorld");
     G4VPhysicalVolume* physWorld = new G4PVPlacement(0,               // rotation matrix
                                                      G4ThreeVector(), // position in mother volume
                                                      logicWorld,      // associated logical volume
@@ -278,10 +278,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
 
 G4VPhysicalVolume* DetectorConstruction::Construct() {
 
-    DefineMaterials();
-    G4VPhysicalVolume* world = DefineVolumes();
-
-    return world;
+    return DefineVolumes();
 }
 
 void DetectorConstruction::ConstructSDandField() {

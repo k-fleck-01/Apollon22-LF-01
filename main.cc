@@ -7,12 +7,8 @@
 //
 #include <iostream>
 
-#ifdef G4MULTITHREADED
 #include "G4MTRunManager.hh"
-#else
 #include "G4RunManager.hh"
-#endif
-
 #include "G4UIExecutive.hh"
 #include "G4UImanager.hh"
 #include "G4VisExecutive.hh"
