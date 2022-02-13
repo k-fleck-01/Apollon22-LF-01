@@ -7,8 +7,13 @@
 #
 
 # Set verbosity level
-/control/verbose 2
-/run/verbose 2
+/control/verbose 1
+/run/verbose 1
+
+# Set up spectrometer variables
+# If not provided, defaults are used
+/spectrometer/SetMagnetStrength 2 tesla
+/spectrometer/SetMagnetLength 30 cm
 
 # Initialise run manager
 /run/initialize
