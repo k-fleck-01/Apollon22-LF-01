@@ -18,3 +18,7 @@ ADD_EXECUTABLE(sim main.cc ${sources} ${headers})
 TARGET_LINK_LIBRARIES(sim ${Geant4_LIBRARIES})
 
 ADD_CUSTOM_TARGET(apollon DEPENDS sim)
+
+# Including macro in build directory
+FILE(GLOB macros ${PROJECT_SOURCE_DIR}/*.mac)
+FILE(INSTALL ${macros} DESTINATION ${CMAKE_BINARY_DIR})

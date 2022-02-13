@@ -6,6 +6,7 @@
 //
 
 #include "DetectorConstruction.hh"
+#include "DetectorMessenger.hh"
 #include "SensitiveDetector.hh"
 
 #include "G4NistManager.hh"
@@ -26,8 +27,14 @@
 #include "G4UniformMagField.hh"
 #include "G4FieldManager.hh"
 
-DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction(), fLogicChamberMagField(0), fLogicSpecMagField(0) {
+#include "G4RunManager.hh"
+
+DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction(), fDetectorMessenger(0), fLogicChamberMagField(0),
+                     fLogicSpecMagField(0), fTargetMagnetSep(30.*cm), fMagnetLength(15.*cm), fMagnetStrength(1.75*tesla),
+                     fMagnetDetSep(30.*cm) {
+
     DefineMaterials();
+    fDetectorMessenger = new DetectorMessenger(this);
 }
 
 DetectorConstruction::~DetectorConstruction()
@@ -322,10 +329,10 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4Box* solidSpecMagCore = new G4Box("specMagCore",
                                          6.*cm,
                                          4.*cm,
-                                         7.5*cm);
+                                         fMagnetLength/2.);
     G4LogicalVolume* logicSpecMagCore = new G4LogicalVolume(solidSpecMagCore, g4Iron, "lSpecMagCore");
     G4VPhysicalVolume* physSpecMagCore = new G4PVPlacement(0,
-                                                           G4ThreeVector(0., 0., 187.5*cm),
+                                                           G4ThreeVector(0., 0., 149.99*cm + fTargetMagnetSep + fMagnetLength/2),
                                                            logicSpecMagCore,
                                                            "SpecMagCore",
                                                            logicWorld,
@@ -337,7 +344,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4Box* solidSpecMagGap = new G4Box("specMagGap",
                                        4.*cm,
                                        2.*cm,
-                                       7.5*cm);
+                                       fMagnetLength/2.);
     G4LogicalVolume* logicSpecMagGap = new G4LogicalVolume(solidSpecMagGap, g4Air, "lSpecMagGap");
     G4VPhysicalVolume* physSpecMagGap = new G4PVPlacement(0,
                                                           G4ThreeVector(2.*cm, 0., 0.),
@@ -355,7 +362,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                         0.25*mm);
     G4LogicalVolume* logicLanexScreen = new G4LogicalVolume(solidLanexScreen, g4Gadox, "lLanexScreen");
     G4VPhysicalVolume* physLanexScreen = new G4PVPlacement(0,
-                                                           G4ThreeVector(0., 0., 225.025*cm),
+                                                           G4ThreeVector(0., 0., 149.99*cm + fTargetMagnetSep + fMagnetLength + fMagnetDetSep),
                                                            logicLanexScreen,
                                                            "LanexScreen",
                                                            logicWorld,
@@ -395,9 +402,37 @@ void DetectorConstruction::ConstructSDandField() {
     G4FieldManager* localChamberFldManager = new G4FieldManager(chamberMagField);
     fLogicChamberMagField->SetFieldManager(localChamberFldManager, true);
 
-    G4MagneticField* specMagField = new G4UniformMagField(G4ThreeVector(0., -1.*tesla, 0.));
+    G4MagneticField* specMagField = new G4UniformMagField(G4ThreeVector(0., -1.*fMagnetStrength, 0.));
     G4FieldManager* localSpecFldManager = new G4FieldManager(specMagField);
     fLogicSpecMagField->SetFieldManager(localSpecFldManager, true);
 
     return;
+}
+
+void DetectorConstruction::SetTargetMagnetSep(G4double val) {
+
+    fTargetMagnetSep = val;
+    G4RunManager::GetRunManager()->ReinitializeGeometry();
+
+}
+
+void DetectorConstruction::SetMagnetLength(G4double val) {
+
+    fMagnetLength = val;
+    G4RunManager::GetRunManager()->ReinitializeGeometry();
+
+}
+
+void DetectorConstruction::SetMagnetStrength(G4double val) {
+
+    fMagnetStrength = val;
+    G4RunManager::GetRunManager()->ReinitializeGeometry();
+
+}
+
+void DetectorConstruction::SetMagnetDetSep(G4double val) {
+
+    fMagnetDetSep = val;
+    G4RunManager::GetRunManager()->ReinitializeGeometry();
+
 }
