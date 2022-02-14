@@ -130,7 +130,6 @@ int macro() {
     TH2D* lanex_edep_xy_gamma = new TH2D("lanex_edep_xy_gamma", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
     TH2D* lanex_edep_xy_muminus = new TH2D("lanex_edep_xy_muminus", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
     TH2D* lanex_edep_xy_muplus = new TH2D("lanex_edep_xy_muplus", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
-
     // *
     // Processing TChain
     // *
@@ -173,22 +172,22 @@ int macro() {
                 target_edep_z_electron->Fill(z, edep);
                 target_edep_xy_electron->Fill(xx, yy, edep);
             }
-            else if (pdg == -11) {
+            else if (pdg == -11) { // positrons
                 if(ekin > -1.0) target_kenergy_positron->Fill(ekin);
                 target_edep_z_positron->Fill(z, edep);
                 target_edep_xy_positron->Fill(xx, yy, edep);
             }
-            else if (pdg == 22) {
+            else if (pdg == 22) { // gammas
                 if(ekin > -1.0) target_kenergy_gamma->Fill(ekin);
                 target_edep_z_gamma->Fill(z, edep);
                 target_edep_xy_gamma->Fill(xx, yy, edep);
             }
-            else if (pdg == 13) {
+            else if (pdg == 13) { // mu-
                 if(ekin > -1.0) target_kenergy_muminus->Fill(ekin);
                 target_edep_z_muminus->Fill(z, edep);
                 target_edep_xy_muminus->Fill(xx, yy, edep);
             }
-            else if (pdg == -13) {
+            else if (pdg == -13) { // mu+
                 if(ekin > -1.0) target_kenergy_muplus->Fill(ekin);
                 target_edep_z_muplus->Fill(z, edep);
                 target_edep_xy_muplus->Fill(xx, yy, edep);
@@ -200,7 +199,7 @@ int macro() {
             yag_edep_z_all->Fill(z, edep);
             yag_edep_xy_all->Fill(xx, yy, edep);
 
-            if (pdg==11) { // electrons
+            if (pdg==11) { 
                 if(ekin > -1.0) yag_kenergy_electron->Fill(ekin);
                 yag_edep_z_electron->Fill(z, edep);
                 yag_edep_xy_electron->Fill(xx, yy, edep);
@@ -232,7 +231,7 @@ int macro() {
             lanex_edep_z_all->Fill(z, edep);
             lanex_edep_xy_all->Fill(xx, yy, edep);
 
-            if (pdg==11) { // electrons
+            if (pdg==11) { 
                 if(ekin > -1.0) lanex_kenergy_electron->Fill(ekin);
                 lanex_edep_z_electron->Fill(z, edep);
                 lanex_edep_xy_electron->Fill(xx, yy, edep);
