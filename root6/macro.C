@@ -22,7 +22,7 @@
 
 int ProcessList(const std::string&, std::vector<std::string>&);
 
-int macro(const char* fnamelist) {
+int macro(std::string fnamelist) {
     // *
     // Open root file to write to
     //
@@ -31,7 +31,7 @@ int macro(const char* fnamelist) {
     foutname = foutname.substr(0, foutname.find_last_of("."));
     foutname += suffix + std::string(".root");
 
-    TFile* fout = new TFile(foutname, "RECREATE");
+    TFile* fout = new TFile(foutname.c_str(), "RECREATE");
     // *
     // Defining histograms
     // *
@@ -133,7 +133,7 @@ int macro(const char* fnamelist) {
     // Processing TChain
     // *
     std::vector<std::string> flist;
-    ProcessList(std::string(fnamelist), flist);
+    ProcessList(fnamelist, flist);
 
     TChain* hitstree = new TChain("Hits");
     std::for_each(flist.begin(), flist.end(), [hitstree](const std::string ss) { hitstree->Add(ss.c_str(), -1); });
