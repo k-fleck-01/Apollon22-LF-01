@@ -38,12 +38,12 @@ int macro(std::string fnamelist) {
     TH1I* target_pdg_all = new TH1I("target_pdg_all", "", 50, -25, 25);
 
     int nbins = 200;
-    TH1D* target_kenergy_all = new TH1D("target_kenergy_all", "",  nbins, 0., 2.);
-    TH1D* target_kenergy_electron = new TH1D("target_kenergy_electron", "", nbins, 0., 2.);
-    TH1D* target_kenergy_positron = new TH1D("target_kenergy_positron", "", nbins, 0., 2.);
-    TH1D* target_kenergy_gamma = new TH1D("target_kenergy_gamma", "", nbins, 0., 2.);
-    TH1D* target_kenergy_muminus = new TH1D("target_kenergy_muminus", "", nbins, 0., 2.);
-    TH1D* target_kenergy_muplus = new TH1D("target_kenergy_muplus", "", nbins, 0., 2.);
+    TH1D* target_kenergy_all = new TH1D("target_kenergy_all", "",  nbins, 0., 2000.);
+    TH1D* target_kenergy_electron = new TH1D("target_kenergy_electron", "", nbins, 0., 2000.);
+    TH1D* target_kenergy_positron = new TH1D("target_kenergy_positron", "", nbins, 0., 2000.);
+    TH1D* target_kenergy_gamma = new TH1D("target_kenergy_gamma", "", nbins, 0., 2000.);
+    TH1D* target_kenergy_muminus = new TH1D("target_kenergy_muminus", "", nbins, 0., 2000.);
+    TH1D* target_kenergy_muplus = new TH1D("target_kenergy_muplus", "", nbins, 0., 2000.);
 
     const double targetz0 = 149.99;
     const double targetz1 = 150.0;
@@ -70,12 +70,12 @@ int macro(std::string fnamelist) {
     TH1I* yag_pdg_all = new TH1I("yag_pdg_all", "", 50, -25, 25);
 
     nbins = 200;
-    TH1D* yag_kenergy_all = new TH1D("yag_kenergy_all", "",  nbins, 0., 2.);
-    TH1D* yag_kenergy_electron = new TH1D("yag_kenergy_electron", "", nbins, 0., 2.);
-    TH1D* yag_kenergy_positron = new TH1D("yag_kenergy_positron", "", nbins, 0., 2.);
-    TH1D* yag_kenergy_gamma = new TH1D("yag_kenergy_gamma", "", nbins, 0., 2.);
-    TH1D* yag_kenergy_muminus = new TH1D("yag_kenergy_muminus", "", nbins, 0., 2.);
-    TH1D* yag_kenergy_muplus = new TH1D("yag_kenergy_muplus", "", nbins, 0., 2.);
+    TH1D* yag_kenergy_all = new TH1D("yag_kenergy_all", "",  nbins, 0., 2000.);
+    TH1D* yag_kenergy_electron = new TH1D("yag_kenergy_electron", "", nbins, 0., 2000.);
+    TH1D* yag_kenergy_positron = new TH1D("yag_kenergy_positron", "", nbins, 0., 2000.);
+    TH1D* yag_kenergy_gamma = new TH1D("yag_kenergy_gamma", "", nbins, 0., 2000.);
+    TH1D* yag_kenergy_muminus = new TH1D("yag_kenergy_muminus", "", nbins, 0., 2000.);
+    TH1D* yag_kenergy_muplus = new TH1D("yag_kenergy_muplus", "", nbins, 0., 2000.);
 
     const double yagz0 = 101.8;
     const double yagz1 = 101.81;
@@ -102,12 +102,12 @@ int macro(std::string fnamelist) {
     TH1I* lanex_pdg_all = new TH1I("lanex_pdg_all", "", 50, -25, 25);
 
     nbins = 200;
-    TH1D* lanex_kenergy_all = new TH1D("lanex_kenergy_all", "",  nbins, 0., 2.);
-    TH1D* lanex_kenergy_electron = new TH1D("lanex_kenergy_electron", "", nbins, 0., 2.);
-    TH1D* lanex_kenergy_positron = new TH1D("lanex_kenergy_positron", "", nbins, 0., 2.);
-    TH1D* lanex_kenergy_gamma = new TH1D("lanex_kenergy_gamma", "", nbins, 0., 2.);
-    TH1D* lanex_kenergy_muminus = new TH1D("lanex_kenergy_muminus", "", nbins, 0., 2.);
-    TH1D* lanex_kenergy_muplus = new TH1D("lanex_kenergy_muplus", "", nbins, 0., 2.);
+    TH1D* lanex_kenergy_all = new TH1D("lanex_kenergy_all", "",  nbins, 0., 2000.);
+    TH1D* lanex_kenergy_electron = new TH1D("lanex_kenergy_electron", "", nbins, 0., 2000.);
+    TH1D* lanex_kenergy_positron = new TH1D("lanex_kenergy_positron", "", nbins, 0., 2000.);
+    TH1D* lanex_kenergy_gamma = new TH1D("lanex_kenergy_gamma", "", nbins, 0., 2000.);
+    TH1D* lanex_kenergy_muminus = new TH1D("lanex_kenergy_muminus", "", nbins, 0., 2000.);
+    TH1D* lanex_kenergy_muplus = new TH1D("lanex_kenergy_muplus", "", nbins, 0., 2000.);
 
     const double lanexz0 = 225.0;
     const double lanexz1 = 225.05;

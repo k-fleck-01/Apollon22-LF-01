@@ -31,7 +31,7 @@ void SensitiveDetector::Initialize(G4HCofThisEvent* HCE) {
 	fHCID = -1;
 	if (fHCID < 0) fHCID = GetCollectionID(0);
 	HCE->AddHitsCollection(fHCID, fHitCollection);
-    return;
+
 }
 
 G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aTouchableHist) {
@@ -117,5 +117,4 @@ void SensitiveDetector::EndOfEvent(G4HCofThisEvent* HCE) {
         analysisManager->AddNtupleRow(0);
     }
 
-    return;
 }
