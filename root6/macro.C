@@ -16,6 +16,7 @@
 
 #include "TTree.h"
 #include "TChain.h"
+#include "TFile.h"
 #include "TH1.h"
 #include "TH2.h"
 
@@ -97,6 +98,38 @@ int macro(std::string fnamelist) {
     TH2D* yag_edep_xy_gamma = new TH2D("yag_edep_xy_gamma", "", nbins, yagx0, yagx1, nbins, yagy0, yagy1);
     TH2D* yag_edep_xy_muminus = new TH2D("yag_edep_xy_muminus", "", nbins, yagx0, yagx1, nbins, yagy0, yagy1);
     TH2D* yag_edep_xy_muplus = new TH2D("yag_edep_xy_muplus", "", nbins, yagx0, yagx1, nbins, yagy0, yagy1);
+    // *
+    // *
+    TH1I* kapton_pdg_all = new TH1I("kapton_pdg_all", "", 50, -25, 25);
+
+    nbins = 200;
+    TH1D* kapton_kenergy_all = new TH1D("kapton_kenergy_all", "",  nbins, 0., 2000.);
+    TH1D* kapton_kenergy_electron = new TH1D("kapton_kenergy_electron", "", nbins, 0., 2000.);
+    TH1D* kapton_kenergy_positron = new TH1D("kapton_kenergy_positron", "", nbins, 0., 2000.);
+    TH1D* kapton_kenergy_gamma = new TH1D("kapton_kenergy_gamma", "", nbins, 0., 2000.);
+    TH1D* kapton_kenergy_muminus = new TH1D("kapton_kenergy_muminus", "", nbins, 0., 2000.);
+    TH1D* kapton_kenergy_muplus = new TH1D("kapton_kenergy_muplus", "", nbins, 0., 2000.);
+
+    const double kaptonz0 = 103.98;
+    const double kaptonz1 = 104.0;
+    TH1D* kapton_edep_z_all = new TH1D("kapton_edep_z_all", "", nbins, kaptonz0, kaptonz1);
+    TH1D* kapton_edep_z_electron = new TH1D("kapton_edep_z_electron", "", nbins, kaptonz0, kaptonz1);
+    TH1D* kapton_edep_z_positron = new TH1D("kapton_edep_z_positron", "", nbins, kaptonz0, kaptonz1);
+    TH1D* kapton_edep_z_gamma = new TH1D("kapton_edep_z_gamma", "", nbins, kaptonz0, kaptonz1);
+    TH1D* kapton_edep_z_muminus = new TH1D("kapton_edep_z_muminus", "", nbins, kaptonz0, kaptonz1);
+    TH1D* kapton_edep_z_muplus = new TH1D("kapton_edep_z_muplus", "", nbins, kaptonz0, kaptonz1);
+
+    const double kaptonx0 = -25.0;
+    const double kaptonx1 = 25.0;
+    const double kaptony0 = -4.0;
+    const double kaptony1 = 4.0;
+    nbins = 400;
+    TH2D* kapton_edep_xy_all = new TH2D("kapton_edep_xy_all", "", nbins, kaptonx0, kaptonx1, nbins, kaptony0, kaptony1);
+    TH2D* kapton_edep_xy_electron = new TH2D("kapton_edep_xy_electron", "", nbins, kaptonx0, kaptonx1, nbins, kaptony0, kaptony1);
+    TH2D *kapton_edep_xy_positron = new TH2D("kapton_edep_xy_positron", "", nbins, kaptonx0, kaptonx1, nbins, kaptony0, kaptony1);
+    TH2D* kapton_edep_xy_gamma = new TH2D("kapton_edep_xy_gamma", "", nbins, kaptonx0, kaptonx1, nbins, kaptony0, kaptony1);
+    TH2D* kapton_edep_xy_muminus = new TH2D("kapton_edep_xy_muminus", "", nbins, kaptonx0, kaptonx1, nbins, kaptony0, kaptony1);
+    TH2D* kapton_edep_xy_muplus = new TH2D("kapton_edep_xy_muplus", "", nbins, kaptonx0, kaptonx1, nbins, kaptony0, kaptony1);
     // *
     // *
     TH1I* lanex_pdg_all = new TH1I("lanex_pdg_all", "", 50, -25, 25);
@@ -223,6 +256,38 @@ int macro(std::string fnamelist) {
                 if(ekin > -1.0) yag_kenergy_muplus->Fill(ekin);
                 yag_edep_z_muplus->Fill(zz, edep);
                 yag_edep_xy_muplus->Fill(xx, yy, edep);
+            }
+        }
+        else if (detid == 2) { // kapton window
+            kapton_pdg_all->Fill(pdg);
+            if(ekin > -1.0) kapton_kenergy_all->Fill(ekin);
+            kapton_edep_z_all->Fill(zz, edep);
+            kapton_edep_xy_all->Fill(xx, yy, edep);
+
+            if (pdg==11) { 
+                if(ekin > -1.0) kapton_kenergy_electron->Fill(ekin);
+                kapton_edep_z_electron->Fill(zz, edep);
+                kapton_edep_xy_electron->Fill(xx, yy, edep);
+            }
+            else if (pdg == -11) {
+                if(ekin > -1.0) kapton_kenergy_positron->Fill(ekin);
+                kapton_edep_z_positron->Fill(zz, edep);
+                kapton_edep_xy_positron->Fill(xx, yy, edep);
+            }
+            else if (pdg == 22) {
+                if(ekin > -1.0) kapton_kenergy_gamma->Fill(ekin);
+                kapton_edep_z_gamma->Fill(zz, edep);
+                kapton_edep_xy_gamma->Fill(xx, yy, edep);
+            }
+            else if (pdg == 13) {
+                if(ekin > -1.0) kapton_kenergy_muminus->Fill(ekin);
+                kapton_edep_z_muminus->Fill(zz, edep);
+                kapton_edep_xy_muminus->Fill(xx, yy, edep);
+            }
+            else if (pdg == -13) {
+                if(ekin > -1.0) kapton_kenergy_muplus->Fill(ekin);
+                kapton_edep_z_muplus->Fill(zz, edep);
+                kapton_edep_xy_muplus->Fill(xx, yy, edep);
             }
         }
         else if (detid == 3) {
