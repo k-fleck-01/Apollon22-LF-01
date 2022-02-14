@@ -19,11 +19,10 @@
 #include "TH1.h"
 #include "TH2.h"
 
-void SetPlottingStyle();
+
 int ProcessList(const std::string&, std::vector<std::string>&);
 
-
-int macro() {
+int macro(const char* fnamelist) {
     // *
     // Open root file to write to
     //
@@ -164,96 +163,96 @@ int macro() {
         if (detid == 0) { // target
             target_pdg_all->Fill(pdg);
             if(ekin > -1.0) target_kenergy_all->Fill(ekin);
-            target_edep_z_all->Fill(z, edep);
+            target_edep_z_all->Fill(zz, edep);
             target_edep_xy_all->Fill(xx, yy, edep);
 
             if (pdg==11) { // electrons
                 if(ekin > -1.0) target_kenergy_electron->Fill(ekin);
-                target_edep_z_electron->Fill(z, edep);
+                target_edep_z_electron->Fill(zz, edep);
                 target_edep_xy_electron->Fill(xx, yy, edep);
             }
             else if (pdg == -11) { // positrons
                 if(ekin > -1.0) target_kenergy_positron->Fill(ekin);
-                target_edep_z_positron->Fill(z, edep);
+                target_edep_z_positron->Fill(zz, edep);
                 target_edep_xy_positron->Fill(xx, yy, edep);
             }
             else if (pdg == 22) { // gammas
                 if(ekin > -1.0) target_kenergy_gamma->Fill(ekin);
-                target_edep_z_gamma->Fill(z, edep);
+                target_edep_z_gamma->Fill(zz, edep);
                 target_edep_xy_gamma->Fill(xx, yy, edep);
             }
             else if (pdg == 13) { // mu-
                 if(ekin > -1.0) target_kenergy_muminus->Fill(ekin);
-                target_edep_z_muminus->Fill(z, edep);
+                target_edep_z_muminus->Fill(zz, edep);
                 target_edep_xy_muminus->Fill(xx, yy, edep);
             }
             else if (pdg == -13) { // mu+
                 if(ekin > -1.0) target_kenergy_muplus->Fill(ekin);
-                target_edep_z_muplus->Fill(z, edep);
+                target_edep_z_muplus->Fill(zz, edep);
                 target_edep_xy_muplus->Fill(xx, yy, edep);
             }
         }
         else if (detid == 1) { // yag screen
             yag_pdg_all->Fill(pdg);
             if(ekin > -1.0) yag_kenergy_all->Fill(ekin);
-            yag_edep_z_all->Fill(z, edep);
+            yag_edep_z_all->Fill(zz, edep);
             yag_edep_xy_all->Fill(xx, yy, edep);
 
             if (pdg==11) { 
                 if(ekin > -1.0) yag_kenergy_electron->Fill(ekin);
-                yag_edep_z_electron->Fill(z, edep);
+                yag_edep_z_electron->Fill(zz, edep);
                 yag_edep_xy_electron->Fill(xx, yy, edep);
             }
             else if (pdg == -11) {
                 if(ekin > -1.0) yag_kenergy_positron->Fill(ekin);
-                yag_edep_z_positron->Fill(z, edep);
+                yag_edep_z_positron->Fill(zz, edep);
                 yag_edep_xy_positron->Fill(xx, yy, edep);
             }
             else if (pdg == 22) {
                 if(ekin > -1.0) yag_kenergy_gamma->Fill(ekin);
-                yag_edep_z_gamma->Fill(z, edep);
+                yag_edep_z_gamma->Fill(zz, edep);
                 yag_edep_xy_gamma->Fill(xx, yy, edep);
             }
             else if (pdg == 13) {
                 if(ekin > -1.0) yag_kenergy_muminus->Fill(ekin);
-                yag_edep_z_muminus->Fill(z, edep);
+                yag_edep_z_muminus->Fill(zz, edep);
                 yag_edep_xy_muminus->Fill(xx, yy, edep);
             }
             else if (pdg == -13) {
                 if(ekin > -1.0) yag_kenergy_muplus->Fill(ekin);
-                yag_edep_z_muplus->Fill(z, edep);
+                yag_edep_z_muplus->Fill(zz, edep);
                 yag_edep_xy_muplus->Fill(xx, yy, edep);
             }
         }
         else if (detid == 3) {
             lanex_pdg_all->Fill(pdg);
             if(ekin > -1.0) lanex_kenergy_all->Fill(ekin);
-            lanex_edep_z_all->Fill(z, edep);
+            lanex_edep_z_all->Fill(zz, edep);
             lanex_edep_xy_all->Fill(xx, yy, edep);
 
             if (pdg==11) { 
                 if(ekin > -1.0) lanex_kenergy_electron->Fill(ekin);
-                lanex_edep_z_electron->Fill(z, edep);
+                lanex_edep_z_electron->Fill(zz, edep);
                 lanex_edep_xy_electron->Fill(xx, yy, edep);
             }
             else if (pdg == -11) {
                 if(ekin > -1.0) lanex_kenergy_positron->Fill(ekin);
-                lanex_edep_z_positron->Fill(z, edep);
+                lanex_edep_z_positron->Fill(zz, edep);
                 lanex_edep_xy_positron->Fill(xx, yy, edep);
             }
             else if (pdg == 22) {
                 if(ekin > -1.0) lanex_kenergy_gamma->Fill(ekin);
-                lanex_edep_z_gamma->Fill(z, edep);
+                lanex_edep_z_gamma->Fill(zz, edep);
                 lanex_edep_xy_gamma->Fill(xx, yy, edep);
             }
             else if (pdg == 13) {
                 if(ekin > -1.0) lanex_kenergy_muminus->Fill(ekin);
-                lanex_edep_z_muminus->Fill(z, edep);
+                lanex_edep_z_muminus->Fill(zz, edep);
                 lanex_edep_xy_muminus->Fill(xx, yy, edep);
             }
             else if (pdg == -13) {
                 if(ekin > -1.0) lanex_kenergy_muplus->Fill(ekin);
-                lanex_edep_z_muplus->Fill(z, edep);
+                lanex_edep_z_muplus->Fill(zz, edep);
                 lanex_edep_xy_muplus->Fill(xx, yy, edep);
             }
         }
