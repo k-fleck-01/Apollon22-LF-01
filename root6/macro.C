@@ -94,7 +94,7 @@ int macro(std::string fnamelist) {
     nbins = 400;
     TH2D* yag_edep_xy_all = new TH2D("yag_edep_xy_all", "", nbins, yagx0, yagx1, nbins, yagy0, yagy1);
     TH2D* yag_edep_xy_electron = new TH2D("yag_edep_xy_electron", "", nbins, yagx0, yagx1, nbins, yagy0, yagy1);
-    TH2D *yag_edep_xy_positron = new TH2D("yag_edep_xy_positron", "", nbins, yagx0, yagx1, nbins, yagy0, yagy1);
+    TH2D* yag_edep_xy_positron = new TH2D("yag_edep_xy_positron", "", nbins, yagx0, yagx1, nbins, yagy0, yagy1);
     TH2D* yag_edep_xy_gamma = new TH2D("yag_edep_xy_gamma", "", nbins, yagx0, yagx1, nbins, yagy0, yagy1);
     TH2D* yag_edep_xy_muminus = new TH2D("yag_edep_xy_muminus", "", nbins, yagx0, yagx1, nbins, yagy0, yagy1);
     TH2D* yag_edep_xy_muplus = new TH2D("yag_edep_xy_muplus", "", nbins, yagx0, yagx1, nbins, yagy0, yagy1);
