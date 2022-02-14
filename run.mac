@@ -13,26 +13,13 @@
 # Set up spectrometer variables
 # If not provided, defaults are used
 /spectrometer/SetMagnetStrength 2 tesla
-/spectrometer/SetMagnetLength 30 cm
+/spectrometer/SetMagnetLength 20 cm
 
 # Initialise run manager
 /run/initialize
 
-# Visualisation commands
-/vis/open OGL  600x600-0+0
-/vis/drawVolume
-/vis/viewer/panTo 0 0
-/vis/viewer/set/viewpointThetaPhi 45. 30.
-/vis/scene/add/axes 0 0 0 25 cm
-/vis/viewer/zoom 4.
-/vis/viewer/set/style wireframe
-/vis/scene/add/trajectories smooth
-/vis/modeling/trajectories/create/drawByCharge
-/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
-/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
-
-/vis/scene/add/hits
-/vis/enable
+# Activate visualisation for tracks/hits
+#/control/execute vis.mac
 
 # Activate beam
 /run/printProgress 1000
