@@ -157,7 +157,9 @@ int macro(std::string fnamelist) {
 
     for(Long64_t ii = 0; ii < nevproc; ++ii) {
 
+        hitstree->GetEntry(ii);
         if (!(ii%10000)) std::cout << ii << " entries processed" << std::endl;
+        
 
         if (detid == 0) { // target
             target_pdg_all->Fill(pdg);
