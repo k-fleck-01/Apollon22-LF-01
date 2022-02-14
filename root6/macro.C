@@ -101,7 +101,7 @@ int macro(const char* fnamelist) {
     // *
     TH1I* lanex_pdg_all = new TH1I("lanex_pdg_all", "", 50, -25, 25);
 
-    int nbins = 200;
+    nbins = 200;
     TH1D* lanex_kenergy_all = new TH1D("lanex_kenergy_all", "",  nbins, 0., 2.);
     TH1D* lanex_kenergy_electron = new TH1D("lanex_kenergy_electron", "", nbins, 0., 2.);
     TH1D* lanex_kenergy_positron = new TH1D("lanex_kenergy_positron", "", nbins, 0., 2.);
@@ -132,9 +132,8 @@ int macro(const char* fnamelist) {
     // *
     // Processing TChain
     // *
-    const std::string fnamelist = "flist.txt";
     std::vector<std::string> flist;
-    ProcessList(fnamelist, flist);
+    ProcessList(std::string(fnamelist), flist);
 
     TChain* hitstree = new TChain("Hits");
     std::for_each(flist.begin(), flist.end(), [hitstree](const std::string ss) { hitstree->Add(ss.c_str(), -1); });
