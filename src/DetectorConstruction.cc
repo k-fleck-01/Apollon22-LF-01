@@ -331,8 +331,8 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                          4.*cm,
                                          fMagnetLength/2.);
     G4LogicalVolume* logicSpecMagCore = new G4LogicalVolume(solidSpecMagCore, g4Iron, "lSpecMagCore");
-    G4VPhysicalVolume* physSpecMagCore = new G4PVPlacement(0,
-                                                           G4ThreeVector(0., 0., 149.99*cm + fTargetMagnetSep + fMagnetLength/2),
+    G4VPhysicalVolume* physSpecMagCore = new G4PVPlacement(0,  // Adding a 5 cm buffer between collimator and magnet
+                                                           G4ThreeVector(0., 0., 154.99*cm + fTargetMagnetSep + fMagnetLength/2),
                                                            logicSpecMagCore,
                                                            "SpecMagCore",
                                                            logicWorld,
@@ -361,8 +361,8 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                         5.*cm,
                                         0.25*mm);
     G4LogicalVolume* logicLanexScreen = new G4LogicalVolume(solidLanexScreen, g4Gadox, "lLanexScreen");
-    G4VPhysicalVolume* physLanexScreen = new G4PVPlacement(0,
-                                                           G4ThreeVector(0., 0., 149.99*cm + fTargetMagnetSep + fMagnetLength + fMagnetDetSep),
+    G4VPhysicalVolume* physLanexScreen = new G4PVPlacement(0,  // Adding a 5 cm buffer between collimator and magnet
+                                                           G4ThreeVector(0., 0., 154.99*cm + fTargetMagnetSep + fMagnetLength + fMagnetDetSep),
                                                            logicLanexScreen,
                                                            "LanexScreen",
                                                            logicWorld,
