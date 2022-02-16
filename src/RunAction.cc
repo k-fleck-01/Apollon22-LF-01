@@ -39,6 +39,19 @@ void RunAction::BeginOfRunAction(const G4Run*) {
     analysisManager->CreateNtupleDColumn(1, "edep");
     analysisManager->FinishNtuple(1);
 
+    analysisManager->CreateNtuple("Tracks", "Tracks");
+    analysisManager->CreateNtupleIColumn(2, "evid");
+    analysisManager->CreateNtupleIColumn(2, "trackid");
+    analysisManager->CreateNtupleIColumn(2, "pdg");
+    analysisManager->CreateNtupleIColumn(2, "procid");
+    analysisManager->CreateNtupleDColumn(2, "vtxx");
+    analysisManager->CreateNtupleDColumn(2, "vtxy");
+    analysisManager->CreateNtupleDColumn(2, "vtxz");
+    analysisManager->CreateNtupleDColumn(2, "endx");
+    analysisManager->CreateNtupleDColumn(2, "endy");
+    analysisManager->CreateNtupleDColumn(2, "endz");
+    analysisManager->FinishNtuple(2);
+
     return;
 }
 
