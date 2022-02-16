@@ -40,10 +40,13 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
     // Generates a primary particle with random position about centre
     // from a flat energy distribution
 
-    G4ThreeVector pos(0., 0., -18.0*cm);
-    G4double x0 = pos.x() + 0.1 * (G4UniformRand()-0.5);
-	G4double y0 = pos.y() + 0.1 * (G4UniformRand()-0.5);
-	G4double z0 = pos.z(); 
+    G4double radius = 0.1*cm;
+    G4double angle =  2*3.1415926545*G4UniformRand();
+
+    G4double x0 = radius*cos(angle);
+    G4double y0 = radius*sin(angle);
+    G4double z0 = -18.0*cm;
+
     fParticleGun->SetParticlePosition(G4ThreeVector(x0, y0, z0));
 
     // Sampling energy from a flat distribution

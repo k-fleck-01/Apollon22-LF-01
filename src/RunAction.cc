@@ -50,6 +50,7 @@ void RunAction::BeginOfRunAction(const G4Run*) {
     analysisManager->CreateNtupleDColumn(2, "endx");
     analysisManager->CreateNtupleDColumn(2, "endy");
     analysisManager->CreateNtupleDColumn(2, "endz");
+    analysisManager->CreateNtupleDColumn(2, "kEnergy");
     analysisManager->FinishNtuple(2);
 
     return;
