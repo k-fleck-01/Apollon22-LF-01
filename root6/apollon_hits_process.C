@@ -2,8 +2,8 @@
 // GEANT4 simulation of the Apollon 2022 experiment.
 // Geometry has been derived from the FLUKA simulation of the same experiment.
 // 
-// Macro file for ROOT utility functions for analysis of Geant4 results.
-// Last edited: 14/02/2022
+// Macro file for processing detector hits from Geant4 simulation.
+// Last edited: 16/02/2022
 //
 
 #include <iostream>
@@ -23,7 +23,7 @@
 
 int ProcessList(const std::string&, std::vector<std::string>&);
 
-int macro(std::string fnamelist) {
+int apollon_hits_process(std::string fnamelist) {
     // *
     // Open root file to write to
     //

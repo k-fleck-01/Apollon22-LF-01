@@ -400,13 +400,16 @@ void DetectorConstruction::ConstructSDandField() {
     // Add magnetic fields
     G4MagneticField* chamberMagField = new G4UniformMagField(G4ThreeVector(0., -1.7*tesla, 0.));
     G4FieldManager* localChamberFldManager = new G4FieldManager(chamberMagField);
+    localChamberFldManager->SetDetectorField(chamberMagField);
+    localChamberFldManager->CreateChordFinder(chamberMagField);
     fLogicChamberMagField->SetFieldManager(localChamberFldManager, true);
 
     G4MagneticField* specMagField = new G4UniformMagField(G4ThreeVector(0., -1.*fMagnetStrength, 0.));
     G4FieldManager* localSpecFldManager = new G4FieldManager(specMagField);
+    localSpecFldManager->SetDetectorField(specMagField);
+    localSpecFldManager->CreateChordFinder(specMagField);
     fLogicSpecMagField->SetFieldManager(localSpecFldManager, true);
 
-    return;
 }
 
 void DetectorConstruction::SetTargetMagnetSep(G4double val) {
