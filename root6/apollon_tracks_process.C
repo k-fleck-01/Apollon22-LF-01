@@ -23,7 +23,7 @@
 
 int ProcessList(const std::string&, std::vector<std::string>&);
 
-int apollon_hits_process(std::string fnamelist) {
+int apollon_tracks_process(std::string fnamelist) {
     // *
     // Open root file to write to
     //
