@@ -60,11 +60,13 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
     aHit->AddParticleType(pdgCode);
 
     // Kinetic energy if particle is entering detector
-    G4double kinEnergy;
-    if(aStep->IsFirstStepInVolume()) {
-        kinEnergy = track->GetKineticEnergy()/MeV;
-    } else {
-        kinEnergy = -1.*MeV;
+    G4double kinEnergy = -1;
+    const G4VProcess* currentProcess = preStepPoint->GetProcessDefinedStep();
+    if(currentProcess != 0) {
+        const G4String& procName = currentProcess->GetProcessName();
+        const G4String& thisVolume = track->GetVolume()->GetName();
+        const G4String& volumePos = track->GetNextVolume()->GetName();
+        if (procName == "Transportation" && volumePos == thisVolume) kinEnergy = track->GetKineticEnergy();
     }
     aHit->AddKineticEnergy(kinEnergy);
 
@@ -97,7 +99,7 @@ void SensitiveDetector::EndOfEvent(G4HCofThisEvent* HCE) {
         auto hit = (*fHitCollection)[ii];
 
         G4int pdg = hit->GetParticleType();
-        G4int procid = hit->GetCreatorProcess();
+        G4int procid = hit->GetProcess();
         G4int detid = hit->GetDetectorID();
         G4double x = hit->GetPosition().x();
         G4double y = hit->GetPosition().y();

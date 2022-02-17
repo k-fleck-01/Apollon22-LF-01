@@ -9,7 +9,7 @@
 
 #include "G4ThreeVector.hh"
 
-Hit::Hit() : G4VHit(), fEdep(0.), fKinEnergy(0.), fPosition(G4ThreeVector()), fParticleType(-1), fCreatorProcess(-1), fDetid(-1)
+Hit::Hit() : G4VHit(), fEdep(0.), fKinEnergy(0.), fPosition(G4ThreeVector()), fParticleType(-1), fProcess(-1), fDetid(-1)
 {}
 
 Hit::~Hit()
@@ -31,8 +31,8 @@ G4int Hit::GetParticleType() const {
     return fParticleType;
 }
 
-G4int Hit::GetCreatorProcess() const {
-    return fCreatorProcess;
+G4int Hit::GetProcess() const {
+    return fProcess;
 }
 
 G4int Hit::GetDetectorID() const {
@@ -54,8 +54,8 @@ void Hit::AddPosition(G4ThreeVector pos) {
 void Hit::AddParticleType(G4int pdg) {
     fParticleType = pdg; 
 }
-void Hit::AddCreatorProcess(G4int procid) {
-    fCreatorProcess = procid;
+void Hit::AddProcess(G4int procid) {
+    fProcess = procid;
 }
 void Hit::AddDetectorID(G4int detid) {
     fDetid = detid;

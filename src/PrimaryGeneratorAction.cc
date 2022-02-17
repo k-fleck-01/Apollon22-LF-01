@@ -57,5 +57,5 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
     fParticleGun->SetParticleEnergy(energy);
 
     fParticleGun->GeneratePrimaryVertex(anEvent);
-    return;
+    
 }
