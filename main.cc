@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 	G4int nThreads = std::min(G4Threading::G4GetNumberOfCores(), 8);
 	if (argc == 3) nThreads = G4UIcommand::ConvertToInt(argv[2]);
 	runManager->SetNumberOfThreads(nThreads);
-	G4cout << "===== profiler is started with " << runManager->GetNumberOfThreads() << " threads =====" << G4endl;
+	G4cout << "===== Simulation has started with " << runManager->GetNumberOfThreads() << " threads =====" << G4endl;
 #else
     G4RunManager* runManager = new G4RunManager;
 #endif
