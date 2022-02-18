@@ -6,29 +6,16 @@
 ### Physics List
 The physics list used is "PhysListEmStandard.cc" as used in the [Geant4 examples](https://gitlab.cern.ch/geant4/geant4/-/tree/master/examples). This contains all standard electromagnetic processes including:
 
-* Electrons
-    - Coulomb and multiple scattering
-    - ionisation
-    - photoelectric effect
-    - bremsstrahlung
-
-* Positrons
-    - Coulomb and multiple scattering
-    - ionisation
-    - bremsstrahlung
-    - pair annihilation
-    - **pair annihilation to muon pair**
-
-* Gammas
-    - Compton scattering
-    - gamma conversion (pair production)
-    - **gamma conversion to muon pair**
-
-* Muons
-    - Coulomb and multiple scattering
-    - ionisation
-    - bremsstrahlung
-    - pair production ($\mu^-\mu^+ \rightarrow e^-e^+$)
+- Coulomb and multiple scattering
+- ionisation
+- photoelectric effect
+- bremsstrahlung
+- pair annihilation
+- **pair annihilation to muon pair**
+- Compton scattering
+- gamma conversion (pair production)
+- **gamma conversion to muon pair**
+- pair production ($\mu^-\mu^+ \rightarrow e^-e^+$)
 
 The processes in bold are not included by default in PhysListEmStandard.cc, but have been added manually.
 
