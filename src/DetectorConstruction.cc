@@ -28,6 +28,7 @@
 #include "G4FieldManager.hh"
 
 #include "G4RunManager.hh"
+#include "G4GDMLParser.hh"
 
 DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction(), fDetectorMessenger(0), fLogicChamberMagField(0),
                      fLogicSpecMagField(0), fTargetMagnetSep(30.*cm), fMagnetLength(15.*cm), fMagnetStrength(1.75*tesla),
@@ -376,6 +377,12 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
 
     // Print material table
     G4cout << *(G4Material::GetMaterialTable()) << G4endl;
+
+    // Exporting geometry to GDML
+    //G4GDMLParser* gdmlParser = new G4GDMLParser();
+    //gdmlParser->Write("apollon_g4geometry.gdml", physWorld);
+    //delete gdmlParser;
+    
     return physWorld;
 
 }
