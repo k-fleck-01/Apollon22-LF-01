@@ -4,14 +4,43 @@
 ## Simulation Information
 ### Geometry Overview
 ### Physics List
+The physics list used is "PhysListEmStandard.cc" as used in the [Geant4 examples](https://gitlab.cern.ch/geant4/geant4/-/tree/master/examples). This contains all standard electromagnetic processes including:
+
+* Electrons
+    - Coulomb and multiple scattering
+    - ionisation
+    - photoelectric effect
+    - bremsstrahlung
+
+* Positrons
+    - Coulomb and multiple scattering
+    - ionisation
+    - bremsstrahlung
+    - pair annihilation
+    - <emph> pair annihilation to muon pair </emph>
+
+* Gammas
+    - Compton scattering
+    - gamma conversion (pair production)
+    - <emph> gamma conversion to muon pair </emph>
+
+* Muons
+    - Coulomb and multiple scattering
+    - ionisation
+    - bremsstrahlung
+    - pair production ($\mu^-\mu^+ \rightarrow e^-e^+$)
+
+The processes in bold are not included by default in PhysListEmStandard.cc, but have been added manually.
+
 ### Hit Information
+### Track Information
 
 ## Compiling and Running
 ### Requirements
 Installation requirements are:
 
-    * CMake (version >= 3.15),
-    * Geant4 (tested on versions 10.07.p02 and 11.0)
+* CMake (version >= 3.15),
+* Geant4 (tested on versions 10.07.p02 and 11.0)
 
 Geant4 can be built with or without multithreading enabled. Additionally, if GDML is enabled (GEANT4_USE_GDML:BOOL = TRUE), an output of the geometry in GDML format can be used in the src/DetectorConstruction.cc file.
 
