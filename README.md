@@ -17,12 +17,12 @@ The physics list used is "PhysListEmStandard.cc" as used in the [Geant4 examples
     - ionisation
     - bremsstrahlung
     - pair annihilation
-    - <emph> pair annihilation to muon pair </emph>
+    - **pair annihilation to muon pair**
 
 * Gammas
     - Compton scattering
     - gamma conversion (pair production)
-    - <emph> gamma conversion to muon pair </emph>
+    - **gamma conversion to muon pair**
 
 * Muons
     - Coulomb and multiple scattering
