@@ -10,9 +10,9 @@
 ### Requirements
 Installation requirements are:
 
-    -   CMake (version >= 3.15),
-    -   Geant4 (tested on versions 10.07.p02 and 11.0)
-    
+    o   CMake (version >= 3.15),
+    o   Geant4 (tested on versions 10.07.p02 and 11.0)
+
 Geant4 can be built with or without multithreading enabled. Additionally, if GDML is enabled (GEANT4_USE_GDML:BOOL = TRUE), an output of the geometry in GDML format can be used in the src/DetectorConstruction.cc file.
 
 ### Instructions
