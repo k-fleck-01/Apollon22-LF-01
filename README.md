@@ -26,6 +26,7 @@ The project can be compiled and run as follows.
 
 4. The project can then be run interactively by running the 'sim' executable
    > ./sim
-which, by default, uses the macro run.mac as input. 
+   
+    which, by default, uses the macro run.mac as input. 
 
 ## Post-Processing
