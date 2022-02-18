@@ -56,7 +56,6 @@ int apollon_tracks_process(std::string fnamelist) {
     TH2D* track_vtxx_vtxz_muminus = new TH2D("track_vtxx_vtxz_muminus", "", nbins, zmin, zmax, nbins, xmin, xmax);
     TH2D* track_vtxx_vtxz_muplus = new TH2D("track_vtxx_vtxz_muplus", "", nbins, zmin, zmax, nbins, xmin, xmax);
 
-    TH2D* track_endx_endz_muplus = new TH2D("track_endx_endz_muplus", "", nbins, zmin, zmax, nbins, xmin, xmax);
     TH2D* track_endx_endz_all = new TH2D("track_endx_endz_all", "", nbins, zmin, zmax, nbins, xmin, xmax);
     TH2D* track_endx_endz_electron = new TH2D("track_endx_endz_electron", "", nbins, zmin, zmax, nbins, xmin, xmax);
     TH2D* track_endx_endz_positron = new TH2D("track_endx_endz_positron", "", nbins, zmin, zmax, nbins, xmin, xmax);
@@ -70,7 +69,7 @@ int apollon_tracks_process(std::string fnamelist) {
     ProcessList(fnamelist, flist);
 
     TChain* trackstree = new TChain("Tracks");
-    std::for_each(flist.begin(), flist.end(), [trackstree](const std::string ss) { hitstree->Add(ss.c_str(), -1); });
+    std::for_each(flist.begin(), flist.end(), [trackstree](const std::string ss) { trackstree->Add(ss.c_str(), -1); });
 
     int evid, trackid, pdg, procid;
     double vtxx, vtxy, vtxz;
@@ -95,7 +94,7 @@ int apollon_tracks_process(std::string fnamelist) {
     for (Long64_t ii = 0; ii < nevproc; ++ii) {
 
         trackstree->GetEntry(ii);
-        if (!(ii%10000)) std::cout << ii << " entries processed" << std::endl;
+        if (!(ii%1000000)) std::cout << ii << " entries processed" << std::endl;
 
         track_pdg->Fill(pdg);
         track_procid->Fill(procid);
