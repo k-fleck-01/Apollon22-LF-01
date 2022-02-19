@@ -7,6 +7,10 @@ PROJECT(apollon)
 FIND_PACKAGE(Geant4 REQUIRED ui_all vis_all)
 INCLUDE(${Geant4_USE_FILE})
 
+# Setting C++ standard
+SET(CMAKE_CXX_STANDARD 11)
+SET(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Header files
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
 
