@@ -75,7 +75,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     // Creating list of materials
     G4NistManager* nist = G4NistManager::Instance();
 
-    G4Material* g4Vacuum    = nist->FindOrBuildMaterial("G4_GALACTIC");
+    G4Material* g4Vacuum    = nist->FindOrBuildMaterial("G4_Galactic");
     G4Material* g4Air       = nist->FindOrBuildMaterial("G4_AIR");
     G4Material* g4Lead      = nist->FindOrBuildMaterial("G4_Pb");
     G4Material* g4Aluminium = nist->FindOrBuildMaterial("G4_Al");
@@ -286,21 +286,6 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     // Gamma spectrometer geometry
     //
 
-    // Converter 
-    G4Box* solidConverter = new G4Box("converter",
-                                      1.*cm,
-                                      1.*cm,
-                                      0.01*cm);
-    G4LogicalVolume* logicConverter = new G4LogicalVolume(solidConverter, g4Tungsten, "lConverter");
-    G4VPhysicalVolume* physConverter = new G4PVPlacement(0,
-                                                         G4ThreeVector(0., 0., 149.99*cm),
-                                                         logicConverter,
-                                                         "Converter",
-                                                         logicWorld,
-                                                         false,
-                                                         0,
-                                                         checkOverlaps);
-
     // Lead shielding
     G4Box* solidLeadFront = new G4Box("leadFront",
                                       22.*cm,
@@ -357,6 +342,20 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                          0,
                                                          checkOverlaps);
 
+    // Converter 
+    G4Box* solidConverter = new G4Box("converter",
+                                      1.*cm,
+                                      1.*cm,
+                                      0.01*cm);
+    G4LogicalVolume* logicConverter = new G4LogicalVolume(solidConverter, g4Tungsten, "lConverter");
+    G4VPhysicalVolume* physConverter = new G4PVPlacement(0,
+                                                         G4ThreeVector(0., 0., 2.49*cm),
+                                                         logicConverter,
+                                                         "Converter",
+                                                         logicLeadFrontInsert,
+                                                         false,
+                                                         0,
+                                                         checkOverlaps);
 
     // Collimators
     G4Tubs* solidCollimator = new G4Tubs("collimator",
@@ -436,9 +435,9 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 
     // Exporting geometry to GDML
-    //G4GDMLParser* gdmlParser = new G4GDMLParser();
-    //gdmlParser->Write("apollon_g4geometry.gdml", physWorld);
-    //delete gdmlParser;
+    G4GDMLParser* gdmlParser = new G4GDMLParser();
+    gdmlParser->Write("apollon_g4geometry.gdml", physWorld);
+    delete gdmlParser;
     
     return physWorld;
 
