@@ -28,15 +28,23 @@ void TrackingAction::PreUserTrackingAction(const G4Track*)
 
 void TrackingAction::PostUserTrackingAction(const G4Track* track) {
 
-    // Adding selection cut so only particles entering a volume are recorded
-    G4bool trackFlag = true;
-    if (track->GetStep()->GetPreStepPoint()->GetProcessDefinedStep() != 0) {
-        const G4VProcess* currentProcess = track->GetStep()->GetPreStepPoint()->GetProcessDefinedStep();
-        const G4String& currentProcessName = currentProcess->GetProcessName();
-        const G4String& thisVolume = track->GetVolume()->GetName();
-        const G4String& posVolume = track->GetNextVolume()->GetName();
-        if (currentProcessName == "Transportation") trackFlag = true;
-    }
+    // Adding selection cut so only particles entering spectrometer region
+    // are recorded.
+
+    constexpr G4double xmincut = -25.*cm;
+    constexpr G4double xmaxcut = 25.*cm;
+    constexpr G4double ymincut = -15.*cm;
+    constexpr G4double ymaxcut = 15.*cm;
+    constexpr G4double zmincut = 145.*cm;
+    constexpr G4double zmaxcut = 250.*cm;
+
+    G4bool trackFlag = false;
+    G4double trackx = track->GetPosition().x();
+    G4double tracky = track->GetPosition().y();
+    G4double trackz = track->GetPosition().z();
+    if ((trackx >= xmincut && trackx <= xmaxcut) &&
+        (tracky >= ymincut && tracky <= ymaxcut) &&
+        (trackz >= zmincut && trackz <= zmaxcut)) trackFlag = true;
 
     if (trackFlag) {
         G4int trackid = track->GetTrackID();

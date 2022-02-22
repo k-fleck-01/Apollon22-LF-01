@@ -47,14 +47,6 @@ void DetectorConstruction::DefineMaterials() {
     //
     G4NistManager* nist = G4NistManager::Instance();
     G4bool isotopes = false;
-    // Vacuum
-    G4Material* g4Vacuum = new G4Material("G4_GALACTIC",
-									       1.,
-									       1.008*g/mole,
-									       1.e-25*g/cm3,
-									       kStateGas,
-									       2.73*kelvin,
-									       3.e-18*pascal);
 
     // YAG (yttrium aluminium garnet)
     // Compositional information taken from: https://www.americanelements.com/cerium-doped-yttrium-aluminum-garnet-163584-80-3
@@ -435,9 +427,9 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 
     // Exporting geometry to GDML
-    G4GDMLParser* gdmlParser = new G4GDMLParser();
-    gdmlParser->Write("apollon_g4geometry.gdml", physWorld);
-    delete gdmlParser;
+    //G4GDMLParser* gdmlParser = new G4GDMLParser();
+    //gdmlParser->Write("apollon_g4geometry.gdml", physWorld);
+    //delete gdmlParser;
     
     return physWorld;
 
