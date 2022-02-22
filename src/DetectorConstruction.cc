@@ -301,6 +301,63 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                          0,
                                                          checkOverlaps);
 
+    // Lead shielding
+    G4Box* solidLeadFront = new G4Box("leadFront",
+                                      22.*cm,
+                                      5.*cm,
+                                      2.5*cm);
+
+    G4LogicalVolume* logicLeadFront = new G4LogicalVolume(solidLeadFront, g4Lead, "lLeadFront");
+    G4VPhysicalVolume* physLeadFron = new G4PVPlacement(0,
+                                                        G4ThreeVector(0., 0., 147.5*cm),
+                                                        logicLeadFront,
+                                                        "LeadFront",
+                                                        logicWorld,
+                                                        false,
+                                                        0,
+                                                        checkOverlaps);
+
+    G4Box* solidLeadFrontInsert = new G4Box("leadFrontInsert",
+                                            2.*cm,
+                                            5.*cm,
+                                            2.5*cm);
+
+    G4LogicalVolume* logicLeadFrontInsert = new G4LogicalVolume(solidLeadFrontInsert, g4Air, "lLeadFrontInsert");
+    G4VPhysicalVolume* physLeadFrontInsert = new G4PVPlacement(0,
+                                                               G4ThreeVector(),
+                                                               logicLeadFrontInsert,
+                                                               "LeadFrontInsert",
+                                                               logicLeadFront,
+                                                               false,
+                                                               0,
+                                                               checkOverlaps);
+
+    G4Box* solidLeadSide = new G4Box("leadUpper",
+                                      2.5*cm,
+                                      5.*cm,
+                                      40.*cm);
+    
+    G4LogicalVolume* logicLeadSide = new G4LogicalVolume(solidLeadSide, g4Lead, "lLeadSide");
+
+    G4VPhysicalVolume* physLeadUpper = new G4PVPlacement(0,
+                                                         G4ThreeVector(17.5*cm, 0., 190.*cm),
+                                                         logicLeadSide,
+                                                         "LeadUpper",
+                                                         logicWorld,
+                                                         false,
+                                                         0,
+                                                         checkOverlaps);
+
+    G4VPhysicalVolume* physLeadLower = new G4PVPlacement(0,
+                                                         G4ThreeVector(-17.5*cm, 0., 190.*cm),
+                                                         logicLeadSide,
+                                                         "LeadLower",
+                                                         logicWorld,
+                                                         false,
+                                                         0,
+                                                         checkOverlaps);
+
+
     // Collimators
     G4Tubs* solidCollimator = new G4Tubs("collimator",
                                          0.2*cm,
