@@ -38,6 +38,7 @@
 #include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+class PhysListMessenger;
 
 class PhysListEmStandard : public G4VPhysicsConstructor
 {
@@ -53,6 +54,11 @@ class PhysListEmStandard : public G4VPhysicsConstructor
     // each physics process will be instantiated and
     // registered to the process manager of each particle type 
     virtual void ConstructProcess();
+
+    virtual void SetMuonScaleFactor(G4double);
+
+  private:
+    PhysListMessenger* fPhysListMessenger;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

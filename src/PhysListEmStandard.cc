@@ -28,6 +28,7 @@
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "PhysListEmStandard.hh"
+#include "PhysListMessenger.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4ProcessManager.hh"
 #include "G4PhysicsListHelper.hh"
@@ -68,6 +69,7 @@
 #include "G4BuilderType.hh"
 
 #include "G4SystemOfUnits.hh"
+#include "G4ProcessTable.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -86,6 +88,8 @@ PhysListEmStandard::PhysListEmStandard(const G4String& name)
   param->SetAuger(false);
   param->SetPixe(false);
   SetPhysicsType(bElectromagnetic);
+
+  fPhysListMessenger = new PhysListMessenger(this); 
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -203,3 +207,16 @@ void PhysListEmStandard::ConstructProcess()
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void PhysListEmStandard::SetMuonScaleFactor(G4double scale) {
+
+    G4ProcessTable* theProcessTable = G4ProcessTable::GetProcessTable();
+
+    G4GammaConversionToMuons* GammaToMuPairProcess  = 
+                    (G4GammaConversionToMuons*) theProcessTable->FindProcess("GammaToMuPair", "gamma");
+    G4AnnihiToMuPair* AnnihiToMuPairProcess = 
+                    (G4AnnihiToMuPair*) theProcessTable->FindProcess("AnnihiToMuPair", "e+");
+
+    if (GammaToMuPairProcess) GammaToMuPairProcess->SetCrossSecFactor(scale);
+    if (AnnihiToMuPairProcess) AnnihiToMuPairProcess->SetCrossSecFactor(scale);
+}

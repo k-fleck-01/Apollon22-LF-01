@@ -29,7 +29,7 @@ void TrackingAction::PreUserTrackingAction(const G4Track*)
 void TrackingAction::PostUserTrackingAction(const G4Track* track) {
 
     // Adding selection cut so only particles entering a volume are recorded
-    G4bool trackFlag = false;
+    G4bool trackFlag = true;
     if (track->GetStep()->GetPreStepPoint()->GetProcessDefinedStep() != 0) {
         const G4VProcess* currentProcess = track->GetStep()->GetPreStepPoint()->GetProcessDefinedStep();
         const G4String& currentProcessName = currentProcess->GetProcessName();
