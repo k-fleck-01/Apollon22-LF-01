@@ -14,13 +14,13 @@
 class Hit : public G4VHit {
     public:
         Hit();
-        Hit(G4ThreeVector, G4double, G4int, G4int, G4int);
         ~Hit();
 
     public:
         G4double GetEdep() const;
         G4double GetKineticEnergy() const;
         G4ThreeVector GetPosition() const;
+        G4ThreeVector GetVertexPosition() const;
         G4int GetParticleType() const;
         G4int GetProcess() const;
         G4int GetDetectorID() const;
@@ -28,6 +28,7 @@ class Hit : public G4VHit {
         void AddEdep(G4double);
         void AddKineticEnergy(G4double);
         void AddPosition(G4ThreeVector);
+        void AddVertexPosition(G4ThreeVector);
         void AddParticleType(G4int);
         void AddProcess(G4int);
         void AddDetectorID(G4int);
@@ -36,6 +37,7 @@ class Hit : public G4VHit {
         G4double fEdep;
         G4double fKinEnergy;
         G4ThreeVector fPosition;
+        G4ThreeVector fVertexPosition;
         G4int fParticleType;
         G4int fProcess;
         G4int fDetid;

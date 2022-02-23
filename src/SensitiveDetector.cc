@@ -59,6 +59,10 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
     G4int pdgCode = track->GetParticleDefinition()->GetPDGEncoding();
     aHit->AddParticleType(pdgCode);
 
+    // Vertex position of track causing hit
+    G4ThreeVector vpos = track->GetVertexPosition();
+    aHit->AddVertexPosition(vpos);
+
     // Kinetic energy if particle is entering detector
     G4double kinEnergy = -1;
     const G4VProcess* currentProcess = preStepPoint->GetProcessDefinedStep();
@@ -98,24 +102,30 @@ void SensitiveDetector::EndOfEvent(G4HCofThisEvent* HCE) {
     for (G4int ii = 0; ii < nhits; ++ii) {
         auto hit = (*fHitCollection)[ii];
 
-        G4int pdg = hit->GetParticleType();
-        G4int procid = hit->GetProcess();
-        G4int detid = hit->GetDetectorID();
-        G4double x = hit->GetPosition().x();
-        G4double y = hit->GetPosition().y();
-        G4double z = hit->GetPosition().z();
-        G4double edep = hit->GetEdep();
+        G4int pdg          = hit->GetParticleType();
+        G4int procid       = hit->GetProcess();
+        G4int detid        = hit->GetDetectorID();
+        G4double x         = hit->GetPosition().x();
+        G4double y         = hit->GetPosition().y();
+        G4double z         = hit->GetPosition().z();
+        G4double vtxx      = hit->GetVertexPosition().x();
+        G4double vtxy      = hit->GetVertexPosition().y();
+        G4double vtxz      = hit->GetVertexPosition().z();
+        G4double edep      = hit->GetEdep();
         G4double kinEnergy = hit->GetKineticEnergy();
 
         analysisManager->FillNtupleIColumn(0, 0, runManager->GetCurrentEvent()->GetEventID());
-        analysisManager->FillNtupleDColumn(0, 1, x);
-        analysisManager->FillNtupleDColumn(0, 2, y);
-        analysisManager->FillNtupleDColumn(0, 3, z);
-        analysisManager->FillNtupleDColumn(0, 4, edep);
-        analysisManager->FillNtupleDColumn(0, 5, kinEnergy);
-        analysisManager->FillNtupleIColumn(0, 6, pdg);
-        analysisManager->FillNtupleIColumn(0, 7, procid);
-        analysisManager->FillNtupleIColumn(0, 8, detid);
+        analysisManager->FillNtupleDColumn(0, 1, x/cm);
+        analysisManager->FillNtupleDColumn(0, 2, y/cm);
+        analysisManager->FillNtupleDColumn(0, 3, z/cm);
+        analysisManager->FillNtupleDColumn(0, 4, vtxx/cm);
+        analysisManager->FillNtupleDColumn(0, 5, vtxy/cm);
+        analysisManager->FillNtupleDColumn(0, 6, vtxz/cm);
+        analysisManager->FillNtupleDColumn(0, 7, edep/MeV);
+        analysisManager->FillNtupleDColumn(0, 8, kinEnergy/MeV);
+        analysisManager->FillNtupleIColumn(0, 9, pdg);
+        analysisManager->FillNtupleIColumn(0, 10, procid);
+        analysisManager->FillNtupleIColumn(0, 11, detid);
         analysisManager->AddNtupleRow(0);
     }
 

@@ -27,6 +27,9 @@ void RunAction::BeginOfRunAction(const G4Run*) {
     analysisManager->CreateNtupleDColumn(0, "x");
     analysisManager->CreateNtupleDColumn(0, "y");
     analysisManager->CreateNtupleDColumn(0, "z");
+    analysisManager->CreateNtupleDColumn(0, "vtxx");
+    analysisManager->CreateNtupleDColumn(0, "vtxy");
+    analysisManager->CreateNtupleDColumn(0, "vtxz");
     analysisManager->CreateNtupleDColumn(0, "edep");
     analysisManager->CreateNtupleDColumn(0, "eKin");
     analysisManager->CreateNtupleIColumn(0, "pdg");
