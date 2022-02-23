@@ -28,7 +28,7 @@
 #include "G4FieldManager.hh"
 
 #include "G4RunManager.hh"
-#include "G4GDMLParser.hh"
+//#include "G4GDMLParser.hh"
 
 DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction(), fDetectorMessenger(0), fLogicChamberMagField(0),
                      fLogicSpecMagField(0), fTargetMagnetSep(30.*cm), fMagnetLength(15.*cm), fMagnetStrength(1.75*tesla),
