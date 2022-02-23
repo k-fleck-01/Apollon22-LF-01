@@ -14,6 +14,8 @@
 #include "G4ParticleTable.hh"
 #include "Randomize.hh"
 
+#include "G4RootAnalysisManager.hh"
+
 PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction(), fParticleGun(0) {
 
     // Generate one particle per event
@@ -39,8 +41,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
     // Generates a primary particle with random position about centre
     // from a flat energy distribution
-
-    G4double radius = 0.1*cm;
+    
+    G4double r0 = 0.1*cm;
+    G4double radius = r0*(2.0*G4UniformRand() - 1.0);
     G4double angle =  2*3.1415926545*G4UniformRand();
 
     G4double x0 = radius*cos(angle);
@@ -57,5 +60,14 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
     fParticleGun->SetParticleEnergy(energy);
 
     fParticleGun->GeneratePrimaryVertex(anEvent);
-    
+
+    // Adding primary information to tree
+    G4RootAnalysisManager* analysisManager = G4RootAnalysisManager::Instance();
+
+    analysisManager->FillNtupleDColumn(3, 0, x0/cm);
+    analysisManager->FillNtupleDColumn(3, 1, y0/cm);
+    analysisManager->FillNtupleDColumn(3, 2, z0/cm);
+    analysisManager->FillNtupleDColumn(3, 3, energy/MeV);
+    analysisManager->AddNtupleRow(3);
+
 }

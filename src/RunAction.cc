@@ -53,6 +53,13 @@ void RunAction::BeginOfRunAction(const G4Run*) {
     analysisManager->CreateNtupleDColumn(2, "kEnergy");
     analysisManager->FinishNtuple(2);
 
+    analysisManager->CreateNtuple("Primaries", "Primaries");
+    analysisManager->CreateNtupleDColumn(3, "x");
+    analysisManager->CreateNtupleDColumn(3, "y");
+    analysisManager->CreateNtupleDColumn(3, "z");
+    analysisManager->CreateNtupleDColumn(3, "E");
+    analysisManager->FinishNtuple(3);
+
     return;
 }
 
