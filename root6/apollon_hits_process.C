@@ -162,8 +162,15 @@ int apollon_hits_process(std::string fnamelist) {
     TH2D* lanex_edep_xy_gamma = new TH2D("lanex_edep_xy_gamma", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
     TH2D* lanex_edep_xy_muminus = new TH2D("lanex_edep_xy_muminus", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
     TH2D* lanex_edep_xy_muplus = new TH2D("lanex_edep_xy_muplus", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
+    
+    const double pxx0 = -0.1;
+    const double pxx1 = 0.1;
+    const double pyy0 = -0.1;
+    const double pyy1 = 0.1;
+    TH2D* primary_profile_xy = new TH2D("primary_profile_xy", nbins, pxx0, pxx1, nbins, pyy0, pyy1);
+    TH1D* primary_profile_energy = new TH1D("primary_profile_energy", 200, 0.0, 2000.0);
     // *
-    // Processing TChain
+    // Processing hits TChain
     // *
     std::vector<std::string> flist;
     ProcessList(fnamelist, flist);
@@ -323,7 +330,29 @@ int apollon_hits_process(std::string fnamelist) {
             }
         }
     }
+    // *
+    // Process primary TChain
+    // *
+    TChain* primarytree = new TChain("Primaries");
+    std::for_each(flist.begin(), flist.end(), [primarytree](const std::string ss) { primarytree->Add(ss.c_str(), -1); });
 
+    double eneg;
+
+    primarytree->SetBranchAddress("x", &xx);
+    primarytree->SetBranchAddress("y", &yy);
+    primarytree->SetBranchAddress("z", &zz);
+    primarytree->SetBranchAddress("E", &eneg);
+
+    nevproc = primarytree->GetEntries();
+    std::cout << "Entries: " << nevproc << std::endl;
+    for (Long64_t ii = 0; ii < nevproc; ++ii) {
+
+        primarytree->GetEntry(ii);
+        if (!(ii%1000000)) std::cout << ii << " entries processed" << std::endl;
+
+        primary_profile_xy->Fill(xx, yy);
+        primary_profile_energy->Fill(eneg);
+    }
 
     fout->Write();
     fout->Close();
