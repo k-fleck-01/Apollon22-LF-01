@@ -411,7 +411,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                         0.25*mm);
     G4LogicalVolume* logicLanexScreen = new G4LogicalVolume(solidLanexScreen, g4Gadox, "lLanexScreen");
     G4VPhysicalVolume* physLanexScreen = new G4PVPlacement(0,  // Adding a 5 cm buffer between collimator and magnet
-                                                           G4ThreeVector(0., 0., 154.99*cm + fTargetMagnetSep + fMagnetLength + fMagnetDetSep),
+                                                           G4ThreeVector(0., 0., 155.*cm + fTargetMagnetSep + fMagnetLength + fMagnetDetSep),
                                                            logicLanexScreen,
                                                            "LanexScreen",
                                                            logicWorld,
