@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
     // Initialise the run manager
 #ifdef G4MULTITHREADED
 	G4MTRunManager* runManager = new G4MTRunManager;
-	G4int nThreads = std::min(G4Threading::G4GetNumberOfCores(), 8);
+	G4int nThreads = std::min(G4Threading::G4GetNumberOfCores(), 16);
 	if (argc == 3) nThreads = G4UIcommand::ConvertToInt(argv[2]);
 	runManager->SetNumberOfThreads(nThreads);
 	G4cout << "===== Simulation has started with " << runManager->GetNumberOfThreads() << " threads =====" << G4endl;

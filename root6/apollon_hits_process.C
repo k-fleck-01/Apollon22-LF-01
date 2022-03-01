@@ -162,7 +162,25 @@ int apollon_hits_process(std::string fnamelist) {
     TH2D* lanex_edep_xy_gamma = new TH2D("lanex_edep_xy_gamma", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
     TH2D* lanex_edep_xy_muminus = new TH2D("lanex_edep_xy_muminus", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
     TH2D* lanex_edep_xy_muplus = new TH2D("lanex_edep_xy_muplus", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
+
+    TH2D* lanex_xy_all = new TH2D("lanex_xy_all", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
+    TH2D* lanex_xy_electron = new TH2D("lanex_xy_electron", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
+    TH2D* lanex_xy_positron = new TH2D("lanex_xy_positron", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
+    TH2D* lanex_xy_gamma = new TH2D("lanex_xy_gamma", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
+    TH2D* lanex_xy_muminus = new TH2D("lanex_xy_muminus", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
+    TH2D* lanex_xy_muplus = new TH2D("lanex_xy_muplus", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
     
+    const double vtxz0 = -150.0;
+    const double vtxz1 = 250.0;
+    const double vtxx0 = -75.0;
+    const double vtxx1 = 75.0;
+    TH2D* lanex_vtxz_vtxx_all = new TH2D("lanex_vtxz_vtxx_all", "", nbins, vtxz0, vtxz1, nbins, vtxx0, vtxx1);
+    TH2D* lanex_vtxz_vtxx_electron = new TH2D("lanex_vtxz_vtxx_electron", "", nbins, vtxz0, vtxz1, nbins, vtxx0, vtxx1);
+    TH2D* lanex_vtxz_vtxx_positron = new TH2D("lanex_vtxz_vtxx_positron", "", nbins, vtxz0, vtxz1, nbins, vtxx0, vtxx1);
+    TH2D* lanex_vtxz_vtxx_gamma = new TH2D("lanex_vtxz_vtxx_gamma", "", nbins, vtxz0, vtxz1, nbins, vtxx0, vtxx1);
+    TH2D* lanex_vtxz_vtxx_muminus = new TH2D("lanex_vtxz_vtxx_muminus", "", nbins, vtxz0, vtxz1, nbins, vtxx0, vtxx1);
+    TH2D* lanex_vtxz_vtxx_muplus = new TH2D("lanex_vtxz_vtxx_muplus", "", nbins, vtxz0, vtxz1, nbins, vtxx0, vtxx1);
+
     const double pxx0 = -0.1;
     const double pxx1 = 0.1;
     const double pyy0 = -0.1;
@@ -180,12 +198,16 @@ int apollon_hits_process(std::string fnamelist) {
     
     int evid, pdg, procid, detid;
     double xx, yy, zz;
+    double vtxx, vtxy, vtxz;
     double ekin, edep;
 
     hitstree->SetBranchAddress("evid", &evid);
     hitstree->SetBranchAddress("x", &xx);
     hitstree->SetBranchAddress("y", &yy);
     hitstree->SetBranchAddress("z", &zz);
+    hitstree->SetBranchAddress("vtxx", &vtxx);
+    hitstree->SetBranchAddress("vtxy", &vtxy);
+    hitstree->SetBranchAddress("vtxz", &vtxz);
     hitstree->SetBranchAddress("edep", &edep);
     hitstree->SetBranchAddress("eKin", &ekin);
     hitstree->SetBranchAddress("pdg", &pdg);
@@ -297,36 +319,48 @@ int apollon_hits_process(std::string fnamelist) {
                 kapton_edep_xy_muplus->Fill(xx, yy, edep);
             }
         }
-        else if (detid == 3) {
+        else if (detid == 3) { // spectrometer LANEX screen
             lanex_pdg_all->Fill(pdg);
             if(ekin > -1.0) lanex_kenergy_all->Fill(ekin);
             lanex_edep_z_all->Fill(zz, edep);
+            lanex_xy_all->Fill(xx, yy);
             lanex_edep_xy_all->Fill(xx, yy, edep);
+            lanex_vtxz_vtxx_all->Fill(vtxz, vtxx);
 
             if (pdg==11) { 
                 if(ekin > -1.0) lanex_kenergy_electron->Fill(ekin);
                 lanex_edep_z_electron->Fill(zz, edep);
+                lanex_xy_electron->Fill(xx, yy);
                 lanex_edep_xy_electron->Fill(xx, yy, edep);
+                lanex_vtxz_vtxx_electron->Fill(vtxz, vtxx);
             }
             else if (pdg == -11) {
                 if(ekin > -1.0) lanex_kenergy_positron->Fill(ekin);
                 lanex_edep_z_positron->Fill(zz, edep);
+                lanex_xy_positron->Fill(xx, yy);
                 lanex_edep_xy_positron->Fill(xx, yy, edep);
+                lanex_vtxz_vtxx_positron->Fill(vtxz, vtxx);
             }
             else if (pdg == 22) {
                 if(ekin > -1.0) lanex_kenergy_gamma->Fill(ekin);
                 lanex_edep_z_gamma->Fill(zz, edep);
+                lanex_xy_gamma->Fill(xx, yy);
                 lanex_edep_xy_gamma->Fill(xx, yy, edep);
+                lanex_vtxz_vtxx_gamma->Fill(vtxz, vtxx);
             }
             else if (pdg == 13) {
                 if(ekin > -1.0) lanex_kenergy_muminus->Fill(ekin);
                 lanex_edep_z_muminus->Fill(zz, edep);
+                lanex_xy_muminus->Fill(xx, yy);
                 lanex_edep_xy_muminus->Fill(xx, yy, edep);
+                lanex_vtxz_vtxx_muminus->Fill(vtxz, vtxx);
             }
             else if (pdg == -13) {
                 if(ekin > -1.0) lanex_kenergy_muplus->Fill(ekin);
                 lanex_edep_z_muplus->Fill(zz, edep);
+                lanex_xy_muplus->Fill(xx, yy);
                 lanex_edep_xy_muplus->Fill(xx, yy, edep);
+                lanex_vtxz_vtxx_muplus->Fill(vtxz, vtxx);
             }
         }
     }
