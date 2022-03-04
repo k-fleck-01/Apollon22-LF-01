@@ -185,8 +185,8 @@ int apollon_hits_process(std::string fnamelist) {
     const double pxx1 = 0.1;
     const double pyy0 = -0.1;
     const double pyy1 = 0.1;
-    TH2D* primary_profile_xy = new TH2D("primary_profile_xy", nbins, pxx0, pxx1, nbins, pyy0, pyy1);
-    TH1D* primary_profile_energy = new TH1D("primary_profile_energy", 200, 0.0, 2000.0);
+    TH2D* primary_profile_xy = new TH2D("primary_profile_xy", "", nbins, pxx0, pxx1, nbins, pyy0, pyy1);
+    TH1D* primary_profile_energy = new TH1D("primary_profile_energy", "", 200, 0.0, 2000.0);
     // *
     // Processing hits TChain
     // *
