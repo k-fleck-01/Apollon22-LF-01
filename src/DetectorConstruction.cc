@@ -30,7 +30,7 @@
 #include "G4FieldManager.hh"
 
 #include "G4RunManager.hh"
-//#include "G4GDMLParser.hh"
+#include "G4GDMLParser.hh"
 
 DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction(), fDetectorMessenger(0), 
                       fLogicChamberMagField(0), fLogicSpecMagField(0), fMagnetStrength(0.6*tesla) {
@@ -71,6 +71,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
 
     G4Material* g4Vacuum    = nist->FindOrBuildMaterial("G4_Galactic");
     G4Material* g4Air       = nist->FindOrBuildMaterial("G4_AIR");
+    G4Material* g4Helium    = nist->FindOrBuildMaterial("G4_He");
     G4Material* g4Lead      = nist->FindOrBuildMaterial("G4_Pb");
     G4Material* g4Aluminium = nist->FindOrBuildMaterial("G4_Al");
     G4Material* g4Iron      = nist->FindOrBuildMaterial("G4_Fe");
@@ -129,6 +130,37 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
 
     const G4double relToChamberWall = -2090.*mm/2.;
 
+    // Interior dividing wall
+    G4Box* solidInnerDivide = new G4Box("innerDivide",
+                                        1190.*mm/2.,
+                                        1074.*mm/2.,
+                                        10.*mm/2.);
+    G4LogicalVolume* logicInnerDivide = new G4LogicalVolume(solidInnerDivide, g4Aluminium, "lInnerDivide");
+    G4VPhysicalVolume* physInnerDivide = new G4PVPlacement(0,
+                                                           G4ThreeVector(0., 0., relToChamberWall + 5.*mm + 704.*mm),
+                                                           logicInnerDivide,
+                                                           "InnerDivide",
+                                                           logicChamberInner,
+                                                           false,
+                                                           0,
+                                                           checkOverlaps);
+
+    G4Tubs* solidDivideHole = new G4Tubs("divideHole",
+                                       0.,
+                                       52.*mm/2.,
+                                       10.*mm/2.,
+                                       0.,
+                                       360.*deg);
+    G4LogicalVolume* logicDivideHole = new G4LogicalVolume(solidDivideHole, g4Vacuum, "lDivideHole");
+    G4VPhysicalVolume* physDivideHole = new G4PVPlacement(0,
+                                                          G4ThreeVector(),
+                                                          logicDivideHole,
+                                                          "DivideHole",
+                                                          logicInnerDivide,
+                                                          false,
+                                                          0,
+                                                          checkOverlaps);
+
     // Gas cell
     G4Box* solidGasCellOuter = new G4Box("gasCellOuter",
                                           40.*mm/2.,
@@ -150,7 +182,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                           30.*mm/2.,
                                           40.*mm/2.);
 
-    G4LogicalVolume* logicGasCellInner = new G4LogicalVolume(solidGasCellInner, g4Air, "lGasCellInner");
+    G4LogicalVolume* logicGasCellInner = new G4LogicalVolume(solidGasCellInner, g4Helium, "lGasCellInner");
     G4VPhysicalVolume* physGasCellInner = new G4PVPlacement(0,
                                                             G4ThreeVector(),
                                                             logicGasCellInner,
@@ -163,9 +195,9 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4Box* solidGasCellSlit = new G4Box("gasCellSlit",
                                         15.0*mm/2.,
                                         24.0*mm/2.,
-                                        5.*mm/2.);
+                                        10.*mm/2.);
 
-    G4LogicalVolume* logicGasCellSlit = new G4LogicalVolume(solidGasCellSlit, g4Air, "lGasCellSlit");
+    G4LogicalVolume* logicGasCellSlit = new G4LogicalVolume(solidGasCellSlit, g4Helium, "lGasCellSlit");
     G4VPhysicalVolume* physGasCellSlitFront = new G4PVPlacement(0,
                                                                 G4ThreeVector(0., 0., -25.*mm),
                                                                 logicGasCellSlit,
@@ -195,7 +227,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     // Rotation matrix to correctly align wedge
     G4RotationMatrix* rotMatrix = new G4RotationMatrix();
     rotMatrix->rotateX(90.*deg);
-    rotMatrix->rotateZ(180.*deg);
+    //rotMatrix->rotateZ(180.*deg);
     G4VPhysicalVolume* physWedge = new G4PVPlacement(rotMatrix,
                                                      G4ThreeVector(0., 0., relToChamberWall + 12.65*mm + 1018.*mm),
                                                      logicWedge,
@@ -213,7 +245,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
 
     G4LogicalVolume* logicMask = new G4LogicalVolume(solidMask, g4Iron, "lMask");
     G4VPhysicalVolume* physMask = new G4PVPlacement(0,
-                                                    G4ThreeVector(0., 0., relToChamberWall + 2.5*mm + 1158.9*mm),
+                                                    G4ThreeVector(0., 0., relToChamberWall + 2.5*mm + 1159.8*mm),
                                                     logicMask,
                                                     "Mask",
                                                     logicChamberInner,
@@ -262,7 +294,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
 
     G4LogicalVolume* logicLeadWallFront = new G4LogicalVolume(solidLeadWallFront, g4Lead, "lLeadWallFront");
     G4VPhysicalVolume* physLeadWallFront = new G4PVPlacement(0,
-                                                             G4ThreeVector(0., 0., relToChamberWall + 50.*mm + 1189.9*mm),
+                                                             G4ThreeVector(0., 0., relToChamberWall + 50.*mm + 1190.8*mm),
                                                              logicLeadWallFront,
                                                              "LeadWallFront",
                                                              logicChamberInner,
@@ -338,9 +370,9 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 
     // Exporting geometry to GDML
-    //G4GDMLParser* gdmlParser = new G4GDMLParser();
-    //gdmlParser->Write("apollon_g4geometry.gdml", physWorld);
-    //delete gdmlParser;
+    G4GDMLParser* gdmlParser = new G4GDMLParser();
+    gdmlParser->Write("apollon_g4geometry.gdml", physWorld);
+    delete gdmlParser;
     
     return physWorld;
 
