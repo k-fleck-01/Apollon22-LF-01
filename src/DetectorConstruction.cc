@@ -16,8 +16,10 @@
 
 #include "G4Box.hh"
 #include "G4Tubs.hh"
+#include "G4Trap.hh"
 #include "G4UnionSolid.hh"
 
+#include "G4RotationMatrix.hh"
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
 #include "G4VPhysicalVolume.hh"
@@ -98,9 +100,9 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
 
     // Chamber volume
     G4Box* solidChamberOuter = new G4Box("chamberOuter",
-                                    625.*mm,
-                                    567.*mm,
-                                    1075.*mm);
+                                    1250.*mm/2.,
+                                    1134.*mm/2.,
+                                    2150.*mm/2.);
     G4LogicalVolume* logicChamberOuter = new G4LogicalVolume(solidChamberOuter, g4Aluminium, "lChamberOuter");
     G4VPhysicalVolume* physChamberOuter = new G4PVPlacement(0,
                                                             G4ThreeVector(0., 0., -2500.*mm),
@@ -112,9 +114,9 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                             checkOverlaps);
 
     G4Box* solidChamberInner = new G4Box("chamberInner",
-                                         575.*mm,
-                                         517.*mm,
-                                         1025.*mm);
+                                         1190.*mm/2.,
+                                         1074.*mm/2.,
+                                         2090.*mm/2.);
     G4LogicalVolume* logicChamberInner = new G4LogicalVolume(solidChamberInner, g4Vacuum, "lChamberInner");
     G4VPhysicalVolume* physChamberInner = new G4PVPlacement(0, 
                                                             G4ThreeVector(),
@@ -125,11 +127,212 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                             0,
                                                             checkOverlaps);
 
+    const G4double relToChamberWall = -2090.*mm/2.;
+
+    // Gas cell
+    G4Box* solidGasCellOuter = new G4Box("gasCellOuter",
+                                          40.*mm/2.,
+                                          50.*mm/2.,
+                                          60.*mm/2.);
+
+    G4LogicalVolume* logicGasCellOuter = new G4LogicalVolume(solidGasCellOuter, g4Aluminium, "lGasCellOuter");
+    G4VPhysicalVolume* physGasCellOuter = new G4PVPlacement(0,
+                                                            G4ThreeVector(0., 0., relToChamberWall + 30.0*mm + 940.0*mm),
+                                                            logicGasCellOuter,
+                                                            "GasCellOuter",
+                                                            logicChamberInner,
+                                                            false,
+                                                            0,
+                                                            checkOverlaps);
+
+    G4Box* solidGasCellInner = new G4Box("gasCellInner",
+                                          39.9*mm/2.,
+                                          30.*mm/2.,
+                                          40.*mm/2.);
+
+    G4LogicalVolume* logicGasCellInner = new G4LogicalVolume(solidGasCellInner, g4Air, "lGasCellInner");
+    G4VPhysicalVolume* physGasCellInner = new G4PVPlacement(0,
+                                                            G4ThreeVector(),
+                                                            logicGasCellInner,
+                                                            "GasCellInner",
+                                                            logicGasCellOuter,
+                                                            false,
+                                                            0,
+                                                            checkOverlaps);
+
+    G4Box* solidGasCellSlit = new G4Box("gasCellSlit",
+                                        15.0*mm/2.,
+                                        24.0*mm/2.,
+                                        5.*mm/2.);
+
+    G4LogicalVolume* logicGasCellSlit = new G4LogicalVolume(solidGasCellSlit, g4Air, "lGasCellSlit");
+    G4VPhysicalVolume* physGasCellSlitFront = new G4PVPlacement(0,
+                                                                G4ThreeVector(0., 0., -25.*mm),
+                                                                logicGasCellSlit,
+                                                                "GasCellSlitFront",
+                                                                logicGasCellOuter,
+                                                                false,
+                                                                0,
+                                                                checkOverlaps);
+    G4VPhysicalVolume* physGasCellSlitBack = new G4PVPlacement(0,
+                                                                G4ThreeVector(0., 0., 25.*mm),
+                                                                logicGasCellSlit,
+                                                                "GasCellSlitBack",
+                                                                logicGasCellOuter,
+                                                                false,
+                                                                0,
+                                                                checkOverlaps);
+
+    // Converter wedge
+    G4Trap* solidWedge = new G4Trap("wedge",  // Full lengths are used in G4Trap - right angular trapezoid
+                                    20.0*mm,  // Depth of wedge (along z)
+                                    25.3*mm,  // Length along y
+                                    50.0*mm,  // Widest part along x
+                                    25.0*mm); // Shortest side along x
+
+    G4LogicalVolume* logicWedge = new G4LogicalVolume(solidWedge, g4Aluminium, "lWedge");
+
+    // Rotation matrix to correctly align wedge
+    G4RotationMatrix* rotMatrix = new G4RotationMatrix();
+    rotMatrix->rotateX(90.*deg);
+    rotMatrix->rotateZ(180.*deg);
+    G4VPhysicalVolume* physWedge = new G4PVPlacement(rotMatrix,
+                                                     G4ThreeVector(0., 0., relToChamberWall + 12.65*mm + 1018.*mm),
+                                                     logicWedge,
+                                                     "Wedge",
+                                                     logicChamberInner,
+                                                     false,
+                                                     0,
+                                                     checkOverlaps);
     
+    // Emittance mask
+    G4Box* solidMask = new G4Box("mask",
+                                 40.*mm/2.,
+                                 30.*mm/2.,
+                                 5.*mm/2.);
+
+    G4LogicalVolume* logicMask = new G4LogicalVolume(solidMask, g4Iron, "lMask");
+    G4VPhysicalVolume* physMask = new G4PVPlacement(0,
+                                                    G4ThreeVector(0., 0., relToChamberWall + 2.5*mm + 1158.9*mm),
+                                                    logicMask,
+                                                    "Mask",
+                                                    logicChamberInner,
+                                                    false,
+                                                    0,
+                                                    checkOverlaps);
+
+    // Aluminium plate
+    G4Box* solidPlate = new G4Box("plate",
+                                  100.*mm/2.,
+                                  100.*mm/2.,
+                                  3.*mm/2.);
+
+    G4LogicalVolume* logicPlate = new G4LogicalVolume(solidPlate, g4Aluminium, "lPlate");
+    G4VPhysicalVolume* physPlate = new G4PVPlacement(0,
+                                                     G4ThreeVector(0., 0., relToChamberWall + 1.5*mm + 1172.3*mm),
+                                                     logicPlate,
+                                                     "Plate",
+                                                     logicChamberInner,
+                                                     false,
+                                                     0,
+                                                     checkOverlaps);
+
+    G4Tubs* solidPlateHole = new G4Tubs("hole",
+                                        0.,        // inner radius
+                                        3.5*mm/2., // outer radius
+                                        3.*mm/2.,  // half length
+                                        0.,        // starting azimuth angle
+                                        360.*deg); // angular segment
+
+    G4LogicalVolume* logicPlateHole = new G4LogicalVolume(solidPlateHole, g4Vacuum, "lPlateHole");
+    G4VPhysicalVolume* physPlateHole = new G4PVPlacement(0,
+                                                         G4ThreeVector(),
+                                                         logicPlateHole,
+                                                         "PlateHole",
+                                                         logicPlate,
+                                                         false,
+                                                         0,
+                                                         checkOverlaps);
+
+    // Lead walls
+    G4Box* solidLeadWallFront = new G4Box("leadWallFront",
+                                          475.*mm/2.,
+                                          285.*mm/2.,
+                                          100.*mm/2.);
+
+    G4LogicalVolume* logicLeadWallFront = new G4LogicalVolume(solidLeadWallFront, g4Lead, "lLeadWallFront");
+    G4VPhysicalVolume* physLeadWallFront = new G4PVPlacement(0,
+                                                             G4ThreeVector(0., 0., relToChamberWall + 50.*mm + 1189.9*mm),
+                                                             logicLeadWallFront,
+                                                             "LeadWallFront",
+                                                             logicChamberInner,
+                                                             false,
+                                                             0,
+                                                             checkOverlaps);
+
+    G4Box* solidLeadWallRear = new G4Box("leadWallRear",
+                                          855.*mm/2.,
+                                          285.*mm/2.,
+                                          100.*mm/2.);
+
+    G4LogicalVolume* logicLeadWallRear = new G4LogicalVolume(solidLeadWallRear, g4Lead, "lLeadWallRear");
+    G4VPhysicalVolume* physLeadWallRear = new G4PVPlacement(0,
+                                                             G4ThreeVector(0., 0., relToChamberWall + 50.*mm + 1339.9*mm),
+                                                             logicLeadWallRear,
+                                                             "LeadWallRear",
+                                                             logicChamberInner,
+                                                             false,
+                                                             0,
+                                                             checkOverlaps);
+                                        
+    // Vacuum chamber magnet
+    G4Box* solidMagCore = new G4Box("magCore",
+                                    360.*mm/2.,
+                                    350.*mm/2.,
+                                    270.*mm/2.);
+    G4LogicalVolume* logicMagCore = new G4LogicalVolume(solidMagCore, g4Iron, "lMagCore");
+    G4VPhysicalVolume* physMagCore = new G4PVPlacement(0,
+                                                       G4ThreeVector(0., 0., relToChamberWall + 135.*mm + 1525.*mm),
+                                                       logicMagCore,
+                                                       "MagCore",
+                                                       logicChamberInner,
+                                                       false,
+                                                       0,
+                                                       checkOverlaps);
+
+    G4Box* solidMagGap = new G4Box("magGap",
+                                   242.*mm/2.,
+                                   18.*mm/2.,
+                                   270.*mm/2.);
+    G4LogicalVolume* logicMagGap  = new G4LogicalVolume(solidMagGap, g4Vacuum, "lMagGap");
+    G4VPhysicalVolume* physMagGap = new G4PVPlacement(0,
+                                                      G4ThreeVector(-59.*mm, 0., 0.),
+                                                      logicMagGap,
+                                                      "MagGap",
+                                                      logicMagCore,
+                                                      false,
+                                                      0,
+                                                      checkOverlaps);
+
+    // Kapton window for chamber
+    G4Box* solidWindow = new G4Box("window",
+                                   945.*mm/2.,
+                                   40.*mm/2.,
+                                   30.*mm/2.);
+
+    G4LogicalVolume* logicWindow = new G4LogicalVolume(solidWindow, g4Kapton, "lWindow");
+    G4VPhysicalVolume* physWindow = new G4PVPlacement(0,
+                                                      G4ThreeVector(0., 0., 1060.*mm),
+                                                      logicWindow,
+                                                      "Window",
+                                                      logicChamberOuter,
+                                                      false,
+                                                      0,
+                                                      checkOverlaps);
     
     // Assign magnetic fields to logical volumes
-    fLogicChamberMagField = logicMagFld;
-    fLogicSpecMagField    = logicSpecMagGap;
+    //fLogicChamberMagField = logicMagFld;
+    //fLogicSpecMagField    = logicSpecMagGap;
 
     // Print material table
     G4cout << *(G4Material::GetMaterialTable()) << G4endl;
@@ -137,7 +340,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     // Exporting geometry to GDML
     //G4GDMLParser* gdmlParser = new G4GDMLParser();
     //gdmlParser->Write("apollon_g4geometry.gdml", physWorld);
-    delete gdmlParser;
+    //delete gdmlParser;
     
     return physWorld;
 
@@ -149,7 +352,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
 }
 
 void DetectorConstruction::ConstructSDandField() {
-
+/*
     G4SDManager* SDManager = G4SDManager::GetSDMpointer();
 
     SensitiveDetector* sd = new SensitiveDetector("sd");
@@ -172,7 +375,7 @@ void DetectorConstruction::ConstructSDandField() {
     localSpecFldManager->SetDetectorField(specMagField);
     localSpecFldManager->CreateChordFinder(specMagField);
     fLogicSpecMagField->SetFieldManager(localSpecFldManager, true);
-
+*/
 }
 
 
