@@ -24,20 +24,14 @@ class DetectorConstruction : public G4VUserDetectorConstruction {
 
         void DefineMaterials();
         G4VPhysicalVolume* DefineVolumes();
-        virtual void SetTargetMagnetSep(G4double);
-        virtual void SetMagnetLength(G4double);
         virtual void SetMagnetStrength(G4double);
-        virtual void SetMagnetDetSep(G4double);
 
     private:
         DetectorMessenger* fDetectorMessenger;
         G4LogicalVolume* fLogicChamberMagField;
         G4LogicalVolume* fLogicSpecMagField;
 
-        G4double fTargetMagnetSep;
-        G4double fMagnetLength;
         G4double fMagnetStrength;
-        G4double fMagnetDetSep;
 
 };
 

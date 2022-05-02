@@ -2,7 +2,7 @@
 // GEANT4 simulation of the Apollon 2022 experiment.
 // Geometry has been derived from the FLUKA simulation of the same experiment.
 // 
-// Source file for DetectorConstruction class
+// Source file for DetectorConstruction class.
 //
 
 #include "DetectorConstruction.hh"
@@ -30,9 +30,8 @@
 #include "G4RunManager.hh"
 //#include "G4GDMLParser.hh"
 
-DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction(), fDetectorMessenger(0), fLogicChamberMagField(0),
-                     fLogicSpecMagField(0), fTargetMagnetSep(30.*cm), fMagnetLength(15.*cm), fMagnetStrength(0.6*tesla),
-                     fMagnetDetSep(30.*cm) {
+DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction(), fDetectorMessenger(0), 
+                      fLogicChamberMagField(0), fLogicSpecMagField(0), fMagnetStrength(0.6*tesla) {
 
     DefineMaterials();
     fDetectorMessenger = new DetectorMessenger(this);
@@ -49,7 +48,8 @@ void DetectorConstruction::DefineMaterials() {
     G4bool isotopes = false;
 
     // YAG (yttrium aluminium garnet)
-    // Compositional information taken from: https://www.americanelements.com/cerium-doped-yttrium-aluminum-garnet-163584-80-3
+    // Compositional information taken from: 
+    // https://www.americanelements.com/cerium-doped-yttrium-aluminum-garnet-163584-80-3
     G4Element* elY  = nist->FindOrBuildElement("Y", isotopes);
     G4Element* elAl = nist->FindOrBuildElement("Al", isotopes);
     G4Element* elO  = nist->FindOrBuildElement("O", isotopes);
@@ -429,7 +429,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     // Exporting geometry to GDML
     //G4GDMLParser* gdmlParser = new G4GDMLParser();
     //gdmlParser->Write("apollon_g4geometry.gdml", physWorld);
-    //delete gdmlParser;
+    delete gdmlParser;
     
     return physWorld;
 
@@ -459,7 +459,7 @@ void DetectorConstruction::ConstructSDandField() {
     localChamberFldManager->CreateChordFinder(chamberMagField);
     fLogicChamberMagField->SetFieldManager(localChamberFldManager, true);
 
-    G4MagneticField* specMagField = new G4UniformMagField(G4ThreeVector(0., -1.*fMagnetStrength, 0.));
+    G4MagneticField* specMagField = new G4UniformMagField(G4ThreeVector(0., fMagnetStrength, 0.));
     G4FieldManager* localSpecFldManager = new G4FieldManager(specMagField);
     localSpecFldManager->SetDetectorField(specMagField);
     localSpecFldManager->CreateChordFinder(specMagField);
@@ -467,30 +467,10 @@ void DetectorConstruction::ConstructSDandField() {
 
 }
 
-void DetectorConstruction::SetTargetMagnetSep(G4double val) {
-
-    fTargetMagnetSep = val;
-    G4RunManager::GetRunManager()->ReinitializeGeometry();
-
-}
-
-void DetectorConstruction::SetMagnetLength(G4double val) {
-
-    fMagnetLength = val;
-    G4RunManager::GetRunManager()->ReinitializeGeometry();
-
-}
 
 void DetectorConstruction::SetMagnetStrength(G4double val) {
 
     fMagnetStrength = val;
-    G4RunManager::GetRunManager()->ReinitializeGeometry();
-
-}
-
-void DetectorConstruction::SetMagnetDetSep(G4double val) {
-
-    fMagnetDetSep = val;
     G4RunManager::GetRunManager()->ReinitializeGeometry();
 
 }

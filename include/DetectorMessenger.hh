@@ -25,10 +25,8 @@ class DetectorMessenger : public G4UImessenger {
     private:
         DetectorConstruction* fDetector;
         G4UIdirectory*        fSpecDir;
-        G4UIcmdWithADoubleAndUnit* fTargetMagnetSepCmd;
-        G4UIcmdWithADoubleAndUnit* fMagnetLengthCmd;
         G4UIcmdWithADoubleAndUnit* fMagnetStrengthCmd;
-        G4UIcmdWithADoubleAndUnit* fMagnetDetSepCmd;
+
 
 };
 
