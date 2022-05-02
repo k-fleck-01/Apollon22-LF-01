@@ -218,7 +218,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     // Converter wedge
     G4Trap* solidWedge = new G4Trap("wedge",  // Full lengths are used in G4Trap - right angular trapezoid
                                     20.0*mm,  // Depth of wedge (along z)
-                                    25.3*mm,  // Length along y
+                                    24.4*mm,  // Length along y
                                     50.0*mm,  // Widest part along x
                                     25.0*mm); // Shortest side along x
 
@@ -227,9 +227,9 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     // Rotation matrix to correctly align wedge
     G4RotationMatrix* rotMatrix = new G4RotationMatrix();
     rotMatrix->rotateX(90.*deg);
-    //rotMatrix->rotateZ(180.*deg);
+    rotMatrix->rotateY(180.*deg);
     G4VPhysicalVolume* physWedge = new G4PVPlacement(rotMatrix,
-                                                     G4ThreeVector(0., 0., relToChamberWall + 12.65*mm + 1018.*mm),
+                                                     G4ThreeVector(10.*mm, 0., relToChamberWall + 12.2*mm + 1018.*mm),
                                                      logicWedge,
                                                      "Wedge",
                                                      logicChamberInner,
@@ -245,7 +245,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
 
     G4LogicalVolume* logicMask = new G4LogicalVolume(solidMask, g4Iron, "lMask");
     G4VPhysicalVolume* physMask = new G4PVPlacement(0,
-                                                    G4ThreeVector(0., 0., relToChamberWall + 2.5*mm + 1159.8*mm),
+                                                    G4ThreeVector(0., 0., relToChamberWall + 2.5*mm + 1158.9*mm),
                                                     logicMask,
                                                     "Mask",
                                                     logicChamberInner,
@@ -261,7 +261,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
 
     G4LogicalVolume* logicPlate = new G4LogicalVolume(solidPlate, g4Aluminium, "lPlate");
     G4VPhysicalVolume* physPlate = new G4PVPlacement(0,
-                                                     G4ThreeVector(0., 0., relToChamberWall + 1.5*mm + 1172.3*mm),
+                                                     G4ThreeVector(0., 0., relToChamberWall + 1.5*mm + 1171.4*mm),
                                                      logicPlate,
                                                      "Plate",
                                                      logicChamberInner,
@@ -294,7 +294,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
 
     G4LogicalVolume* logicLeadWallFront = new G4LogicalVolume(solidLeadWallFront, g4Lead, "lLeadWallFront");
     G4VPhysicalVolume* physLeadWallFront = new G4PVPlacement(0,
-                                                             G4ThreeVector(0., 0., relToChamberWall + 50.*mm + 1190.8*mm),
+                                                             G4ThreeVector(0., 0., relToChamberWall + 50.*mm + 1189.9*mm),
                                                              logicLeadWallFront,
                                                              "LeadWallFront",
                                                              logicChamberInner,
