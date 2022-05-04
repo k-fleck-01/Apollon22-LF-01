@@ -409,7 +409,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                  0.5*mm/2.);
     G4LogicalVolume* logicCr39 = new G4LogicalVolume(solidCr39, g4Cr39, "lCr39");
     G4VPhysicalVolume* physCr39 = new G4PVPlacement(0,
-                                                    G4ThreeVector(0., 0., -0.5*mm/2. - 21.*mm/2.),
+                                                    G4ThreeVector(0., 0., -21.*mm/2. + 0.5*mm/2.),
                                                     logicCr39,
                                                     "Cr39",
                                                     logicStackLayer,
