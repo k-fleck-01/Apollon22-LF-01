@@ -401,7 +401,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                         logicStack,       // mother logical volume
                                                         kZAxis,           // axis of replication
                                                         3,                // no. of replicas
-                                                        21.*mm);         // width of replica
+                                                        21.*mm);          // width of replica
     
     G4Box* solidCr39 = new G4Box("cr39",
                                  50.*mm/2.,
