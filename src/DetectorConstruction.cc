@@ -250,7 +250,6 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                  40.*mm/2.,
                                  30.*mm/2.,
                                  5.*mm/2.);
-
     G4LogicalVolume* logicMask = new G4LogicalVolume(solidMask, g4Iron, "lMask");
     G4VPhysicalVolume* physMask = new G4PVPlacement(0,
                                                     G4ThreeVector(0., 0., relToChamberWall + 2.5*mm + 1158.9*mm),
@@ -261,12 +260,65 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                     0,
                                                     checkOverlaps);
 
+    G4Box* solidMaskLayerSet = new G4Box("maskLayerSet",
+                                 40.*mm/2.,
+                                 25.5*mm/2.,
+                                 5.*mm/2.);
+    G4LogicalVolume* logicMaskLayerSet = new G4LogicalVolume(solidMaskLayerSet, g4Iron, "lMaskLayerSet");
+    G4VPhysicalVolume* physMaskLayerSet = new G4PVPlacement(0,
+                                                    G4ThreeVector(0., 0.25*mm, 0.),
+                                                    logicMaskLayerSet,
+                                                    "MaskLayerSet",
+                                                    logicMask,
+                                                    false,
+                                                    0,
+                                                    checkOverlaps);
+
+    G4Box* solidMaskLayer = new G4Box("maskLayer",
+                                        24.8*mm/2.,
+                                        1.7*mm/2.,
+                                        5.*mm/2.);
+    G4LogicalVolume* logicMaskLayer = new G4LogicalVolume(solidMaskLayer, g4Iron, "lMaskLayer");
+    G4VPhysicalVolume* physMaskLayer = new G4PVReplica("MaskLayer",
+                                                       logicMaskLayer,
+                                                       logicMaskLayerSet,
+                                                       kYAxis,
+                                                       15,
+                                                       1.7*mm);
+
+    G4Box* solidMaskFeSlit = new G4Box("maskFeSlit",
+                                       24.8*mm/2.,
+                                       0.85*mm/2.,
+                                       5.*mm/2.);
+    G4LogicalVolume* logicMaskFeSlit = new G4LogicalVolume(solidMaskFeSlit, g4Iron, "lMaskFeSlit");
+    G4VPhysicalVolume* physMaskFeSlit = new G4PVPlacement(0,
+                                                          G4ThreeVector(0., 0.425*mm, 0.),
+                                                          logicMaskFeSlit,
+                                                          "MaskFeSlit",
+                                                          logicMaskLayer,
+                                                          false,
+                                                          0,
+                                                          checkOverlaps);
+
+    G4Box* solidMaskSlit = new G4Box("maskSlit",
+                                       24.8*mm/2.,
+                                       0.85*mm/2.,
+                                       5.*mm/2.);
+    G4LogicalVolume* logicMaskSlit = new G4LogicalVolume(solidMaskSlit, g4Vacuum, "lMaskSlit");
+    G4VPhysicalVolume* physMaskSlit = new G4PVPlacement(0,
+                                                          G4ThreeVector(0., -0.425*mm, 0.),
+                                                          logicMaskSlit,
+                                                          "MaskSlit",
+                                                          logicMaskLayer,
+                                                          false,
+                                                          0,
+                                                          checkOverlaps);
+
     // Aluminium plate
     G4Box* solidPlate = new G4Box("plate",
                                   100.*mm/2.,
                                   100.*mm/2.,
                                   3.*mm/2.);
-
     G4LogicalVolume* logicPlate = new G4LogicalVolume(solidPlate, g4Aluminium, "lPlate");
     G4VPhysicalVolume* physPlate = new G4PVPlacement(0,
                                                      G4ThreeVector(0., 0., relToChamberWall + 1.5*mm + 1171.4*mm),
