@@ -76,6 +76,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4Material* g4Lead      = nist->FindOrBuildMaterial("G4_Pb");
     G4Material* g4Aluminium = nist->FindOrBuildMaterial("G4_Al");
     G4Material* g4Iron      = nist->FindOrBuildMaterial("G4_Fe");
+    G4Material* g4Steel     = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
     G4Material* g4YAG       = nist->FindOrBuildMaterial("YAG");
     G4Material* g4Kapton    = nist->FindOrBuildMaterial("G4_KAPTON");
     G4Material* g4Tungsten  = nist->FindOrBuildMaterial("G4_W");
@@ -112,7 +113,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                     1250.*mm/2.,
                                     1134.*mm/2.,
                                     2150.*mm/2.);
-    G4LogicalVolume* logicChamberOuter = new G4LogicalVolume(solidChamberOuter, g4Aluminium, "lChamberOuter");
+    G4LogicalVolume* logicChamberOuter = new G4LogicalVolume(solidChamberOuter, g4Steel, "lChamberOuter");
     G4VPhysicalVolume* physChamberOuter = new G4PVPlacement(0,
                                                             G4ThreeVector(0., 0., -2500.*mm),
                                                             logicChamberOuter,
@@ -143,7 +144,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                         1190.*mm/2.,
                                         1074.*mm/2.,
                                         10.*mm/2.);
-    G4LogicalVolume* logicInnerDivide = new G4LogicalVolume(solidInnerDivide, g4Aluminium, "lInnerDivide");
+    G4LogicalVolume* logicInnerDivide = new G4LogicalVolume(solidInnerDivide, g4Steel, "lInnerDivide");
     G4VPhysicalVolume* physInnerDivide = new G4PVPlacement(0,
                                                            G4ThreeVector(0., 0., relToChamberWall + 5.*mm + 704.*mm),
                                                            logicInnerDivide,
@@ -175,7 +176,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                           50.*mm/2.,
                                           60.*mm/2.);
 
-    G4LogicalVolume* logicGasCellOuter = new G4LogicalVolume(solidGasCellOuter, g4Aluminium, "lGasCellOuter");
+    G4LogicalVolume* logicGasCellOuter = new G4LogicalVolume(solidGasCellOuter, g4Steel, "lGasCellOuter");
     G4VPhysicalVolume* physGasCellOuter = new G4PVPlacement(0,
                                                             G4ThreeVector(0., 0., relToChamberWall + 30.0*mm + 940.0*mm),
                                                             logicGasCellOuter,
@@ -233,10 +234,10 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4LogicalVolume* logicWedge = new G4LogicalVolume(solidWedge, g4Aluminium, "lWedge");
 
     // Rotation matrix to correctly align wedge
-    G4RotationMatrix* rotMatrix = new G4RotationMatrix();
-    rotMatrix->rotateX(90.*deg);
-    rotMatrix->rotateY(180.*deg);
-    G4VPhysicalVolume* physWedge = new G4PVPlacement(rotMatrix,
+    G4RotationMatrix* wedgeRotMatrix = new G4RotationMatrix();
+    wedgeRotMatrix->rotateX(90.*deg);
+    wedgeRotMatrix->rotateY(180.*deg);
+    G4VPhysicalVolume* physWedge = new G4PVPlacement(wedgeRotMatrix,
                                                      G4ThreeVector(10.*mm, 0., relToChamberWall + 12.2*mm + 1018.*mm),
                                                      logicWedge,
                                                      "Wedge",
@@ -244,6 +245,24 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                      false,
                                                      0,
                                                      checkOverlaps);
+
+    // Kapton sheet
+    G4Box* solidKaptonSheet = new G4Box("kaptonSheet",
+                                        25.*mm/2.,
+                                        110.*mm/2.,
+                                        1.*mm/2.);
+    G4LogicalVolume* logicKaptonSheet = new G4LogicalVolume(solidKaptonSheet, g4Kapton, "lKaptonSheet");
+
+    G4RotationMatrix* kSheetRotMatrix = new G4RotationMatrix();
+    kSheetRotMatrix->rotateY(45.*deg);
+    G4VPhysicalVolume* physKaptonSheet = new G4PVPlacement(kSheetRotMatrix,
+                                                           G4ThreeVector(0., 0., relToChamberWall + 0.5*mm + 1009.5*mm),
+                                                           logicKaptonSheet,
+                                                           "KaptonSheet",
+                                                           logicChamberInner,
+                                                           false,
+                                                           0,
+                                                           checkOverlaps);
     
     // Emittance mask
     G4Box* solidMask = new G4Box("mask",
@@ -405,6 +424,43 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                       false,
                                                       0,
                                                       checkOverlaps);
+
+    // YAG screen
+    G4Box* solidYagScreen = new G4Box("yagScreen",
+                                      100.*mm/2.,
+                                      30.3*mm/2.,
+                                      2.*mm);
+    G4LogicalVolume* logicYagScreen = new G4LogicalVolume(solidYagScreen, g4YAG, "lYagScreen");
+
+    G4RotationMatrix* yagScreenRotMatrix = new G4RotationMatrix();
+    yagScreenRotMatrix->rotateX(-45.*deg);
+    G4VPhysicalVolume* physYagScreen = new G4PVPlacement(yagScreenRotMatrix,
+                                                         G4ThreeVector(50.*mm, 0., relToChamberWall + 0.1*mm + 1919.9*mm),
+                                                         logicYagScreen,
+                                                         "YagScreen",
+                                                         logicChamberInner,
+                                                         false,
+                                                         0,
+                                                         checkOverlaps);
+                                                    
+    // YAG stand
+    G4Trap* solidYagStand = new G4Trap("yagStand",  
+                                       100.*mm,  // Depth of wedge (along z)
+                                       524.8*mm,  // Length along y
+                                       195.*mm,  // Widest part along x
+                                       66.7*mm); // Shortest side along x
+    G4LogicalVolume* logicYagStand = new G4LogicalVolume(solidYagStand, g4Steel, "lYagStand");
+
+    G4RotationMatrix* yagStandRotMatrix = new G4RotationMatrix();
+    yagStandRotMatrix->rotateY(-90.*deg);
+    G4VPhysicalVolume* physYagStand = new G4PVPlacement(yagStandRotMatrix,
+                                                        G4ThreeVector(50.*mm, -12.2*mm -262.4*mm, relToChamberWall + 33.35*mm + 1919.9*mm),
+                                                        logicYagStand,
+                                                        "YagStand",
+                                                        logicChamberInner,
+                                                        false,
+                                                        0,
+                                                        checkOverlaps);
 
     // Kapton window for chamber
     G4Box* solidWindow = new G4Box("window",
