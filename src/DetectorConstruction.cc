@@ -79,6 +79,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4Material* g4Steel     = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
     G4Material* g4YAG       = nist->FindOrBuildMaterial("YAG");
     G4Material* g4Kapton    = nist->FindOrBuildMaterial("G4_KAPTON");
+    G4Material* g4Perspex   = nist->FindOrBuildMaterial("G4_PLEXIGLASS");  // Perspex trademark - PMMA or Plexiglass is generic name
     G4Material* g4Tungsten  = nist->FindOrBuildMaterial("G4_W");
     G4Material* g4Gadox     = nist->FindOrBuildMaterial("G4_GADOLINIUM_OXYSULFIDE");
     G4Material* g4Cr39      = nist->FindOrBuildMaterial("G4_CR39");
@@ -446,7 +447,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     // YAG stand
     G4Trap* solidYagStand = new G4Trap("yagStand",  
                                        100.*mm,  // Depth of wedge (along z)
-                                       524.8*mm,  // Length along y
+                                       290.*mm,  // Length along y
                                        195.*mm,  // Widest part along x
                                        66.7*mm); // Shortest side along x
     G4LogicalVolume* logicYagStand = new G4LogicalVolume(solidYagStand, g4Steel, "lYagStand");
@@ -454,7 +455,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4RotationMatrix* yagStandRotMatrix = new G4RotationMatrix();
     yagStandRotMatrix->rotateY(-90.*deg);
     G4VPhysicalVolume* physYagStand = new G4PVPlacement(yagStandRotMatrix,
-                                                        G4ThreeVector(50.*mm, -12.2*mm -262.4*mm, relToChamberWall + 33.35*mm + 1919.9*mm),
+                                                        G4ThreeVector(50.*mm, -12.2*mm -145.*mm, relToChamberWall + 33.35*mm + 1919.9*mm),
                                                         logicYagStand,
                                                         "YagStand",
                                                         logicChamberInner,
@@ -477,6 +478,21 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                       false,
                                                       0,
                                                       checkOverlaps);
+
+    // Perspex layer over kapton window
+    G4Box* solidPerspex = new G4Box("perspex",
+                                    945.*mm/2.,
+                                    40.*mm/2.,
+                                    4.*mm/2.);
+    G4LogicalVolume* logicPerspex = new G4LogicalVolume(solidPerspex, g4Perspex, "lPerspex");
+    G4VPhysicalVolume* physPerspex = new G4PVPlacement(0,
+                                                       G4ThreeVector(0., 0., -1425.*mm + 2.*mm),
+                                                       logicPerspex,
+                                                       "Perspex",
+                                                       logicWorld,
+                                                       false,
+                                                       0,
+                                                       checkOverlaps);
 
     //*************************************************************************
     //*************************************************************************
