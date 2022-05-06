@@ -225,7 +225,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                                 0,
                                                                 checkOverlaps);
 
-    // Converter wedge
+/*    // Converter wedge
     G4Trap* solidWedge = new G4Trap("wedge",  // Full lengths are used in G4Trap - right angular trapezoid
                                     20.0*mm,  // Depth of wedge (along z)
                                     24.4*mm,  // Length along y
@@ -246,7 +246,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                      false,
                                                      0,
                                                      checkOverlaps);
-
+*/
     // Kapton sheet
     G4Box* solidKaptonSheet = new G4Box("kaptonSheet",
                                         25.*mm/2.,
