@@ -76,6 +76,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4Material* g4Lead      = nist->FindOrBuildMaterial("G4_Pb");
     G4Material* g4Aluminium = nist->FindOrBuildMaterial("G4_Al");
     G4Material* g4Iron      = nist->FindOrBuildMaterial("G4_Fe");
+    G4Material* g4Tantalum  = nist->FindOrBuildMaterial("G4_Ta");
     G4Material* g4Steel     = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
     G4Material* g4YAG       = nist->FindOrBuildMaterial("YAG");
     G4Material* g4Kapton    = nist->FindOrBuildMaterial("G4_KAPTON");
@@ -138,7 +139,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                             0,
                                                             checkOverlaps);
 
-    const G4double relToChamberWall = -2090.*mm/2.;
+    constexpr G4double relToChamberWall = -2090.*mm/2.;
 
     // Interior dividing wall
     G4Box* solidInnerDivide = new G4Box("innerDivide",
@@ -225,14 +226,14 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                                 0,
                                                                 checkOverlaps);
 
-/*    // Converter wedge
+    // Converter wedge
     G4Trap* solidWedge = new G4Trap("wedge",  // Full lengths are used in G4Trap - right angular trapezoid
                                     20.0*mm,  // Depth of wedge (along z)
                                     24.4*mm,  // Length along y
                                     50.0*mm,  // Widest part along x
                                     25.0*mm); // Shortest side along x
 
-    G4LogicalVolume* logicWedge = new G4LogicalVolume(solidWedge, g4Aluminium, "lWedge");
+    G4LogicalVolume* logicWedge = new G4LogicalVolume(solidWedge, g4Tantalum, "lWedge");
 
     // Rotation matrix to correctly align wedge
     G4RotationMatrix* wedgeRotMatrix = new G4RotationMatrix();
@@ -246,7 +247,8 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                      false,
                                                      0,
                                                      checkOverlaps);
-*/
+
+
     // Kapton sheet
     G4Box* solidKaptonSheet = new G4Box("kaptonSheet",
                                         25.*mm/2.,
@@ -499,7 +501,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     // GAMMA SPECTROMETER GEOMETRY
     //*************************************************************************
     //*************************************************************************
-    const G4double relToChamberExit = -1425.*mm;
+    constexpr G4double relToChamberExit = -1425.*mm;
 
     //*************************************************************************
     //*************************************************************************
