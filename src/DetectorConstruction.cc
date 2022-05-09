@@ -257,7 +257,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4LogicalVolume* logicKaptonSheet = new G4LogicalVolume(solidKaptonSheet, g4Kapton, "lKaptonSheet");
 
     G4RotationMatrix* kSheetRotMatrix = new G4RotationMatrix();
-    kSheetRotMatrix->rotateY(45.*deg);
+    kSheetRotMatrix->rotateY(-45.*deg);
     G4VPhysicalVolume* physKaptonSheet = new G4PVPlacement(kSheetRotMatrix,
                                                            G4ThreeVector(0., 0., relToChamberWall + 0.5*mm + 1009.5*mm),
                                                            logicKaptonSheet,
@@ -427,6 +427,20 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                       false,
                                                       0,
                                                       checkOverlaps);
+
+    G4Box* solidMagField = new G4Box("magField",
+                                     100.*mm/2.,
+                                     18.*mm/2.,
+                                     270.*mm/2.);
+    G4LogicalVolume* logicMagField = new G4LogicalVolume(solidMagField, g4Vacuum, "lMagField");
+    G4VPhysicalVolume* physMagField = new G4PVPlacement(0,
+                                                        G4ThreeVector(91.*mm - 50.*mm, 0., 0.),
+                                                        logicMagField,
+                                                        "MagField",
+                                                        logicMagGap,
+                                                        false,
+                                                        0,
+                                                        checkOverlaps);
 
     // YAG screen
     G4Box* solidYagScreen = new G4Box("yagScreen",
@@ -617,7 +631,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
 
     // Exporting geometry to GDML
     G4GDMLParser* gdmlParser = new G4GDMLParser();
-    gdmlParser->Write("apollon_g4geometry_v2.gdml", physWorld);
+    //gdmlParser->Write("apollon_g4geometry_v2.gdml", physWorld);
     delete gdmlParser;
     
     return physWorld;
