@@ -503,6 +503,44 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     //*************************************************************************
     constexpr G4double relToChamberExit = -1425.*mm;
 
+    // Lead shielding
+    G4Box* solidLeadWallSpec = new G4Box("solidLeadWallSpec",
+                                         475.*mm/2.,
+                                         285.*mm/2.,
+                                         100.*mm/2.);
+    G4LogicalVolume* logicLeadWallSpec = new G4LogicalVolume(solidLeadWallSpec, g4Lead, "lLeadWallSpec");
+    G4VPhysicalVolume* physLeadWallSpecLower = new G4PVPlacement(0,
+                                                                 G4ThreeVector(-80.*mm -475.*mm/2. , 0., relToChamberExit + 50.*mm + 250.*mm),
+                                                                 logicLeadWallSpec,
+                                                                 "LeadWallSpecLower",
+                                                                 logicWorld,
+                                                                 false,
+                                                                 0,
+                                                                 checkOverlaps);
+    G4VPhysicalVolume* physLeadWallSpecUpper = new G4PVPlacement(0,
+                                                                 G4ThreeVector(80.*mm + 475.*mm/2., 0., relToChamberExit + 50.*mm + 250.*mm),
+                                                                 logicLeadWallSpec,
+                                                                 "LeadWallSpecUpper",
+                                                                 logicWorld,
+                                                                 false,
+                                                                 0,
+                                                                 checkOverlaps);
+
+    G4Box* soildLeadShieldAdd = new G4Box("solidLeadShieldAdd",
+                                          200.*mm/2.,
+                                          285.*mm/2.,
+                                          50.*mm/2.);
+    G4LogicalVolume* logicLeadShieldAdd = new G4LogicalVolume(soildLeadShieldAdd, g4Lead, "lLeadShieldAdd");
+    G4VPhysicalVolume* physLeadShieldAdd = new G4PVPlacement(0,
+                                                             G4ThreeVector(-80.*mm -100.*mm, 0., relToChamberExit + 25.*mm + 350.*mm),
+                                                             logicLeadShieldAdd,
+                                                             "LeadShieldAdd",
+                                                             logicWorld,
+                                                             false,
+                                                             0,
+                                                             checkOverlaps);
+
+
     //*************************************************************************
     //*************************************************************************
     // MUON SPECTROMETRY GEOMETRY
@@ -513,54 +551,27 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4Box* solidStack = new G4Box("stack",
                                   50.*mm/2.,
                                   50.*mm/2.,
-                                  63.*mm/2);
-    G4LogicalVolume* logicStack = new G4LogicalVolume(solidStack, g4Air, "lStack");
+                                  10.*mm/2);
+    G4LogicalVolume* logicStack = new G4LogicalVolume(solidStack, g4Cr39, "lStack");
 
     // Single layer of stack
-    G4Box* solidStackLayer = new G4Box("StackLayer",
-                                 50.*mm/2.,
-                                 50.*mm/2.,
-                                 21.*mm/2.);
-    G4LogicalVolume* logicStackLayer = new G4LogicalVolume(solidStackLayer, g4Air, "lStackLayer");
-    G4VPhysicalVolume* physStackLayer = new G4PVReplica("StackLayer",     // name
-                                                        logicStackLayer,  // logical volume
-                                                        logicStack,       // mother logical volume
-                                                        kZAxis,           // axis of replication
-                                                        3,                // no. of replicas
-                                                        21.*mm);          // width of replica
-    
     G4Box* solidCr39 = new G4Box("cr39",
                                  50.*mm/2.,
                                  50.*mm/2.,
                                  0.5*mm/2.);
     G4LogicalVolume* logicCr39 = new G4LogicalVolume(solidCr39, g4Cr39, "lCr39");
-    G4VPhysicalVolume* physCr39 = new G4PVPlacement(0,
-                                                    G4ThreeVector(0., 0., -21.*mm/2. + 0.5*mm/2.),
-                                                    logicCr39,
-                                                    "Cr39",
-                                                    logicStackLayer,
-                                                    false,
-                                                    0,
-                                                    checkOverlaps);
+    G4VPhysicalVolume* physCr39 = new G4PVReplica("Cr39",     // name
+                                                  logicCr39,  // logical volume
+                                                  logicStack,       // mother logical volume
+                                                  kZAxis,           // axis of replication
+                                                  20,               // no. of replicas
+                                                  0.5*mm);          // width of replica
 
-    G4Box* solidCr39Gap = new G4Box("cr39Gap",
-                                    50.*mm/2.,
-                                    50.*mm/2.,
-                                    20.5*mm/2.);
-    G4LogicalVolume* logicCr39Gap = new G4LogicalVolume(solidCr39Gap, g4Air, "lCr39Gap");
-    G4VPhysicalVolume* physCr39Gap = new G4PVPlacement(0, 
-                                                       G4ThreeVector(0., 0., 0.5*mm/2.),
-                                                       logicCr39Gap,
-                                                       "Cr39Gap",
-                                                       logicStackLayer,
-                                                       false,
-                                                       0,
-                                                       checkOverlaps);
 
     
     // Placement of stacks
     G4VPhysicalVolume* physStack1 = new G4PVPlacement(0,
-                                                      G4ThreeVector(61.*mm, 0., relToChamberExit + 1431.*mm),
+                                                      G4ThreeVector(-180.*mm -25.*mm, 25.*mm, relToChamberExit + 5.*mm + 400.*mm),
                                                       logicStack,
                                                       "Stack1",
                                                       logicWorld,
@@ -569,7 +580,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                       checkOverlaps);
 
     G4VPhysicalVolume* physStack2 = new G4PVPlacement(0,
-                                                      G4ThreeVector(0., 0., relToChamberExit + 1431.*mm),
+                                                      G4ThreeVector(-180.*mm + 25.*mm, 25.*mm, relToChamberExit + 5.*mm + 400.*mm),
                                                       logicStack,
                                                       "Stack2",
                                                       logicWorld,
@@ -578,9 +589,18 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                       checkOverlaps);
 
     G4VPhysicalVolume* physStack3 = new G4PVPlacement(0,
-                                                      G4ThreeVector(-61.*mm, 0., relToChamberExit + 1431.*mm),
+                                                      G4ThreeVector(-180.*mm -25.*mm, -25.*mm, relToChamberExit + 5.*mm + 400.*mm),
                                                       logicStack,
                                                       "Stack3",
+                                                      logicWorld,
+                                                      false,
+                                                      0,
+                                                      checkOverlaps);
+
+    G4VPhysicalVolume* physStack4 = new G4PVPlacement(0,
+                                                      G4ThreeVector(-180.*mm +25.*mm, -25.*mm, relToChamberExit + 5.*mm + 400.*mm),
+                                                      logicStack,
+                                                      "Stack4",
                                                       logicWorld,
                                                       false,
                                                       0,
@@ -597,7 +617,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
 
     // Exporting geometry to GDML
     G4GDMLParser* gdmlParser = new G4GDMLParser();
-    gdmlParser->Write("apollon_g4geometry.gdml", physWorld);
+    gdmlParser->Write("apollon_g4geometry_v2.gdml", physWorld);
     delete gdmlParser;
     
     return physWorld;
