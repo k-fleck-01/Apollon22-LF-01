@@ -510,9 +510,10 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                        0,
                                                        checkOverlaps);
 
+    
     //*************************************************************************
     //*************************************************************************
-    // GAMMA SPECTROMETER GEOMETRY
+    // MUON SPECTROMETRY GEOMETRY
     //*************************************************************************
     //*************************************************************************
     constexpr G4double relToChamberExit = -1425.*mm;
@@ -553,13 +554,6 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                              false,
                                                              0,
                                                              checkOverlaps);
-
-
-    //*************************************************************************
-    //*************************************************************************
-    // MUON SPECTROMETRY GEOMETRY
-    //*************************************************************************
-    //*************************************************************************
 
     // Cr-39 stacks
     G4Box* solidStack = new G4Box("stack",
@@ -620,10 +614,15 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                       0,
                                                       checkOverlaps);
 
+    //*************************************************************************
+    //*************************************************************************
+    // GAMMA SPECTROMETER GEOMETRY
+    //*************************************************************************
+    //*************************************************************************
     
     
     // Assign magnetic fields to logical volumes
-    //fLogicChamberMagField = logicMagFld;
+    fLogicChamberMagField = logicMagFld;
     //fLogicSpecMagField    = logicSpecMagGap;
 
     // Print material table
