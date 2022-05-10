@@ -34,7 +34,7 @@
 #include "G4GDMLParser.hh"
 
 DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction(), fDetectorMessenger(0), 
-                      fLogicChamberMagField(0), fLogicSpecMagField(0), fMagnetStrength(0.6*tesla) {
+                      fLogicChamberMagField(0), fLogicSpecMagField(0), fMagnetStrength(1.*tesla) {
 
     DefineMaterials();
     fDetectorMessenger = new DetectorMessenger(this);
@@ -451,14 +451,22 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
 
     G4RotationMatrix* yagScreenRotMatrix = new G4RotationMatrix();
     yagScreenRotMatrix->rotateX(-45.*deg);
-    G4VPhysicalVolume* physYagScreen = new G4PVPlacement(yagScreenRotMatrix,
-                                                         G4ThreeVector(50.*mm, 0., relToChamberWall + 0.1*mm + 1919.9*mm),
-                                                         logicYagScreen,
-                                                         "YagScreen",
-                                                         logicChamberInner,
-                                                         false,
-                                                         0,
-                                                         checkOverlaps);
+    G4VPhysicalVolume* physYagScreenUpper = new G4PVPlacement(yagScreenRotMatrix,
+                                                              G4ThreeVector(50.*mm + 50.*mm, 0., relToChamberWall + 0.1*mm + 1919.9*mm),
+                                                              logicYagScreen,
+                                                              "YagScreenUpper",
+                                                              logicChamberInner,
+                                                              false,
+                                                              0,
+                                                              checkOverlaps);
+    G4VPhysicalVolume* physYagScreenLower = new G4PVPlacement(yagScreenRotMatrix,
+                                                              G4ThreeVector(-50.*mm - 50.*mm, 0., relToChamberWall + 0.1*mm + 1919.9*mm),
+                                                              logicYagScreen,
+                                                              "YagScreenLower",
+                                                              logicChamberInner,
+                                                              false,
+                                                              0,
+                                                              checkOverlaps);
                                                     
     // YAG stand
     G4Trap* solidYagStand = new G4Trap("yagStand",  
@@ -470,14 +478,22 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
 
     G4RotationMatrix* yagStandRotMatrix = new G4RotationMatrix();
     yagStandRotMatrix->rotateY(-90.*deg);
-    G4VPhysicalVolume* physYagStand = new G4PVPlacement(yagStandRotMatrix,
-                                                        G4ThreeVector(50.*mm, -12.2*mm -145.*mm, relToChamberWall + 33.35*mm + 1919.9*mm),
-                                                        logicYagStand,
-                                                        "YagStand",
-                                                        logicChamberInner,
-                                                        false,
-                                                        0,
-                                                        checkOverlaps);
+    G4VPhysicalVolume* physYagStandUpper = new G4PVPlacement(yagStandRotMatrix,
+                                                             G4ThreeVector(50.*mm + 50.*mm, -12.2*mm -145.*mm, relToChamberWall + 33.35*mm + 1919.9*mm),
+                                                             logicYagStand,
+                                                             "YagStandUpper",
+                                                             logicChamberInner,
+                                                             false,
+                                                             0,
+                                                             checkOverlaps);
+    G4VPhysicalVolume* physYagStandLower = new G4PVPlacement(yagStandRotMatrix,
+                                                             G4ThreeVector(-50.*mm - 50.*mm, -12.2*mm -145.*mm, relToChamberWall + 33.35*mm + 1919.9*mm),
+                                                             logicYagStand,
+                                                             "YagStandLower",
+                                                             logicChamberInner,
+                                                             false,
+                                                             0,
+                                                             checkOverlaps);
 
     // Kapton window for chamber
     G4Box* solidWindow = new G4Box("window",
@@ -570,10 +586,10 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4LogicalVolume* logicCr39 = new G4LogicalVolume(solidCr39, g4Cr39, "lCr39");
     G4VPhysicalVolume* physCr39 = new G4PVReplica("Cr39",     // name
                                                   logicCr39,  // logical volume
-                                                  logicStack,       // mother logical volume
-                                                  kZAxis,           // axis of replication
-                                                  20,               // no. of replicas
-                                                  0.5*mm);          // width of replica
+                                                  logicStack, // mother logical volume
+                                                  kZAxis,     // axis of replication
+                                                  20,         // no. of replicas
+                                                  0.5*mm);    // width of replica
 
 
     
@@ -619,18 +635,161 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     // GAMMA SPECTROMETER GEOMETRY
     //*************************************************************************
     //*************************************************************************
+
+    // Lead blocks
+    G4Box* solidLeadBlock = new G4Box("leadBlock",
+                                      50.*mm/2.,
+                                      100.*mm/2.,
+                                      100.*mm/2.);
+    G4LogicalVolume* logicLeadBlock = new G4LogicalVolume(solidLeadBlock, g4Lead, "lLeadBlock");
+
+    G4VPhysicalVolume* physLBFrontUpper = new G4PVPlacement(0,
+                                                           G4ThreeVector(2.*mm + 50.*mm, 0., relToChamberExit + 50.*mm + 350.*mm),
+                                                           logicLeadBlock,
+                                                           "LBFrontUpper",
+                                                           logicWorld,
+                                                           false,
+                                                           0,
+                                                           checkOverlaps);
+    G4VPhysicalVolume* physLBFrontLower = new G4PVPlacement(0,
+                                                           G4ThreeVector(-2.*mm - 50.*mm, 0., relToChamberExit + 50.*mm + 350.*mm),
+                                                           logicLeadBlock,
+                                                           "LBFrontLower",
+                                                           logicWorld,
+                                                           false,
+                                                           0,
+                                                           checkOverlaps);
+
+    G4RotationMatrix* leadBlockRotMatrix = new G4RotationMatrix();
+    leadBlockRotMatrix->rotateY(90.*deg);
+    G4VPhysicalVolume* physLBBackLower = new G4PVPlacement(leadBlockRotMatrix,
+                                                           G4ThreeVector(-5.*mm - 50.*mm, 0., relToChamberExit + 25*mm + 512.5*mm),
+                                                           logicLeadBlock,
+                                                           "LBBackLower",
+                                                           logicWorld,
+                                                           false,
+                                                           0,
+                                                           checkOverlaps);
+    G4VPhysicalVolume* physLBBackUpper = new G4PVPlacement(leadBlockRotMatrix,
+                                                           G4ThreeVector(5.*mm + 50.*mm, 0., relToChamberExit + 25*mm + 512.5*mm),
+                                                           logicLeadBlock,
+                                                           "LBBackUpper",
+                                                           logicWorld,
+                                                           false,
+                                                           0,
+                                                           checkOverlaps);
+
+    // Rear collimator
+    G4Box* solidCollimator = new G4Box("collimator",
+                                       105.*mm/2.,
+                                       100.*mm/2.,
+                                       100.*mm/2.);
+    G4LogicalVolume* logicCollimator = new G4LogicalVolume(solidCollimator, g4Lead, "lCollimator");
+    G4VPhysicalVolume* physCollimator = new G4PVPlacement(0,
+                                                          G4ThreeVector(0, 0, relToChamberExit + 50.*mm + 575.*mm),
+                                                          logicCollimator,
+                                                          "Collimator",
+                                                          logicWorld,
+                                                          false,
+                                                          0,
+                                                          checkOverlaps);
+
+    G4Box* solidCollimatorGap = new G4Box("collimatorGap",
+                                          5.*mm/2.,
+                                          10.*mm/2.,
+                                          100.*mm/2.);
+    G4LogicalVolume* logicCollimatorGap = new G4LogicalVolume(solidCollimatorGap, g4Air, "lCollimatorGap");
+    G4VPhysicalVolume* physCollimatorGap = new G4PVPlacement(0,
+                                                             G4ThreeVector(),
+                                                             logicCollimatorGap,
+                                                             "CollimatorGap",
+                                                             logicCollimator,
+                                                             false,
+                                                             0,
+                                                             checkOverlaps);
     
+    // Gamma spectrometer dipole
+    G4Box* solidGSpecMagnet = new G4Box("gSpecMagnet",
+                                        80.*mm/2.,
+                                        30.*mm/2.,
+                                        50.*mm/2.);
+    G4LogicalVolume* logicGSpecMagnet = new G4LogicalVolume(solidGSpecMagnet, g4Iron, "lGSpecMagnet");
+    G4VPhysicalVolume* physGSpecMagnet = new G4PVPlacement(0,
+                                                           G4ThreeVector(0., 0., relToChamberExit + 25.*mm + 680.*mm),
+                                                           logicGSpecMagnet,
+                                                           "GSpecMagnet",
+                                                           logicWorld,
+                                                           false,
+                                                           0,
+                                                           checkOverlaps);
+
+    G4Box* solidGSpecMagGap = new G4Box("gSpecMagGap",
+                                        70.*mm/2.,
+                                        8.*mm/2.,
+                                        50.*mm/2.);
+    G4LogicalVolume* logicGSpecMagGap = new  G4LogicalVolume(solidGSpecMagGap, g4Air, "lGSpecMagGap");
+    G4VPhysicalVolume* physGSpecMagGap = new G4PVPlacement(0,
+                                                           G4ThreeVector(),
+                                                           logicGSpecMagGap,
+                                                           "GSpecMagGap",
+                                                           logicGSpecMagnet,
+                                                           false,
+                                                           0,
+                                                           checkOverlaps);
+
+    // LANEX mount
+    G4Box* solidLanexMount = new G4Box("lanexMount",
+                                       315.*mm/2.,
+                                       180.*mm/2.,
+                                       10.*mm/2.);
+    G4LogicalVolume* logicLanexMount = new G4LogicalVolume(solidLanexMount, g4Steel, "lLanexMount");
+    G4VPhysicalVolume* physLanexMount = new G4PVPlacement(0,
+                                                          G4ThreeVector(-15.*mm, 0., relToChamberExit + 5.*mm + 1380*mm),
+                                                          logicLanexMount,
+                                                          "LanexMount",
+                                                          logicWorld,
+                                                          false,
+                                                          0,
+                                                          checkOverlaps);
+
+    G4Box* solidLanexMountOpen = new G4Box("lanexMountOpen",
+                                           300.*mm/2.,
+                                           150.*mm/2.,
+                                           10.*mm/2.);
+    G4LogicalVolume* logicLanexMountOpen = new G4LogicalVolume(solidLanexMountOpen, g4Air, "lLanexMountOpent");
+    G4VPhysicalVolume* physLanexMountOpen = new G4PVPlacement(0,
+                                                              G4ThreeVector(15.*mm/2., 0., 0.),
+                                                              logicLanexMountOpen,
+                                                              "LanexMountOpen",
+                                                              logicLanexMount,
+                                                              false,
+                                                              0,
+                                                              checkOverlaps);
+
+    G4Box* solidLanexSheet = new G4Box("lanexSheet",
+                                       300.*mm/2.,
+                                       150.*mm/2.,
+                                       2.*mm/2.);
+    G4LogicalVolume* logicLanexSheet = new G4LogicalVolume(solidLanexSheet, g4Gadox, "lLanexSheet");
+    G4VPhysicalVolume* physLanexSheet = new G4PVPlacement(0,
+                                                          G4ThreeVector(),
+                                                          logicLanexSheet,
+                                                          "LanexSheet",
+                                                          logicLanexMountOpen,
+                                                          false,
+                                                          0,
+                                                          checkOverlaps);
     
     // Assign magnetic fields to logical volumes
-    fLogicChamberMagField = logicMagFld;
-    //fLogicSpecMagField    = logicSpecMagGap;
+    fLogicChamberMagField = logicMagField;
+    fLogicSpecMagField    = logicGSpecMagGap;
 
     // Print material table
     G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 
     // Exporting geometry to GDML
     G4GDMLParser* gdmlParser = new G4GDMLParser();
-    //gdmlParser->Write("apollon_g4geometry_v2.gdml", physWorld);
+    gdmlParser->Write("apollon_g4geometry_v3.gdml", physWorld);
     delete gdmlParser;
     
     return physWorld;
@@ -640,6 +799,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
 G4VPhysicalVolume* DetectorConstruction::Construct() {
 
     return DefineVolumes();
+    
 }
 
 void DetectorConstruction::ConstructSDandField() {
