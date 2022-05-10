@@ -14,6 +14,7 @@
 
 class G4HCofThisEvent;
 class G4Step;
+class G4StepPoint;
 class G4TouchableHistory;
 
 class SensitiveDetector : public G4VSensitiveDetector {

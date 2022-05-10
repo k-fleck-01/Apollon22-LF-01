@@ -48,7 +48,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
     G4double x0 = radius*cos(angle);
     G4double y0 = radius*sin(angle);
-    G4double z0 = -18.0*cm;
+    G4double z0 = -2575.*mm;        // Centre of gas cell
 
     fParticleGun->SetParticlePosition(G4ThreeVector(x0, y0, z0));
 

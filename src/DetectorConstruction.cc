@@ -827,16 +827,16 @@ G4VPhysicalVolume* DetectorConstruction::Construct() {
 }
 
 void DetectorConstruction::ConstructSDandField() {
-/*
+
     G4SDManager* SDManager = G4SDManager::GetSDMpointer();
 
     SensitiveDetector* sd = new SensitiveDetector("sd");
     SDManager->AddNewDetector(sd);
     
-    SetSensitiveDetector("lDetScreen", sd, true);    // YAG detector
-    SetSensitiveDetector("lTarget", sd, true);       // Tungsten target
-    SetSensitiveDetector("lWindow", sd, true);       // Kapton window
-    SetSensitiveDetector("lLanexScreen", sd, true);  // Spectrometer LANEX screen
+    // Setting sensitive volumes
+    SetSensitiveDetector("lYagScreen", sd, true);
+    SetSensitiveDetector("lStack", sd, true);
+    SetSensitiveDetector("lLanexSheet", sd, true);
 
     // Add magnetic fields
     G4MagneticField* chamberMagField = new G4UniformMagField(G4ThreeVector(0., -1.7*tesla, 0.));
@@ -850,7 +850,7 @@ void DetectorConstruction::ConstructSDandField() {
     localSpecFldManager->SetDetectorField(specMagField);
     localSpecFldManager->CreateChordFinder(specMagField);
     fLogicSpecMagField->SetFieldManager(localSpecFldManager, true);
-*/
+
 }
 
 

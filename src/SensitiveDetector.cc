@@ -42,26 +42,38 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
     class Hit* aHit = new class Hit(); // class keyword needs to be added as 'Hit'
                                        // is also an inline function within this scope.
 
+    // Get detector ID
+    const G4String& logicName = preStepPoint->GetPhysicalVolume()->GetLogicalVolume()->GetName();
+    G4int ldet = 0;
+    if (logicName == "lYagScreen") {
+        ldet = 1000;
+    }
+    else if (logicName == "lStack") {
+        ldet = 2000;
+    }
+    else if (logicName == "lLanexSheet") {
+        ldet = 3000;
+    }
+    G4int detid = ldet + preStepPoint->GetPhysicalVolume()->GetCopyNo() + 1;
+
     // Position of hit
     G4ThreeVector prePosition = preStepPoint->GetPosition();
     G4ThreeVector postPosition = postStepPoint->GetPosition();
     G4ThreeVector position = prePosition + G4UniformRand() * (postPosition - prePosition); // Energy deposition occurs at 
                                                                                            // a random point along step.
-    aHit->AddPosition(position);
+    
 
     // Energy deposition of hit
     G4double edep = aStep->GetTotalEnergyDeposit()/MeV; // Energy deposition in MeV.
     if (edep == 0.) return false;
-    aHit->AddEdep(edep);
 
     G4Track* track = aStep->GetTrack();
     // PDG code of particle causing hit
     G4int pdgCode = track->GetParticleDefinition()->GetPDGEncoding();
-    aHit->AddParticleType(pdgCode);
+    
 
     // Vertex position of track causing hit
     G4ThreeVector vpos = track->GetVertexPosition();
-    aHit->AddVertexPosition(vpos);
 
     // Kinetic energy if particle is entering detector
     G4double kinEnergy = -1;
@@ -72,22 +84,14 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
         const G4String& volumePos = track->GetNextVolume()->GetName();
         if (procName == "Transportation" && volumePos == thisVolume) kinEnergy = track->GetKineticEnergy();
     }
+
+    // Adding Hit information
+    aHit->AddPosition(position);
+    aHit->AddEdep(edep);
+    aHit->AddParticleType(pdgCode);
+    aHit->AddVertexPosition(vpos);
     aHit->AddKineticEnergy(kinEnergy);
-
-    // ID of detector hit occurs in
-    const G4String& vName = preStepPoint->GetPhysicalVolume()->GetName();
-    G4int detid = -1;
-    if (vName == "Target") {
-        detid = 0;
-    } else if (vName == "DetScreen") {
-        detid = 1;
-    } else if (vName == "Window") {
-        detid = 2;
-    } else if (vName == "LanexScreen") {
-        detid = 3;
-    }
     aHit->AddDetectorID(detid);
-
     fHitCollection->insert(aHit);
 
     return true;
