@@ -9,7 +9,7 @@
 
 #include "G4ThreeVector.hh"
 
-Hit::Hit() : G4VHit(), fEdep(0.), fKinEnergy(0.), fPosition(0), fVertexPosition(0),
+Hit::Hit() : G4VHit(), fEdep(0.), fEnergy(0.), fPosition(0), fVertexPosition(0),
              fParticleType(-1), fProcess(-1), fDetid(-1)
 {}
 
@@ -20,8 +20,8 @@ G4double Hit::GetEdep() const {
     return fEdep;
 }
 
-G4double Hit::GetKineticEnergy() const {
-    return fKinEnergy;
+G4double Hit::GetEnergy() const {
+    return fEnergy;
 }
 
 G4ThreeVector Hit::GetPosition() const {
@@ -48,8 +48,8 @@ void Hit::AddEdep(G4double edep) {
     fEdep = edep;
 }
 
-void Hit::AddKineticEnergy(G4double ekin) {
-    fKinEnergy = ekin;
+void Hit::AddEnergy(G4double ekin) {
+    fEnergy = ekin;
 }
 
 void Hit::AddPosition(G4ThreeVector pos) {

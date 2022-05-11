@@ -46,6 +46,7 @@ void RunAction::BeginOfRunAction(const G4Run*) {
     analysisManager->CreateNtupleIColumn(2, "evid");
     analysisManager->CreateNtupleIColumn(2, "trackid");
     analysisManager->CreateNtupleIColumn(2, "pdg");
+    analysisManager->CreateNtupleIColumn(2, "detid");
     analysisManager->CreateNtupleIColumn(2, "procid");
     analysisManager->CreateNtupleDColumn(2, "vtxx");
     analysisManager->CreateNtupleDColumn(2, "vtxy");
@@ -62,6 +63,25 @@ void RunAction::BeginOfRunAction(const G4Run*) {
     analysisManager->CreateNtupleDColumn(3, "z");
     analysisManager->CreateNtupleDColumn(3, "E");
     analysisManager->FinishNtuple(3);
+
+    analysisManager->CreateNtuple("Bdx", "Bdx");
+    analysisManager->CreateNtupleIColumn(4, "eventid");
+    analysisManager->CreateNtupleIColumn(4, "pdg");
+    analysisManager->CreateNtupleIColumn(4, "detid");
+    analysisManager->CreateNtupleIColumn(4, "procid");
+    analysisManager->CreateNtupleDColumn(4, "x");
+    analysisManager->CreateNtupleDColumn(4, "y");
+    analysisManager->CreateNtupleDColumn(4, "z");
+    analysisManager->CreateNtupleDColumn(4, "vtxx");
+    analysisManager->CreateNtupleDColumn(4, "vtxy");
+    analysisManager->CreateNtupleDColumn(4, "vtxz");
+    analysisManager->CreateNtupleDColumn(4, "px");
+    analysisManager->CreateNtupleDColumn(4, "py");
+    analysisManager->CreateNtupleDColumn(4, "pz");
+    analysisManager->CreateNtupleDColumn(4, "energy");
+    analysisManager->CreateNtupleDColumn(4, "theta");
+    analysisManager->CreateNtupleDColumn(4, "fluence");
+    analysisManager->FinishNtuple(4);
 
     return;
 }

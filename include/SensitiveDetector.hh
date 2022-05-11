@@ -8,9 +8,10 @@
 // Last edited: 07/02/2022
 //
 
-#include "Hit.hh"
-
 #include "G4VSensitiveDetector.hh"
+
+#include "Hit.hh"
+#include "BDCrossing.hh"
 
 class G4HCofThisEvent;
 class G4Step;
@@ -29,7 +30,9 @@ class SensitiveDetector : public G4VSensitiveDetector {
         
     private:
         HitCollection* fHitCollection;
+        BDXCollection* fBDXCollection;
         G4int fHCID;
+        G4int fBXCID;
 };
 
 #endif

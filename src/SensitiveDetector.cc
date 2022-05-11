@@ -7,7 +7,6 @@
 //
 
 #include "SensitiveDetector.hh"
-#include "Hit.hh"
 
 #include "G4Step.hh"
 #include "G4Track.hh"
@@ -18,7 +17,8 @@
 #include "G4HCofThisEvent.hh"
 #include "G4SystemOfUnits.hh"
 
-SensitiveDetector::SensitiveDetector(G4String name) : G4VSensitiveDetector(name), fHitCollection(0), fHCID(0) {
+SensitiveDetector::SensitiveDetector(G4String name) : G4VSensitiveDetector(name), fHitCollection(0), fBDXCollection(0),
+                 fHCID(0), fBXCID(0) {
     collectionName.insert("HitCollection");
 }
 
@@ -32,15 +32,17 @@ void SensitiveDetector::Initialize(G4HCofThisEvent* HCE) {
 	if (fHCID < 0) fHCID = GetCollectionID(0);
 	HCE->AddHitsCollection(fHCID, fHitCollection);
 
+    fBDXCollection = new BDXCollection(GetName(), collectionName[0]);
+    fBXCID = -1;
+    if (fBXCID < 0) fBXCID = GetCollectionID(0);
+    HCE->AddHitsCollection(fBXCID, fBDXCollection);
+    
 }
 
 G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aTouchableHist) {
 
     G4StepPoint* preStepPoint  = aStep->GetPreStepPoint();
     G4StepPoint* postStepPoint = aStep->GetPostStepPoint();
-
-    class Hit* aHit = new class Hit(); // class keyword needs to be added as 'Hit'
-                                       // is also an inline function within this scope.
 
     // Get detector ID
     const G4String& logicName = preStepPoint->GetPhysicalVolume()->GetLogicalVolume()->GetName();
@@ -62,35 +64,53 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
     G4ThreeVector position = prePosition + G4UniformRand() * (postPosition - prePosition); // Energy deposition occurs at 
                                                                                            // a random point along step.
     
-
-    // Energy deposition of hit
-    G4double edep = aStep->GetTotalEnergyDeposit()/MeV; // Energy deposition in MeV.
-    if (edep == 0.) return false;
-
     G4Track* track = aStep->GetTrack();
     // PDG code of particle causing hit
     G4int pdgCode = track->GetParticleDefinition()->GetPDGEncoding();
     
-
     // Vertex position of track causing hit
     G4ThreeVector vpos = track->GetVertexPosition();
 
-    // Kinetic energy if particle is entering detector
-    G4double kinEnergy = -1;
-    const G4VProcess* currentProcess = preStepPoint->GetProcessDefinedStep();
-    if(currentProcess != 0) {
-        const G4String& procName = currentProcess->GetProcessName();
-        const G4String& thisVolume = track->GetVolume()->GetName();
-        const G4String& volumePos = track->GetNextVolume()->GetName();
-        if (procName == "Transportation" && volumePos == thisVolume) kinEnergy = track->GetKineticEnergy();
+    // Total energy of particle depositing energy
+    G4double energy = track->GetTotalEnergy();
+
+     //
+    // Boundary crossing scoring 
+    //
+    if (aStep->IsFirstStepInVolume()) {
+        BDCrossing * aBdx = new BDCrossing();
+
+        // Getting volume information
+        const G4VTouchable* theTouchable = preStepPoint->GetTouchable();
+        G4ThreeVector localPosition = theTouchable->GetHistory()->GetTopTransform().TransformPoint(prePosition);
+        G4ThreeVector surfNorm = theTouchable->GetSolid()->SurfaceNormal(localPosition);
+        G4double areaS = 0.5*theTouchable->GetSolid()->GetSurfaceArea()/mm2;
+
+        aBdx->SetPDG(pdgCode);
+        aBdx->SetDetID(detid);
+        aBdx->SetVertex(vpos);
+        aBdx->SetPosition(prePosition);
+        aBdx->SetEnergy(energy);
+        aBdx->SetMomentum(track->GetMomentum());
+        aBdx->SetAngle(surfNorm);
+        aBdx->SetFluence(surfNorm, areaS);
+        aBdx->SetCreatorProcess(track->GetCreatorProcess());
+        fBDXCollection->insert(aBdx);
+
     }
 
     // Adding Hit information
+    // Energy deposition of hit
+    G4double edep = aStep->GetTotalEnergyDeposit();
+    if (edep == 0.) return false;
+
+    class Hit* aHit = new class Hit(); // class keyword needs to be added as 'Hit'
+                                       // is also an inline function within this scope.
     aHit->AddPosition(position);
     aHit->AddEdep(edep);
     aHit->AddParticleType(pdgCode);
     aHit->AddVertexPosition(vpos);
-    aHit->AddKineticEnergy(kinEnergy);
+    aHit->AddEnergy(energy);
     aHit->AddDetectorID(detid);
     fHitCollection->insert(aHit);
 
@@ -116,21 +136,61 @@ void SensitiveDetector::EndOfEvent(G4HCofThisEvent* HCE) {
         G4double vtxy      = hit->GetVertexPosition().y();
         G4double vtxz      = hit->GetVertexPosition().z();
         G4double edep      = hit->GetEdep();
-        G4double kinEnergy = hit->GetKineticEnergy();
+        G4double energy    = hit->GetEnergy();
 
         analysisManager->FillNtupleIColumn(0, 0, runManager->GetCurrentEvent()->GetEventID());
-        analysisManager->FillNtupleDColumn(0, 1, x/cm);
-        analysisManager->FillNtupleDColumn(0, 2, y/cm);
-        analysisManager->FillNtupleDColumn(0, 3, z/cm);
-        analysisManager->FillNtupleDColumn(0, 4, vtxx/cm);
-        analysisManager->FillNtupleDColumn(0, 5, vtxy/cm);
-        analysisManager->FillNtupleDColumn(0, 6, vtxz/cm);
+        analysisManager->FillNtupleDColumn(0, 1, x/mm);
+        analysisManager->FillNtupleDColumn(0, 2, y/mm);
+        analysisManager->FillNtupleDColumn(0, 3, z/mm);
+        analysisManager->FillNtupleDColumn(0, 4, vtxx/mm);
+        analysisManager->FillNtupleDColumn(0, 5, vtxy/mm);
+        analysisManager->FillNtupleDColumn(0, 6, vtxz/mm);
         analysisManager->FillNtupleDColumn(0, 7, edep/MeV);
-        analysisManager->FillNtupleDColumn(0, 8, kinEnergy/MeV);
+        analysisManager->FillNtupleDColumn(0, 8, energy/MeV);
         analysisManager->FillNtupleIColumn(0, 9, pdg);
         analysisManager->FillNtupleIColumn(0, 10, procid);
         analysisManager->FillNtupleIColumn(0, 11, detid);
         analysisManager->AddNtupleRow(0);
+    }
+
+    nhits = fBDXCollection->entries();
+    for (G4int ii = 0; ii < nhits; ++ii) {
+        auto bdx = (*fBDXCollection)[ii];
+
+        G4int pdg          = bdx->GetPDG();
+        G4int detid        = bdx->GetDetID();
+        G4int procid       = bdx->GetProcessID();
+        G4double x         = bdx->GetPosition().x();
+        G4double y         = bdx->GetPosition().y();
+        G4double z         = bdx->GetPosition().z();
+        G4double vtxx      = bdx->GetVertex().x();
+        G4double vtxy      = bdx->GetVertex().y();
+        G4double vtxz      = bdx->GetVertex().z();
+        G4double px        = bdx->GetMomentum().x();
+        G4double py        = bdx->GetMomentum().y();
+        G4double pz        = bdx->GetMomentum().z();
+        G4double energy    = bdx->GetEnergy();
+        G4double theta     = bdx->GetAngle();
+        G4double fluence   = bdx->GetFluence();
+
+
+        analysisManager->FillNtupleIColumn(4, 0, runManager->GetCurrentEvent()->GetEventID());
+        analysisManager->FillNtupleIColumn(4, 1, pdg);
+        analysisManager->FillNtupleIColumn(4, 2, detid);
+        analysisManager->FillNtupleIColumn(4, 3, procid);
+        analysisManager->FillNtupleDColumn(4, 4, x/mm);
+        analysisManager->FillNtupleDColumn(4, 5, y/mm);
+        analysisManager->FillNtupleDColumn(4, 6, z/mm);
+        analysisManager->FillNtupleDColumn(4, 7, vtxx/mm);
+        analysisManager->FillNtupleDColumn(4, 8, vtxy/mm);
+        analysisManager->FillNtupleDColumn(4, 9, vtxz/mm);
+        analysisManager->FillNtupleDColumn(4, 10, px/MeV);
+        analysisManager->FillNtupleDColumn(4, 11, py/MeV);
+        analysisManager->FillNtupleDColumn(4, 12, pz/MeV);
+        analysisManager->FillNtupleDColumn(4, 13, energy/MeV);
+        analysisManager->FillNtupleDColumn(4, 14, theta/rad);
+        analysisManager->FillNtupleDColumn(4, 15, fluence/(1/mm2));
+        analysisManager->AddNtupleRow(4);
     }
 
 }
