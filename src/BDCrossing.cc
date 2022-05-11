@@ -29,7 +29,7 @@ void BDCrossing::SetEnergy(G4double energy) { fEnergy = energy; }
 void BDCrossing::SetMomentum(G4ThreeVector momentum) {fMomentum = momentum; }
 void BDCrossing::SetAngle(G4ThreeVector surfNorm) { fAngle = fMomentum.angle(surfNorm); }
 void BDCrossing::SetFluence(G4ThreeVector surfNorm, G4double areaS) { fFluence = 1./fMomentum.cosTheta(surfNorm)/areaS; }
-void BDCrossing::SetCreatorProcess(const G4VProcess* process) { fProcid = 2000 + process->GetProcessSubType();}
+void BDCrossing::SetCreatorProcess(G4int procid) { fProcid = procid; }
 
 //
 //

@@ -28,7 +28,7 @@ class BDCrossing: public G4VHit {
         void SetMomentum(G4ThreeVector);
         void SetAngle(G4ThreeVector);
         void SetFluence(G4ThreeVector, G4double);
-        void SetCreatorProcess(const G4VProcess*);
+        void SetCreatorProcess(G4int);
 
         G4int GetPDG() const;
         G4int GetDetID() const;

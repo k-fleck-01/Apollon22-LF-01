@@ -26,7 +26,7 @@ PhysicsList::PhysicsList() : G4VModularPhysicsList() {
     fEmPhysicsList = new PhysListEmStandard("local");
     G4LossTableManager::Instance();
 
-    SetDefaultCutValue(1.*mm);
+    SetDefaultCutValue(0.1*mm);
 }
 
 PhysicsList::~PhysicsList() {
