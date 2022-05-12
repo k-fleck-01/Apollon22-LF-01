@@ -5,6 +5,7 @@
 // Source file for BDCrossing class
 // Last edited: 11/05/2022
 //
+#include <cmath>
 
 #include "BDCrossing.hh"
 
@@ -27,8 +28,19 @@ void BDCrossing::SetVertex(G4ThreeVector vtx) { fVertex = vtx; }
 void BDCrossing::SetPosition(G4ThreeVector pos) { fPosition = pos; }
 void BDCrossing::SetEnergy(G4double energy) { fEnergy = energy; }
 void BDCrossing::SetMomentum(G4ThreeVector momentum) {fMomentum = momentum; }
-void BDCrossing::SetAngle(G4ThreeVector surfNorm) { fAngle = fMomentum.angle(surfNorm); }
-void BDCrossing::SetFluence(G4ThreeVector surfNorm, G4double areaS) { fFluence = 1./fMomentum.cosTheta(surfNorm)/areaS; }
+void BDCrossing::SetAngle(G4ThreeVector surfNorm) {
+    G4ThreeVector pUnit = fMomentum/fMomentum.mag();
+    fAngle = pUnit.polarAngle(-surfNorm);
+ }
+void BDCrossing::SetFluence(G4ThreeVector surfNorm, G4double areaS) { 
+    G4double cosTheta = fMomentum.cosTheta(-surfNorm);
+    if (std::abs(cosTheta) < 1.e-7) {
+        fFluence = 0.;
+    }
+    else {
+        fFluence = 1./cosTheta/areaS;
+    } 
+}
 void BDCrossing::SetCreatorProcess(G4int procid) { fProcid = procid; }
 
 //

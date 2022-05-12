@@ -854,7 +854,7 @@ void DetectorConstruction::ConstructSDandField() {
     SetSensitiveDetector("lLanexSheet", sd, true);
 
     // Add magnetic fields
-    G4MagneticField* chamberMagField = new G4UniformMagField(G4ThreeVector(0., -1.7*tesla, 0.));
+    G4MagneticField* chamberMagField = new G4UniformMagField(G4ThreeVector(0., 1.7*tesla, 0.));
     G4FieldManager* localChamberFldManager = new G4FieldManager(chamberMagField);
     localChamberFldManager->SetDetectorField(chamberMagField);
     localChamberFldManager->CreateChordFinder(chamberMagField);
@@ -867,7 +867,6 @@ void DetectorConstruction::ConstructSDandField() {
     fLogicSpecMagField->SetFieldManager(localSpecFldManager, true);
 
 }
-
 
 void DetectorConstruction::SetMagnetStrength(G4double val) {
 

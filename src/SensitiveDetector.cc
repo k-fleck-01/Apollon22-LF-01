@@ -45,7 +45,8 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
     G4StepPoint* postStepPoint = aStep->GetPostStepPoint();
 
     // Get detector ID
-    const G4String& logicName = preStepPoint->GetPhysicalVolume()->GetLogicalVolume()->GetName();
+    const G4VTouchable* theTouchable = preStepPoint->GetTouchable();
+    const G4String& logicName = theTouchable->GetVolume()->GetLogicalVolume()->GetName();
     G4int ldet = 0;
     if (logicName == "lYagScreen") {
         ldet = 1000;
@@ -56,7 +57,7 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
     else if (logicName == "lLanexSheet") {
         ldet = 3000;
     }
-    G4int detid = ldet + preStepPoint->GetPhysicalVolume()->GetCopyNo() + 1;
+    G4int detid = ldet + theTouchable->GetCopyNumber();
 
     // Position of hit
     G4ThreeVector prePosition = preStepPoint->GetPosition();
@@ -77,11 +78,10 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
      //
     // Boundary crossing scoring 
     //
-    if (aStep->IsFirstStepInVolume()) {
+    if (preStepPoint->GetStepStatus() == fGeomBoundary) {
         BDCrossing * aBdx = new BDCrossing();
 
         // Getting volume information
-        const G4VTouchable* theTouchable = preStepPoint->GetTouchable();
         G4ThreeVector localPosition = theTouchable->GetHistory()->GetTopTransform().TransformPoint(prePosition);
         G4ThreeVector surfNorm = theTouchable->GetSolid()->SurfaceNormal(localPosition);
         G4double areaS = 0.5*theTouchable->GetSolid()->GetSurfaceArea()/mm2;

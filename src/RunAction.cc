@@ -31,7 +31,7 @@ void RunAction::BeginOfRunAction(const G4Run*) {
     analysisManager->CreateNtupleDColumn(0, "vtxy");
     analysisManager->CreateNtupleDColumn(0, "vtxz");
     analysisManager->CreateNtupleDColumn(0, "edep");
-    analysisManager->CreateNtupleDColumn(0, "eKin");
+    analysisManager->CreateNtupleDColumn(0, "energy");
     analysisManager->CreateNtupleIColumn(0, "pdg");
     analysisManager->CreateNtupleIColumn(0, "procid");
     analysisManager->CreateNtupleIColumn(0, "detid");

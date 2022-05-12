@@ -24,172 +24,96 @@
 int ProcessList(const std::string&, std::vector<std::string>&);
 
 int apollon_hits_process(std::string fnamelist) {
-    // *
+    // ************************************************************************
     // Open root file to write to
-    //
+    // ************************************************************************
     std::string suffix("_hits");
     std::string foutname = fnamelist.substr(fnamelist.find_last_of("/")+1);
     foutname = foutname.substr(0, foutname.find_last_of("."));
     foutname += suffix + std::string(".root");
 
     TFile* fout = new TFile(foutname.c_str(), "RECREATE");
-    // *
+    // ************************************************************************
     // Defining histograms
-    // *
-    TH1I* target_pdg_all = new TH1I("target_pdg_all", "", 50, -25, 25);
+    // ************************************************************************
+    constexpr int& nSpaceBins  = 200;
+    constexpr int& nEnergyBins = 100; 
 
-    int nbins = 200;
-    TH1D* target_kenergy_all = new TH1D("target_kenergy_all", "",  nbins, 0., 2000.);
-    TH1D* target_kenergy_electron = new TH1D("target_kenergy_electron", "", nbins, 0., 2000.);
-    TH1D* target_kenergy_positron = new TH1D("target_kenergy_positron", "", nbins, 0., 2000.);
-    TH1D* target_kenergy_gamma = new TH1D("target_kenergy_gamma", "", nbins, 0., 2000.);
-    TH1D* target_kenergy_muminus = new TH1D("target_kenergy_muminus", "", nbins, 0., 2000.);
-    TH1D* target_kenergy_muplus = new TH1D("target_kenergy_muplus", "", nbins, 0., 2000.);
+    // Hits histograms
+    TH2D* hits_xy_all = new TH2D("hits_xy_all", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
+    TH2D* hits_xy_electron = new TH2D("hits_xy_electron", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
+    TH2D* hits_xy_positron = new TH2D("hits_xy_positron", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
+    TH2D* hits_xy_gamma = new TH2D("hits_xy_gamma", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
+    TH2D* hits_xy_muminus = new TH2D("hits_xy_muminus", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
+    TH2D* hits_xy_muplus = new TH2D("hits_xy_muplus", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
 
-    const double targetz0 = 149.99;
-    const double targetz1 = 150.0;
-    TH1D* target_edep_z_all = new TH1D("target_edep_z_all", "", nbins, targetz0, targetz1);
-    TH1D* target_edep_z_electron = new TH1D("target_edep_z_electron", "", nbins, targetz0, targetz1);
-    TH1D* target_edep_z_positron = new TH1D("target_edep_z_positron", "", nbins, targetz0, targetz1);
-    TH1D* target_edep_z_gamma = new TH1D("target_edep_z_gamma", "", nbins, targetz0, targetz1);
-    TH1D* target_edep_z_muminus = new TH1D("target_edep_z_muminus", "", nbins, targetz0, targetz1);
-    TH1D* target_edep_z_muplus = new TH1D("target_edep_z_muplus", "", nbins, targetz0, targetz1);
+    TH2D* hits_xy_edep_all = new TH2D("hits_xy_edep_all", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
+    TH2D* hits_xy_edep_electron = new TH2D("hits_xy_edep_electron", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
+    TH2D* hits_xy_edep_positron = new TH2D("hits_xy_edep_positron", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
+    TH2D* hits_xy_edep_gamma = new TH2D("hits_xy_edep_gamma", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
+    TH2D* hits_xy_edep_muminus = new TH2D("hits_xy_edep_muminus", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
+    TH2D* hits_xy_edep_muplus = new TH2D("hits_xy_edep_muplus", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
 
-    const double targetx0 = -1.0;
-    const double targetx1 = 1.0;
-    const double targety0 = -1.0;
-    const double targety1 = 1.0;
-    nbins = 400;
-    TH2D* target_edep_xy_all = new TH2D("target_edep_xy_all", "", nbins, targetx0, targetx1, nbins, targety0, targety1);
-    TH2D* target_edep_xy_electron = new TH2D("target_edep_xy_electron", "", nbins, targetx0, targetx1, nbins, targety0, targety1);
-    TH2D* target_edep_xy_positron = new TH2D("target_edep_xy_positron", "", nbins, targetx0, targetx1, nbins, targety0, targety1);
-    TH2D* target_edep_xy_gamma = new TH2D("target_edep_xy_gamma", "", nbins, targetx0, targetx1, nbins, targety0, targety1);
-    TH2D* target_edep_xy_muminus = new TH2D("target_edep_xy_muminus", "", nbins, targetx0, targetx1, nbins, targety0, targety1);
-    TH2D* target_edep_xy_muplus = new TH2D("target_edep_xy_muplus", "", nbins, targetx0, targetx1, nbins, targety0, targety1);
-    // *
-    // *
-    TH1I* yag_pdg_all = new TH1I("yag_pdg_all", "", 50, -25, 25);
+    TH1D* hits_edep_all = new TH1D("hits_edep_all", "", nEnergyBins, 0., 2.);
+    TH1D* hits_edep_electron = new TH1D("hits_edep_electron", "", nEnergyBins, 0., 2.);
+    TH1D* hits_edep_positron = new TH1D("hits_edep_positron", "", nEnergyBins, 0., 2.);
+    TH1D* hits_edep_gamma = new TH1D("hits_edep_gamma", "", nEnergyBins, 0., 2.);
+    TH1D* hits_edep_muminus = new TH1D("hits_edep_muminus", "", nEnergyBins, 0., 2.);
+    TH1D* hits_edep_muplus = new TH1D("hits_edep_muplus", "", nEnergyBins, 0., 2.);
 
-    nbins = 200;
-    TH1D* yag_kenergy_all = new TH1D("yag_kenergy_all", "",  nbins, 0., 2000.);
-    TH1D* yag_kenergy_electron = new TH1D("yag_kenergy_electron", "", nbins, 0., 2000.);
-    TH1D* yag_kenergy_positron = new TH1D("yag_kenergy_positron", "", nbins, 0., 2000.);
-    TH1D* yag_kenergy_gamma = new TH1D("yag_kenergy_gamma", "", nbins, 0., 2000.);
-    TH1D* yag_kenergy_muminus = new TH1D("yag_kenergy_muminus", "", nbins, 0., 2000.);
-    TH1D* yag_kenergy_muplus = new TH1D("yag_kenergy_muplus", "", nbins, 0., 2000.);
+    // Primaries histograms
+    TH2D* primaries_xy = new TH2D("primaries_xy", "", nSpaceBins, -0.1, 0.1, nSpaceBins, -0.1, 0.1);
+    TH1D* primaries_energy = new TH1D("primaries_energy", "", nEnergyBins, 0., 2000.);
 
-    const double yagz0 = 101.8;
-    const double yagz1 = 101.81;
-    TH1D* yag_edep_z_all = new TH1D("yag_edep_z_all", "", nbins, yagz0, yagz1);
-    TH1D* yag_edep_z_electron = new TH1D("yag_edep_z_electron", "", nbins, yagz0, yagz1);
-    TH1D* yag_edep_z_positron = new TH1D("yag_edep_z_positron", "", nbins, yagz0, yagz1);
-    TH1D* yag_edep_z_gamma = new TH1D("yag_edep_z_gamma", "", nbins, yagz0, yagz1);
-    TH1D* yag_edep_z_muminus = new TH1D("yag_edep_z_muminus", "", nbins, yagz0, yagz1);
-    TH1D* yag_edep_z_muplus = new TH1D("yag_edep_z_muplus", "", nbins, yagz0, yagz1);
-
-    const double yagx0 = 4.0;
-    const double yagx1 = 24.0;
-    const double yagy0 = -4.0;
-    const double yagy1 = 4.0;
-    nbins = 400;
-    TH2D* yag_edep_xy_all = new TH2D("yag_edep_xy_all", "", nbins, yagx0, yagx1, nbins, yagy0, yagy1);
-    TH2D* yag_edep_xy_electron = new TH2D("yag_edep_xy_electron", "", nbins, yagx0, yagx1, nbins, yagy0, yagy1);
-    TH2D* yag_edep_xy_positron = new TH2D("yag_edep_xy_positron", "", nbins, yagx0, yagx1, nbins, yagy0, yagy1);
-    TH2D* yag_edep_xy_gamma = new TH2D("yag_edep_xy_gamma", "", nbins, yagx0, yagx1, nbins, yagy0, yagy1);
-    TH2D* yag_edep_xy_muminus = new TH2D("yag_edep_xy_muminus", "", nbins, yagx0, yagx1, nbins, yagy0, yagy1);
-    TH2D* yag_edep_xy_muplus = new TH2D("yag_edep_xy_muplus", "", nbins, yagx0, yagx1, nbins, yagy0, yagy1);
-    // *
-    // *
-    TH1I* kapton_pdg_all = new TH1I("kapton_pdg_all", "", 50, -25, 25);
-
-    nbins = 200;
-    TH1D* kapton_kenergy_all = new TH1D("kapton_kenergy_all", "",  nbins, 0., 2000.);
-    TH1D* kapton_kenergy_electron = new TH1D("kapton_kenergy_electron", "", nbins, 0., 2000.);
-    TH1D* kapton_kenergy_positron = new TH1D("kapton_kenergy_positron", "", nbins, 0., 2000.);
-    TH1D* kapton_kenergy_gamma = new TH1D("kapton_kenergy_gamma", "", nbins, 0., 2000.);
-    TH1D* kapton_kenergy_muminus = new TH1D("kapton_kenergy_muminus", "", nbins, 0., 2000.);
-    TH1D* kapton_kenergy_muplus = new TH1D("kapton_kenergy_muplus", "", nbins, 0., 2000.);
-
-    const double kaptonz0 = 103.98;
-    const double kaptonz1 = 104.0;
-    TH1D* kapton_edep_z_all = new TH1D("kapton_edep_z_all", "", nbins, kaptonz0, kaptonz1);
-    TH1D* kapton_edep_z_electron = new TH1D("kapton_edep_z_electron", "", nbins, kaptonz0, kaptonz1);
-    TH1D* kapton_edep_z_positron = new TH1D("kapton_edep_z_positron", "", nbins, kaptonz0, kaptonz1);
-    TH1D* kapton_edep_z_gamma = new TH1D("kapton_edep_z_gamma", "", nbins, kaptonz0, kaptonz1);
-    TH1D* kapton_edep_z_muminus = new TH1D("kapton_edep_z_muminus", "", nbins, kaptonz0, kaptonz1);
-    TH1D* kapton_edep_z_muplus = new TH1D("kapton_edep_z_muplus", "", nbins, kaptonz0, kaptonz1);
-
-    const double kaptonx0 = -25.0;
-    const double kaptonx1 = 25.0;
-    const double kaptony0 = -4.0;
-    const double kaptony1 = 4.0;
-    nbins = 400;
-    TH2D* kapton_edep_xy_all = new TH2D("kapton_edep_xy_all", "", nbins, kaptonx0, kaptonx1, nbins, kaptony0, kaptony1);
-    TH2D* kapton_edep_xy_electron = new TH2D("kapton_edep_xy_electron", "", nbins, kaptonx0, kaptonx1, nbins, kaptony0, kaptony1);
-    TH2D *kapton_edep_xy_positron = new TH2D("kapton_edep_xy_positron", "", nbins, kaptonx0, kaptonx1, nbins, kaptony0, kaptony1);
-    TH2D* kapton_edep_xy_gamma = new TH2D("kapton_edep_xy_gamma", "", nbins, kaptonx0, kaptonx1, nbins, kaptony0, kaptony1);
-    TH2D* kapton_edep_xy_muminus = new TH2D("kapton_edep_xy_muminus", "", nbins, kaptonx0, kaptonx1, nbins, kaptony0, kaptony1);
-    TH2D* kapton_edep_xy_muplus = new TH2D("kapton_edep_xy_muplus", "", nbins, kaptonx0, kaptonx1, nbins, kaptony0, kaptony1);
-    // *
-    // *
-    TH1I* lanex_pdg_all = new TH1I("lanex_pdg_all", "", 50, -25, 25);
-
-    nbins = 200;
-    TH1D* lanex_kenergy_all = new TH1D("lanex_kenergy_all", "",  nbins, 0., 2000.);
-    TH1D* lanex_kenergy_electron = new TH1D("lanex_kenergy_electron", "", nbins, 0., 2000.);
-    TH1D* lanex_kenergy_positron = new TH1D("lanex_kenergy_positron", "", nbins, 0., 2000.);
-    TH1D* lanex_kenergy_gamma = new TH1D("lanex_kenergy_gamma", "", nbins, 0., 2000.);
-    TH1D* lanex_kenergy_muminus = new TH1D("lanex_kenergy_muminus", "", nbins, 0., 2000.);
-    TH1D* lanex_kenergy_muplus = new TH1D("lanex_kenergy_muplus", "", nbins, 0., 2000.);
-
-    const double lanexz0 = 225.0;
-    const double lanexz1 = 225.05;
-    TH1D* lanex_edep_z_all = new TH1D("lanex_edep_z_all", "", nbins, lanexz0, lanexz1);
-    TH1D* lanex_edep_z_electron = new TH1D("lanex_edep_z_electron", "", nbins, lanexz0, lanexz1);
-    TH1D* lanex_edep_z_positron = new TH1D("lanex_edep_z_positron", "", nbins, lanexz0, lanexz1);
-    TH1D* lanex_edep_z_gamma = new TH1D("lanex_edep_z_gamma", "", nbins, lanexz0, lanexz1);
-    TH1D* lanex_edep_z_muminus = new TH1D("lanex_edep_z_muminus", "", nbins, lanexz0, lanexz1);
-    TH1D* lanex_edep_z_muplus = new TH1D("lanex_edep_z_muplus", "", nbins, lanexz0, lanexz1);
-
-    const double lanexx0 = -20.0;
-    const double lanexx1 = 20.0;
-    const double lanexy0 = -5.0;
-    const double lanexy1 = 5.0;
-    nbins = 400;
-    TH2D* lanex_edep_xy_all = new TH2D("lanex_edep_xy_all", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
-    TH2D* lanex_edep_xy_electron = new TH2D("lanex_edep_xy_electron", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
-    TH2D* lanex_edep_xy_positron = new TH2D("lanex_edep_xy_positron", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
-    TH2D* lanex_edep_xy_gamma = new TH2D("lanex_edep_xy_gamma", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
-    TH2D* lanex_edep_xy_muminus = new TH2D("lanex_edep_xy_muminus", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
-    TH2D* lanex_edep_xy_muplus = new TH2D("lanex_edep_xy_muplus", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
-
-    TH2D* lanex_xy_all = new TH2D("lanex_xy_all", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
-    TH2D* lanex_xy_electron = new TH2D("lanex_xy_electron", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
-    TH2D* lanex_xy_positron = new TH2D("lanex_xy_positron", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
-    TH2D* lanex_xy_gamma = new TH2D("lanex_xy_gamma", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
-    TH2D* lanex_xy_muminus = new TH2D("lanex_xy_muminus", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
-    TH2D* lanex_xy_muplus = new TH2D("lanex_xy_muplus", "", nbins, lanexx0, lanexx1, nbins, lanexy0, lanexy1);
+    // Boundary crossing histograms
+    TH3D* bdx_xyz_all = new TH3D("bdx_xyz_all", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80., nSpaceBins, 49., 51.);
+    TH3D* bdx_xyz_electron = new TH3D("bdx_xyz_electron", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80., nSpaceBins, 49., 51.);
+    TH3D* bdx_xyz_positron = new TH3D("bdx_xyz_positron", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80., nSpaceBins, 49., 51.);
+    TH3D* bdx_xyz_gamma = new TH3D("bdx_xyz_gamma", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80., nSpaceBins, 49., 51.);
+    TH3D* bdx_xyz_muminus = new TH3D("bdx_xyz_muminus", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80., nSpaceBins, 49., 51.);
+    TH3D* bdx_xyz_muplus = new TH3D("bdx_xyz_all", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80., nSpaceBins, 49., 51.);
     
-    const double vtxz0 = -150.0;
-    const double vtxz1 = 250.0;
-    const double vtxx0 = -75.0;
-    const double vtxx1 = 75.0;
-    TH2D* lanex_vtxz_vtxx_all = new TH2D("lanex_vtxz_vtxx_all", "", nbins, vtxz0, vtxz1, nbins, vtxx0, vtxx1);
-    TH2D* lanex_vtxz_vtxx_electron = new TH2D("lanex_vtxz_vtxx_electron", "", nbins, vtxz0, vtxz1, nbins, vtxx0, vtxx1);
-    TH2D* lanex_vtxz_vtxx_positron = new TH2D("lanex_vtxz_vtxx_positron", "", nbins, vtxz0, vtxz1, nbins, vtxx0, vtxx1);
-    TH2D* lanex_vtxz_vtxx_gamma = new TH2D("lanex_vtxz_vtxx_gamma", "", nbins, vtxz0, vtxz1, nbins, vtxx0, vtxx1);
-    TH2D* lanex_vtxz_vtxx_muminus = new TH2D("lanex_vtxz_vtxx_muminus", "", nbins, vtxz0, vtxz1, nbins, vtxx0, vtxx1);
-    TH2D* lanex_vtxz_vtxx_muplus = new TH2D("lanex_vtxz_vtxx_muplus", "", nbins, vtxz0, vtxz1, nbins, vtxx0, vtxx1);
+    TH2D* bdx_vtxx_vtxz_all = new TH2D("bdx_vtxx_vtxz_all", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxx_vtxz_electron = new TH2D("bdx_vtxx_vtxz_electron", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxx_vtxz_positron = new TH2D("bdx_vtxx_vtxz_positron", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxx_vtxz_gamma = new TH2D("bdx_vtxx_vtxz_gamma", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxx_vtxz_muminus = new TH2D("bdx_vtxx_vtxz_muminus", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxx_vtxz_muplus = new TH2D("bdx_vtxx_vtxz_all", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
 
-    const double pxx0 = -0.1;
-    const double pxx1 = 0.1;
-    const double pyy0 = -0.1;
-    const double pyy1 = 0.1;
-    TH2D* primary_profile_xy = new TH2D("primary_profile_xy", "", nbins, pxx0, pxx1, nbins, pyy0, pyy1);
-    TH1D* primary_profile_energy = new TH1D("primary_profile_energy", "", 200, 0.0, 2000.0);
-    // *
+    TH2D* bdx_vtxy_vtxz_all = new TH2D("bdx_vtxy_vtxz_all", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxy_vtxz_electron = new TH2D("bdx_vtxy_vtxz_electron", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxy_vtxz_positron = new TH2D("bdx_vtxy_vtxz_positron", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxy_vtxz_gamma = new TH2D("bdx_vtxy_vtxz_gamma", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxy_vtxz_muminus = new TH2D("bdx_vtxy_vtxz_muminus", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxy_vtxz_muplus = new TH2D("bdx_vtxy_vtxz_all", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    
+    TH1D* bdx_energy_all = new TH1D("bdx_energy_all", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_electron = new TH1D("bdx_energy_electron", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_positron = new TH1D("bdx_energy_positron", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_gamma = new TH1D("bdx_energy_gamma", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_muminus = new TH1D("bdx_energy_muminus", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_muplus = new TH1D("bdx_energy_muplus", nEnergyBins, 0., 2000.);
+
+    TH1D* bdx_fluence_all = new TH1D("bdx_fluence_all", nEnergyBins, 0., 2000.);
+    TH1D* bdx_fluence_electron = new TH1D("bdx_fluence_electron", nEnergyBins, 0., 2000.);
+    TH1D* bdx_fluence_positron = new TH1D("bdx_fluence_positron", nEnergyBins, 0., 2000.);
+    TH1D* bdx_fluence_gamma = new TH1D("bdx_fluence_gamma", nEnergyBins, 0., 2000.);
+    TH1D* bdx_fluence_muminus = new TH1D("bdx_fluence_muminus", nEnergyBins, 0., 2000.);
+    TH1D* bdx_fluence_muplus = new TH1D("bdx_fluence_muplus", nEnergyBins, 0., 2000.);
+
+    TH1D* bdx_energy_fluence_all = new TH1D("bdx_energy_fluence_all", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_fluence_electron = new TH1D("bdx_energy_fluence_electron", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_fluence_positron = new TH1D("bdx_energy_fluence_positron", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_fluence_gamma = new TH1D("bdx_energy_fluence_gamma", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_fluence_muminus = new TH1D("bdx_energy_fluence_muminus", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_fluence_muplus = new TH1D("bdx_energy_fluence_muplus", nEnergyBins, 0., 2000.);
+
+    TH1I* bdx_creation_process = new TH1I("bdx_creation_process", "", 25, 2000, 2025);
+    TH1I* bdx_pdg = new TH1I("bdx_pdg", "", 40, -15, 25);
+
+    // ************************************************************************
     // Processing hits TChain
-    // *
+    // ************************************************************************
     std::vector<std::string> flist;
     ProcessList(fnamelist, flist);
 
@@ -199,7 +123,7 @@ int apollon_hits_process(std::string fnamelist) {
     int evid, pdg, procid, detid;
     double xx, yy, zz;
     double vtxx, vtxy, vtxz;
-    double ekin, edep;
+    double eneg, edep;
 
     hitstree->SetBranchAddress("evid", &evid);
     hitstree->SetBranchAddress("x", &xx);
@@ -209,9 +133,8 @@ int apollon_hits_process(std::string fnamelist) {
     hitstree->SetBranchAddress("vtxy", &vtxy);
     hitstree->SetBranchAddress("vtxz", &vtxz);
     hitstree->SetBranchAddress("edep", &edep);
-    hitstree->SetBranchAddress("eKin", &ekin);
+    hitstree->SetBranchAddress("energy", &eneg);
     hitstree->SetBranchAddress("pdg", &pdg);
-    hitstree->SetBranchAddress("procid", &procid);
     hitstree->SetBranchAddress("detid", &detid);
 
     Long64_t nevproc = hitstree->GetEntries();
@@ -222,155 +145,42 @@ int apollon_hits_process(std::string fnamelist) {
         hitstree->GetEntry(ii);
         if (!(ii%1000000)) std::cout << ii << " entries processed" << std::endl;
         
+        if (detid != 3000) continue; // Only gamma spectrometer LANEX are processed
+        hits_xy_all->Fill(xx, yy);
+        hits_xy_edep_all->Fill(xx, yy, edep);
+        hits_edep_all->Fill(edep);
 
-        if (detid == 0) { // target
-            target_pdg_all->Fill(pdg);
-            if(ekin > -1.0) target_kenergy_all->Fill(ekin);
-            target_edep_z_all->Fill(zz, edep);
-            target_edep_xy_all->Fill(xx, yy, edep);
-
-            if (pdg==11) { // electrons
-                if(ekin > -1.0) target_kenergy_electron->Fill(ekin);
-                target_edep_z_electron->Fill(zz, edep);
-                target_edep_xy_electron->Fill(xx, yy, edep);
-            }
-            else if (pdg == -11) { // positrons
-                if(ekin > -1.0) target_kenergy_positron->Fill(ekin);
-                target_edep_z_positron->Fill(zz, edep);
-                target_edep_xy_positron->Fill(xx, yy, edep);
-            }
-            else if (pdg == 22) { // gammas
-                if(ekin > -1.0) target_kenergy_gamma->Fill(ekin);
-                target_edep_z_gamma->Fill(zz, edep);
-                target_edep_xy_gamma->Fill(xx, yy, edep);
-            }
-            else if (pdg == 13) { // mu-
-                if(ekin > -1.0) target_kenergy_muminus->Fill(ekin);
-                target_edep_z_muminus->Fill(zz, edep);
-                target_edep_xy_muminus->Fill(xx, yy, edep);
-            }
-            else if (pdg == -13) { // mu+
-                if(ekin > -1.0) target_kenergy_muplus->Fill(ekin);
-                target_edep_z_muplus->Fill(zz, edep);
-                target_edep_xy_muplus->Fill(xx, yy, edep);
-            }
+        if (pdg == 11) { // electrons 
+            hits_xy_electron->Fill(xx, yy);
+            hits_xy_edep_electron->Fill(xx, yy, edep);
+            hits_edep_electron->Fill(edep);
         }
-        else if (detid == 1) { // yag screen
-            yag_pdg_all->Fill(pdg);
-            if(ekin > -1.0) yag_kenergy_all->Fill(ekin);
-            yag_edep_z_all->Fill(zz, edep);
-            yag_edep_xy_all->Fill(xx, yy, edep);
-
-            if (pdg==11) { 
-                if(ekin > -1.0) yag_kenergy_electron->Fill(ekin);
-                yag_edep_z_electron->Fill(zz, edep);
-                yag_edep_xy_electron->Fill(xx, yy, edep);
-            }
-            else if (pdg == -11) {
-                if(ekin > -1.0) yag_kenergy_positron->Fill(ekin);
-                yag_edep_z_positron->Fill(zz, edep);
-                yag_edep_xy_positron->Fill(xx, yy, edep);
-            }
-            else if (pdg == 22) {
-                if(ekin > -1.0) yag_kenergy_gamma->Fill(ekin);
-                yag_edep_z_gamma->Fill(zz, edep);
-                yag_edep_xy_gamma->Fill(xx, yy, edep);
-            }
-            else if (pdg == 13) {
-                if(ekin > -1.0) yag_kenergy_muminus->Fill(ekin);
-                yag_edep_z_muminus->Fill(zz, edep);
-                yag_edep_xy_muminus->Fill(xx, yy, edep);
-            }
-            else if (pdg == -13) {
-                if(ekin > -1.0) yag_kenergy_muplus->Fill(ekin);
-                yag_edep_z_muplus->Fill(zz, edep);
-                yag_edep_xy_muplus->Fill(xx, yy, edep);
-            }
+        else if (pdg == -11) { // positrons
+            hits_xy_positron->Fill(xx, yy);
+            hits_xy_edep_positron->Fill(xx, yy, edep);
+            hits_edep_positron->Fill(edep);
         }
-        else if (detid == 2) { // kapton window
-            kapton_pdg_all->Fill(pdg);
-            if(ekin > -1.0) kapton_kenergy_all->Fill(ekin);
-            kapton_edep_z_all->Fill(zz, edep);
-            kapton_edep_xy_all->Fill(xx, yy, edep);
-
-            if (pdg==11) { 
-                if(ekin > -1.0) kapton_kenergy_electron->Fill(ekin);
-                kapton_edep_z_electron->Fill(zz, edep);
-                kapton_edep_xy_electron->Fill(xx, yy, edep);
-            }
-            else if (pdg == -11) {
-                if(ekin > -1.0) kapton_kenergy_positron->Fill(ekin);
-                kapton_edep_z_positron->Fill(zz, edep);
-                kapton_edep_xy_positron->Fill(xx, yy, edep);
-            }
-            else if (pdg == 22) {
-                if(ekin > -1.0) kapton_kenergy_gamma->Fill(ekin);
-                kapton_edep_z_gamma->Fill(zz, edep);
-                kapton_edep_xy_gamma->Fill(xx, yy, edep);
-            }
-            else if (pdg == 13) {
-                if(ekin > -1.0) kapton_kenergy_muminus->Fill(ekin);
-                kapton_edep_z_muminus->Fill(zz, edep);
-                kapton_edep_xy_muminus->Fill(xx, yy, edep);
-            }
-            else if (pdg == -13) {
-                if(ekin > -1.0) kapton_kenergy_muplus->Fill(ekin);
-                kapton_edep_z_muplus->Fill(zz, edep);
-                kapton_edep_xy_muplus->Fill(xx, yy, edep);
-            }
+        else if (pdg == 22) { // gammas
+            hits_xy_gamma->Fill(xx, yy);
+            hits_xy_edep_gamma->Fill(xx, yy, edep);
+            hits_edep_gamma->Fill(edep);
         }
-        else if (detid == 3) { // spectrometer LANEX screen
-            lanex_pdg_all->Fill(pdg);
-            if(ekin > -1.0) lanex_kenergy_all->Fill(ekin);
-            lanex_edep_z_all->Fill(zz, edep);
-            lanex_xy_all->Fill(xx, yy);
-            lanex_edep_xy_all->Fill(xx, yy, edep);
-            lanex_vtxz_vtxx_all->Fill(vtxz, vtxx);
-
-            if (pdg==11) { 
-                if(ekin > -1.0) lanex_kenergy_electron->Fill(ekin);
-                lanex_edep_z_electron->Fill(zz, edep);
-                lanex_xy_electron->Fill(xx, yy);
-                lanex_edep_xy_electron->Fill(xx, yy, edep);
-                lanex_vtxz_vtxx_electron->Fill(vtxz, vtxx);
-            }
-            else if (pdg == -11) {
-                if(ekin > -1.0) lanex_kenergy_positron->Fill(ekin);
-                lanex_edep_z_positron->Fill(zz, edep);
-                lanex_xy_positron->Fill(xx, yy);
-                lanex_edep_xy_positron->Fill(xx, yy, edep);
-                lanex_vtxz_vtxx_positron->Fill(vtxz, vtxx);
-            }
-            else if (pdg == 22) {
-                if(ekin > -1.0) lanex_kenergy_gamma->Fill(ekin);
-                lanex_edep_z_gamma->Fill(zz, edep);
-                lanex_xy_gamma->Fill(xx, yy);
-                lanex_edep_xy_gamma->Fill(xx, yy, edep);
-                lanex_vtxz_vtxx_gamma->Fill(vtxz, vtxx);
-            }
-            else if (pdg == 13) {
-                if(ekin > -1.0) lanex_kenergy_muminus->Fill(ekin);
-                lanex_edep_z_muminus->Fill(zz, edep);
-                lanex_xy_muminus->Fill(xx, yy);
-                lanex_edep_xy_muminus->Fill(xx, yy, edep);
-                lanex_vtxz_vtxx_muminus->Fill(vtxz, vtxx);
-            }
-            else if (pdg == -13) {
-                if(ekin > -1.0) lanex_kenergy_muplus->Fill(ekin);
-                lanex_edep_z_muplus->Fill(zz, edep);
-                lanex_xy_muplus->Fill(xx, yy);
-                lanex_edep_xy_muplus->Fill(xx, yy, edep);
-                lanex_vtxz_vtxx_muplus->Fill(vtxz, vtxx);
-            }
+        else if (pdg == 13) { // mu- 
+            hits_xy_muminus->Fill(xx, yy);
+            hits_xy_edep_muminus->Fill(xx, yy, edep);
+            hits_edep_muminus->Fill(edep);
+        }
+        else if (pdg == -13) { // mu+ 
+            hits_xy_muplus->Fill(xx, yy);
+            hits_xy_edep_muplus->Fill(xx, yy, edep);
+            hits_edep_muplus->Fill(edep);
         }
     }
-    // *
+    // ************************************************************************
     // Process primary TChain
-    // *
+    // ************************************************************************
     TChain* primarytree = new TChain("Primaries");
     std::for_each(flist.begin(), flist.end(), [primarytree](const std::string ss) { primarytree->Add(ss.c_str(), -1); });
-
-    double eneg;
 
     primarytree->SetBranchAddress("x", &xx);
     primarytree->SetBranchAddress("y", &yy);
@@ -384,8 +194,46 @@ int apollon_hits_process(std::string fnamelist) {
         primarytree->GetEntry(ii);
         if (!(ii%1000000)) std::cout << ii << " entries processed" << std::endl;
 
-        primary_profile_xy->Fill(xx, yy);
-        primary_profile_energy->Fill(eneg);
+        primaries_xy->Fill(xx, yy);
+        primaries_energy->Fill(eneg);
+    }
+
+    // ************************************************************************
+    // Processing bdx TChain
+    // ************************************************************************
+    TChain* bdxtree = new TChain("Bdx");
+    std::for_each(flist.begin(), flist.end(), [bdxtree](const std::string ss) { bdxtree->Add(ss.c_str(), -1); });
+    
+    int procid;
+    double px, py, pz;
+    double theta, fluence;
+
+    bdxtree->SetBranchAddress("evid", &evid);
+    bdxtree->SetBranchAddress("pdg", &pdg);
+    bdxtree->SetBranchAddress("detid", &detid);
+    bdxtree->SetBranchAddress("procid", &procid);
+    bdxtree->SetBranchAddress("x", &xx);
+    bdxtree->SetBranchAddress("y", &yy);
+    bdxtree->SetBranchAddress("z", &zz);
+    bdxtree->SetBranchAddress("vtxx", &vtxx);
+    bdxtree->SetBranchAddress("vtxy", &vtxy);
+    bdxtree->SetBranchAddress("vtxz", &vtxz);
+    bdxtree->SetBranchAddress("px", &px);
+    bdxtree->SetBranchAddress("py", &py);
+    bdxtree->SetBranchAddress("pz", &pz);
+    bdxtree->SetBranchAddress("energy", &eneg);
+    bdxtree->SetBranchAddress("theta", &theta);
+    bdxtree->SetBranchAddress("fluence", &fluence);
+
+    nevproc = bdxtree->GetEntries();
+    std::cout << "Entries: " << nevproc << std::endl;
+
+    for(Long64_t ii = 0; ii < nevproc; ++ii) {
+
+        bdxtree->GetEntry(ii);
+        if (!(ii%1000000)) std::cout << ii << " entries processed" << std::endl;
+
+
     }
 
     fout->Write();
