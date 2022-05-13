@@ -65,6 +65,8 @@ int apollon_hits_process(std::string fnamelist) {
     // Primaries histograms
     TH2D* primaries_xy = new TH2D("primaries_xy", "", nSpaceBins, -0.1, 0.1, nSpaceBins, -0.1, 0.1);
     TH1D* primaries_energy = new TH1D("primaries_energy", "", nEnergyBins, 0., 2000.);
+    TH1D* primaries_polar = new TH1D("primaries_polar", "", nEnergyBins, 0., 1.);
+    TH1D* primaries_azimuthal = new TH1D("primaries_azimuthal", nEnergyBins, 0., 2.*3.14159265);
 
     // Boundary crossing histograms
     TH3D* bdx_xyz_all = new TH3D("bdx_xyz_all", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80., nSpaceBins, 49., 51.);
@@ -197,10 +199,13 @@ int apollon_hits_process(std::string fnamelist) {
     TChain* primarytree = new TChain("Primaries");
     std::for_each(flist.begin(), flist.end(), [primarytree](const std::string ss) { primarytree->Add(ss.c_str(), -1); });
 
+    double polar, azimuth;
     primarytree->SetBranchAddress("x", &xx);
     primarytree->SetBranchAddress("y", &yy);
     primarytree->SetBranchAddress("z", &zz);
     primarytree->SetBranchAddress("E", &eneg);
+    primarytree->SetBranchAddress("theta", &polar);
+    primarytree->SetBranchAddress("phi", &azimuth);
 
     nevproc = primarytree->GetEntries();
     std::cout << "Entries: " << nevproc << std::endl;
@@ -211,6 +216,9 @@ int apollon_hits_process(std::string fnamelist) {
 
         primaries_xy->Fill(xx, yy);
         primaries_energy->Fill(eneg);
+        primaries_polar->Fill(polar);
+        primaries_azimuthal->Fill(azimuth);
+        
     }
 
     // ************************************************************************

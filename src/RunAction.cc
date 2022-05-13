@@ -62,6 +62,8 @@ void RunAction::BeginOfRunAction(const G4Run*) {
     analysisManager->CreateNtupleDColumn(3, "y");
     analysisManager->CreateNtupleDColumn(3, "z");
     analysisManager->CreateNtupleDColumn(3, "E");
+    analysisManager->CreateNtupleDColumn(3, "theta");
+    analysisManager->CreateNtupleDColumn(3, "phi");
     analysisManager->FinishNtuple(3);
 
     analysisManager->CreateNtuple("Bdx", "Bdx");
