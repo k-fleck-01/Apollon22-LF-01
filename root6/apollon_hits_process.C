@@ -19,6 +19,7 @@
 #include "TFile.h"
 #include "TH1.h"
 #include "TH2.h"
+#include "TH3.h"
 
 
 int ProcessList(const std::string&, std::vector<std::string>&);
@@ -86,6 +87,20 @@ int apollon_hits_process(std::string fnamelist) {
     TH2D* bdx_vtxy_vtxz_gamma = new TH2D("bdx_vtxy_vtxz_gamma", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
     TH2D* bdx_vtxy_vtxz_muminus = new TH2D("bdx_vtxy_vtxz_muminus", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
     TH2D* bdx_vtxy_vtxz_muplus = new TH2D("bdx_vtxy_vtxz_all", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+
+    TH1D* bdx_vtxz_all = new TH1D("bdx_vtxz_all", "", nSpaceBins, -2500., 50.);
+    TH1D* bdx_vtxz_electron = new TH1D("bdx_vtxz_electron", "", nSpaceBins, -2500., 50.);
+    TH1D* bdx_vtxz_positron = new TH1D("bdx_vtxz_positron", "", nSpaceBins, -2500., 50.);
+    TH1D* bdx_vtxz_gamma = new TH1D("bdx_vtxz_gamma", "", nSpaceBins, -2500., 50.);
+    TH1D* bdx_vtxz_muminus = new TH1D("bdx_vtxz_muminus", "", nSpaceBins, -2500., 50.);
+    TH1D* bdx_vtxz_muplus = new TH1D("bdx_vtxz_muplus", "", nSpaceBins, -2500., 50.); 
+
+    TH1D* bdx_polar_all = new TH1D("bdx_polar_all", "", nEnergyBins, 0., CLHEP::pi);
+    TH1D* bdx_polar_electron = new TH1D("bdx_polar_electron", "", nEnergyBins, 0., CLHEP::pi);
+    TH1D* bdx_polar_positron = new TH1D("bdx_polar_positron", "", nEnergyBins, 0., CLHEP::pi);
+    TH1D* bdx_polar_gamma = new TH1D("bdx_polar_gamma", "", nEnergyBins, 0., CLHEP::pi);
+    TH1D* bdx_polar_muminus = new TH1D("bdx_polar_muminus", "", nEnergyBins, 0., CLHEP::pi);
+    TH1D* bdx_polar_muplus = new TH1D("bdx_polar_muplus", "", nEnergyBins, 0., CLHEP::pi);
     
     TH1D* bdx_energy_all = new TH1D("bdx_energy_all", nEnergyBins, 0., 2000.);
     TH1D* bdx_energy_electron = new TH1D("bdx_energy_electron", nEnergyBins, 0., 2000.);
@@ -233,7 +248,80 @@ int apollon_hits_process(std::string fnamelist) {
         bdxtree->GetEntry(ii);
         if (!(ii%1000000)) std::cout << ii << " entries processed" << std::endl;
 
+        if (detid != 3000) continue;
+        bdx_xyz_all->Fill(xx, yy, zz);
+        bdx_vtxx_vtxz_all->Fill(vtxz, vtxx);
+        bdx_vtxy_vtxz_all->Fill(vtxz, vtxy);
+        bdx_vtxz_all->Fill(vtxz);
+        bdx_polar_all->Fill(theta);
+        bdx_energy_all->Fill(eneg);
+        if (fluence >= 0.) {
+            bdx_fluence_all->Fill(eneg, fluence);
+            bdx_energy_fluence_all->Fill(eneg, eneg*fluence);
+        }
+        bdx_pdg->Fill(pdg);
+        bdx_creation_process->Fill(procid);
 
+        if (pdg == 11) { // electron 
+            bdx_xyz_electron->Fill(xx, yy, zz);
+            bdx_vtxx_vtxz_electron->Fill(vtxz, vtxx);
+            bdx_vtxy_vtxx_electron->Fill(vtxz, vtxy);
+            bdx_vtxz_electron->Fill(vtxz);
+            bdx_polar_electron->Fill(theta); 
+            bdx_energy_electron->Fill(eneg);
+            if (fluence > 0.) {
+                bdx_fluence_electron->Fill(eneg, fluence);
+                bdx_energy_fluence_electron->Fill(eneg, eneg*fluence);
+            }
+        }
+        else if (pdg == -11) { // positrons
+            bdx_xyz_positron->Fill(xx, yy, zz);
+            bdx_vtxx_vtxz_positron->Fill(vtxz, vtxx);
+            bdx_vtxy_vtxx_positron->Fill(vtxz, vtxy);
+            bdx_vtxz_positron->Fill(vtxz);
+            bdx_polar_positron->Fill(theta);
+            bdx_energy_positron->Fill(eneg);
+            if (fluence > 0.) {
+                bdx_fluence_positron->Fill(eneg, fluence);
+                bdx_energy_fluence_positron->Fill(eneg, eneg*fluence);
+            }
+        }
+        else if (pdg == 22) { // gamma
+            bdx_xyz_gamma->Fill(xx, yy, zz);
+            bdx_vtxx_vtxz_gamma->Fill(vtxz, vtxx);
+            bdx_vtxy_vtxx_gamma->Fill(vtxz, vtxy);
+            bdx_vtxz_gamma->Fill(vtxz);
+            bdx_polar_gamma->Fill(theta); 
+            bdx_energy_gamma->Fill(eneg);
+            if (fluence > 0.) {
+                bdx_fluence_gamma->Fill(eneg, fluence);
+                bdx_energy_fluence_gamma->Fill(eneg, eneg*fluence);
+            }
+        }
+        else if (pdg == 13) { // mu-
+            bdx_xyz_muminus->Fill(xx, yy, zz);
+            bdx_vtxx_vtxz_muminus->Fill(vtxz, vtxx);
+            bdx_vtxy_vtxx_muminus->Fill(vtxz, vtxy);
+            bdx_vtxz_muminus->Fill(vtxz);
+            bdx_polar_muminus->Fill(theta);
+            bdx_energy_muminus->Fill(eneg);
+            if (fluence > 0.) {
+                bdx_fluence_muminus->Fill(eneg, fluence);
+                bdx_energy_fluence_muminus->Fill(eneg, eneg*fluence);
+            }
+        }
+        else if (pdg == -13) { // mu+
+            bdx_xyz_muplus->Fill(xx, yy, zz);
+            bdx_vtxx_vtxz_muplus->Fill(vtxz, vtxx);
+            bdx_vtxy_vtxx_muplus->Fill(vtxz, vtxy);
+            bdx_vtxz_muplus->Fill(vtxz);
+            bdx_polar_muplus->Fill(theta);
+            bdx_energy_muplus->Fill(eneg);
+            if (fluence > 0.) {
+                bdx_fluence_muplus->Fill(eneg, fluence);
+                bdx_energy_fluence_muplus->Fill(eneg, eneg*fluence);
+            }
+        }
     }
 
     fout->Write();
