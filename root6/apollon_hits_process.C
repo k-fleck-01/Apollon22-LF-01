@@ -37,8 +37,8 @@ int apollon_hits_process(std::string fnamelist) {
     // ************************************************************************
     // Defining histograms
     // ************************************************************************
-    constexpr int& nSpaceBins  = 200;
-    constexpr int& nEnergyBins = 100; 
+    constexpr int nSpaceBins  = 200;
+    constexpr int nEnergyBins = 100; 
 
     // Hits histograms
     TH2D* hits_xy_all = new TH2D("hits_xy_all", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
@@ -72,21 +72,21 @@ int apollon_hits_process(std::string fnamelist) {
     TH3D* bdx_xyz_positron = new TH3D("bdx_xyz_positron", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80., nSpaceBins, 49., 51.);
     TH3D* bdx_xyz_gamma = new TH3D("bdx_xyz_gamma", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80., nSpaceBins, 49., 51.);
     TH3D* bdx_xyz_muminus = new TH3D("bdx_xyz_muminus", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80., nSpaceBins, 49., 51.);
-    TH3D* bdx_xyz_muplus = new TH3D("bdx_xyz_all", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80., nSpaceBins, 49., 51.);
+    TH3D* bdx_xyz_muplus = new TH3D("bdx_xyz_muplus", "", nSpaceBins, -150., 150., nSpaceBins, -80., 80., nSpaceBins, 49., 51.);
     
-    TH2D* bdx_vtxx_vtxz_all = new TH2D("bdx_vtxx_vtxz_all", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
-    TH2D* bdx_vtxx_vtxz_electron = new TH2D("bdx_vtxx_vtxz_electron", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
-    TH2D* bdx_vtxx_vtxz_positron = new TH2D("bdx_vtxx_vtxz_positron", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
-    TH2D* bdx_vtxx_vtxz_gamma = new TH2D("bdx_vtxx_vtxz_gamma", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
-    TH2D* bdx_vtxx_vtxz_muminus = new TH2D("bdx_vtxx_vtxz_muminus", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
-    TH2D* bdx_vtxx_vtxz_muplus = new TH2D("bdx_vtxx_vtxz_all", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxx_vtxz_all = new TH2D("bdx_vtxx_vtxz_all", "", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxx_vtxz_electron = new TH2D("bdx_vtxx_vtxz_electron", "", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxx_vtxz_positron = new TH2D("bdx_vtxx_vtxz_positron", "", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxx_vtxz_gamma = new TH2D("bdx_vtxx_vtxz_gamma", "", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxx_vtxz_muminus = new TH2D("bdx_vtxx_vtxz_muminus", "", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxx_vtxz_muplus = new TH2D("bdx_vtxx_vtxz_muplus", "", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
 
-    TH2D* bdx_vtxy_vtxz_all = new TH2D("bdx_vtxy_vtxz_all", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
-    TH2D* bdx_vtxy_vtxz_electron = new TH2D("bdx_vtxy_vtxz_electron", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
-    TH2D* bdx_vtxy_vtxz_positron = new TH2D("bdx_vtxy_vtxz_positron", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
-    TH2D* bdx_vtxy_vtxz_gamma = new TH2D("bdx_vtxy_vtxz_gamma", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
-    TH2D* bdx_vtxy_vtxz_muminus = new TH2D("bdx_vtxy_vtxz_muminus", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
-    TH2D* bdx_vtxy_vtxz_muplus = new TH2D("bdx_vtxy_vtxz_all", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxy_vtxz_all = new TH2D("bdx_vtxy_vtxz_all", "", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxy_vtxz_electron = new TH2D("bdx_vtxy_vtxz_electron", "", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxy_vtxz_positron = new TH2D("bdx_vtxy_vtxz_positron", "", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxy_vtxz_gamma = new TH2D("bdx_vtxy_vtxz_gamma", "", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxy_vtxz_muminus = new TH2D("bdx_vtxy_vtxz_muminus", "", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
+    TH2D* bdx_vtxy_vtxz_muplus = new TH2D("bdx_vtxy_vtxz_muplus", "", nSpaceBins, -2500., 50., nSpaceBins, -600., 600.);
 
     TH1D* bdx_vtxz_all = new TH1D("bdx_vtxz_all", "", nSpaceBins, -2500., 50.);
     TH1D* bdx_vtxz_electron = new TH1D("bdx_vtxz_electron", "", nSpaceBins, -2500., 50.);
@@ -95,33 +95,33 @@ int apollon_hits_process(std::string fnamelist) {
     TH1D* bdx_vtxz_muminus = new TH1D("bdx_vtxz_muminus", "", nSpaceBins, -2500., 50.);
     TH1D* bdx_vtxz_muplus = new TH1D("bdx_vtxz_muplus", "", nSpaceBins, -2500., 50.); 
 
-    TH1D* bdx_polar_all = new TH1D("bdx_polar_all", "", nEnergyBins, 0., CLHEP::pi);
-    TH1D* bdx_polar_electron = new TH1D("bdx_polar_electron", "", nEnergyBins, 0., CLHEP::pi);
-    TH1D* bdx_polar_positron = new TH1D("bdx_polar_positron", "", nEnergyBins, 0., CLHEP::pi);
-    TH1D* bdx_polar_gamma = new TH1D("bdx_polar_gamma", "", nEnergyBins, 0., CLHEP::pi);
-    TH1D* bdx_polar_muminus = new TH1D("bdx_polar_muminus", "", nEnergyBins, 0., CLHEP::pi);
-    TH1D* bdx_polar_muplus = new TH1D("bdx_polar_muplus", "", nEnergyBins, 0., CLHEP::pi);
+    TH1D* bdx_polar_all = new TH1D("bdx_polar_all", "", nEnergyBins, 0., 3.14159265);
+    TH1D* bdx_polar_electron = new TH1D("bdx_polar_electron", "", nEnergyBins, 0., 3.14159265);
+    TH1D* bdx_polar_positron = new TH1D("bdx_polar_positron", "", nEnergyBins, 0., 3.14159265);
+    TH1D* bdx_polar_gamma = new TH1D("bdx_polar_gamma", "", nEnergyBins, 0., 3.14159265);
+    TH1D* bdx_polar_muminus = new TH1D("bdx_polar_muminus", "", nEnergyBins, 0., 3.14159265);
+    TH1D* bdx_polar_muplus = new TH1D("bdx_polar_muplus", "", nEnergyBins, 0., 3.14159265);
     
-    TH1D* bdx_energy_all = new TH1D("bdx_energy_all", nEnergyBins, 0., 2000.);
-    TH1D* bdx_energy_electron = new TH1D("bdx_energy_electron", nEnergyBins, 0., 2000.);
-    TH1D* bdx_energy_positron = new TH1D("bdx_energy_positron", nEnergyBins, 0., 2000.);
-    TH1D* bdx_energy_gamma = new TH1D("bdx_energy_gamma", nEnergyBins, 0., 2000.);
-    TH1D* bdx_energy_muminus = new TH1D("bdx_energy_muminus", nEnergyBins, 0., 2000.);
-    TH1D* bdx_energy_muplus = new TH1D("bdx_energy_muplus", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_all = new TH1D("bdx_energy_all", "", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_electron = new TH1D("bdx_energy_electron", "", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_positron = new TH1D("bdx_energy_positron", "", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_gamma = new TH1D("bdx_energy_gamma", "", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_muminus = new TH1D("bdx_energy_muminus", "", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_muplus = new TH1D("bdx_energy_muplus", "", nEnergyBins, 0., 2000.);
 
-    TH1D* bdx_fluence_all = new TH1D("bdx_fluence_all", nEnergyBins, 0., 2000.);
-    TH1D* bdx_fluence_electron = new TH1D("bdx_fluence_electron", nEnergyBins, 0., 2000.);
-    TH1D* bdx_fluence_positron = new TH1D("bdx_fluence_positron", nEnergyBins, 0., 2000.);
-    TH1D* bdx_fluence_gamma = new TH1D("bdx_fluence_gamma", nEnergyBins, 0., 2000.);
-    TH1D* bdx_fluence_muminus = new TH1D("bdx_fluence_muminus", nEnergyBins, 0., 2000.);
-    TH1D* bdx_fluence_muplus = new TH1D("bdx_fluence_muplus", nEnergyBins, 0., 2000.);
+    TH1D* bdx_fluence_all = new TH1D("bdx_fluence_all", "", nEnergyBins, 0., 2000.);
+    TH1D* bdx_fluence_electron = new TH1D("bdx_fluence_electron", "", nEnergyBins, 0., 2000.);
+    TH1D* bdx_fluence_positron = new TH1D("bdx_fluence_positron", "", nEnergyBins, 0., 2000.);
+    TH1D* bdx_fluence_gamma = new TH1D("bdx_fluence_gamma", "", nEnergyBins, 0., 2000.);
+    TH1D* bdx_fluence_muminus = new TH1D("bdx_fluence_muminus", "", nEnergyBins, 0., 2000.);
+    TH1D* bdx_fluence_muplus = new TH1D("bdx_fluence_muplus", "", nEnergyBins, 0., 2000.);
 
-    TH1D* bdx_energy_fluence_all = new TH1D("bdx_energy_fluence_all", nEnergyBins, 0., 2000.);
-    TH1D* bdx_energy_fluence_electron = new TH1D("bdx_energy_fluence_electron", nEnergyBins, 0., 2000.);
-    TH1D* bdx_energy_fluence_positron = new TH1D("bdx_energy_fluence_positron", nEnergyBins, 0., 2000.);
-    TH1D* bdx_energy_fluence_gamma = new TH1D("bdx_energy_fluence_gamma", nEnergyBins, 0., 2000.);
-    TH1D* bdx_energy_fluence_muminus = new TH1D("bdx_energy_fluence_muminus", nEnergyBins, 0., 2000.);
-    TH1D* bdx_energy_fluence_muplus = new TH1D("bdx_energy_fluence_muplus", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_fluence_all = new TH1D("bdx_energy_fluence_all", "", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_fluence_electron = new TH1D("bdx_energy_fluence_electron", "", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_fluence_positron = new TH1D("bdx_energy_fluence_positron", "", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_fluence_gamma = new TH1D("bdx_energy_fluence_gamma", "", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_fluence_muminus = new TH1D("bdx_energy_fluence_muminus", "", nEnergyBins, 0., 2000.);
+    TH1D* bdx_energy_fluence_muplus = new TH1D("bdx_energy_fluence_muplus", "", nEnergyBins, 0., 2000.);
 
     TH1I* bdx_creation_process = new TH1I("bdx_creation_process", "", 25, 2000, 2025);
     TH1I* bdx_pdg = new TH1I("bdx_pdg", "", 40, -15, 25);
@@ -135,7 +135,7 @@ int apollon_hits_process(std::string fnamelist) {
     TChain* hitstree = new TChain("Hits");
     std::for_each(flist.begin(), flist.end(), [hitstree](const std::string ss) { hitstree->Add(ss.c_str(), -1); });
     
-    int evid, pdg, procid, detid;
+    int evid, pdg, detid;
     double xx, yy, zz;
     double vtxx, vtxy, vtxz;
     double eneg, edep;
@@ -223,7 +223,7 @@ int apollon_hits_process(std::string fnamelist) {
     double px, py, pz;
     double theta, fluence;
 
-    bdxtree->SetBranchAddress("evid", &evid);
+    bdxtree->SetBranchAddress("eventid", &evid);
     bdxtree->SetBranchAddress("pdg", &pdg);
     bdxtree->SetBranchAddress("detid", &detid);
     bdxtree->SetBranchAddress("procid", &procid);
@@ -265,7 +265,7 @@ int apollon_hits_process(std::string fnamelist) {
         if (pdg == 11) { // electron 
             bdx_xyz_electron->Fill(xx, yy, zz);
             bdx_vtxx_vtxz_electron->Fill(vtxz, vtxx);
-            bdx_vtxy_vtxx_electron->Fill(vtxz, vtxy);
+            bdx_vtxy_vtxz_electron->Fill(vtxz, vtxy);
             bdx_vtxz_electron->Fill(vtxz);
             bdx_polar_electron->Fill(theta); 
             bdx_energy_electron->Fill(eneg);
@@ -277,7 +277,7 @@ int apollon_hits_process(std::string fnamelist) {
         else if (pdg == -11) { // positrons
             bdx_xyz_positron->Fill(xx, yy, zz);
             bdx_vtxx_vtxz_positron->Fill(vtxz, vtxx);
-            bdx_vtxy_vtxx_positron->Fill(vtxz, vtxy);
+            bdx_vtxy_vtxz_positron->Fill(vtxz, vtxy);
             bdx_vtxz_positron->Fill(vtxz);
             bdx_polar_positron->Fill(theta);
             bdx_energy_positron->Fill(eneg);
@@ -289,7 +289,7 @@ int apollon_hits_process(std::string fnamelist) {
         else if (pdg == 22) { // gamma
             bdx_xyz_gamma->Fill(xx, yy, zz);
             bdx_vtxx_vtxz_gamma->Fill(vtxz, vtxx);
-            bdx_vtxy_vtxx_gamma->Fill(vtxz, vtxy);
+            bdx_vtxy_vtxz_gamma->Fill(vtxz, vtxy);
             bdx_vtxz_gamma->Fill(vtxz);
             bdx_polar_gamma->Fill(theta); 
             bdx_energy_gamma->Fill(eneg);
@@ -301,7 +301,7 @@ int apollon_hits_process(std::string fnamelist) {
         else if (pdg == 13) { // mu-
             bdx_xyz_muminus->Fill(xx, yy, zz);
             bdx_vtxx_vtxz_muminus->Fill(vtxz, vtxx);
-            bdx_vtxy_vtxx_muminus->Fill(vtxz, vtxy);
+            bdx_vtxy_vtxz_muminus->Fill(vtxz, vtxy);
             bdx_vtxz_muminus->Fill(vtxz);
             bdx_polar_muminus->Fill(theta);
             bdx_energy_muminus->Fill(eneg);
@@ -313,7 +313,7 @@ int apollon_hits_process(std::string fnamelist) {
         else if (pdg == -13) { // mu+
             bdx_xyz_muplus->Fill(xx, yy, zz);
             bdx_vtxx_vtxz_muplus->Fill(vtxz, vtxx);
-            bdx_vtxy_vtxx_muplus->Fill(vtxz, vtxy);
+            bdx_vtxy_vtxz_muplus->Fill(vtxz, vtxy);
             bdx_vtxz_muplus->Fill(vtxz);
             bdx_polar_muplus->Fill(theta);
             bdx_energy_muplus->Fill(eneg);
