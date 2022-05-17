@@ -48,13 +48,14 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
     const G4VTouchable* theTouchable = preStepPoint->GetTouchable();
     const G4String& logicName = theTouchable->GetVolume()->GetLogicalVolume()->GetName();
     G4int ldet = 0;
+    G4int detidx = 0;
     if (logicName == "lYagScreen") {
         ldet = 1000;
     }
     else if (logicName == "lCr39") {
         ldet = 2000;
     }
-    else if (logicName == "lLanexSheet") {
+    else if (logicName == "lPhosphorLayer") {
         ldet = 3000;
     }
     G4int detid = ldet + 100*(theTouchable->GetCopyNumber(1)) + theTouchable->GetCopyNumber();

@@ -70,20 +70,24 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     // Creating list of materials
     G4NistManager* nist = G4NistManager::Instance();
 
-    G4Material* g4Vacuum    = nist->FindOrBuildMaterial("G4_Galactic");
-    G4Material* g4Air       = nist->FindOrBuildMaterial("G4_AIR");
-    G4Material* g4Helium    = nist->FindOrBuildMaterial("G4_He");
-    G4Material* g4Lead      = nist->FindOrBuildMaterial("G4_Pb");
-    G4Material* g4Aluminium = nist->FindOrBuildMaterial("G4_Al");
-    G4Material* g4Iron      = nist->FindOrBuildMaterial("G4_Fe");
-    G4Material* g4Tantalum  = nist->FindOrBuildMaterial("G4_Ta");
-    G4Material* g4Steel     = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
-    G4Material* g4YAG       = nist->FindOrBuildMaterial("YAG");
-    G4Material* g4Kapton    = nist->FindOrBuildMaterial("G4_KAPTON");
-    G4Material* g4Perspex   = nist->FindOrBuildMaterial("G4_PLEXIGLASS");  // Perspex trademark - PMMA or Plexiglass is generic name
-    G4Material* g4Tungsten  = nist->FindOrBuildMaterial("G4_W");
-    G4Material* g4Gadox     = nist->FindOrBuildMaterial("G4_GADOLINIUM_OXYSULFIDE");
-    G4Material* g4Cr39      = nist->FindOrBuildMaterial("G4_CR39");
+    G4Material* g4Vacuum       = nist->FindOrBuildMaterial("G4_Galactic");
+    G4Material* g4Air          = nist->FindOrBuildMaterial("G4_AIR");
+    G4Material* g4Helium       = nist->FindOrBuildMaterial("G4_He");
+    G4Material* g4Lead         = nist->FindOrBuildMaterial("G4_Pb");
+    G4Material* g4Aluminium    = nist->FindOrBuildMaterial("G4_Al");
+    G4Material* g4Iron         = nist->FindOrBuildMaterial("G4_Fe");
+    G4Material* g4Tantalum     = nist->FindOrBuildMaterial("G4_Ta");
+    G4Material* g4Steel        = nist->FindOrBuildMaterial("G4_STAINLESS-STEEL");
+    G4Material* g4YAG          = nist->FindOrBuildMaterial("YAG");
+    G4Material* g4Kapton       = nist->FindOrBuildMaterial("G4_KAPTON");
+    G4Material* g4Perspex      = nist->FindOrBuildMaterial("G4_PLEXIGLASS");  // Perspex trademark - PMMA or Plexiglass is generic name
+    G4Material* g4Tungsten     = nist->FindOrBuildMaterial("G4_W");
+    G4Material* g4Gadox        = nist->FindOrBuildMaterial("G4_GADOLINIUM_OXYSULFIDE");
+    G4Material* g4Acetate      = nist->FindOrBuildMaterial("G4_CELLULOSE_CELLOPHANE");
+    G4Material* g4TiO2         = nist->FindOrBuildMaterial("G4_TITANIUM_DIOXIDE");
+    G4Material* g4Polyethylene = nist->FindOrBuildMaterial("G4_POLYETHYLENE");
+    G4Material* g4Polystyrene  = nist->FindOrBuildMaterial("G4_POLYSTYRENE");
+    G4Material* g4Cr39         = nist->FindOrBuildMaterial("G4_CR39");
 
     //
     // Defining geometry
@@ -805,10 +809,11 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                               0,
                                                               checkOverlaps);
 
+    // LANEX screen
     G4Box* solidLanexSheet = new G4Box("lanexSheet",
                                        300.*mm/2.,
                                        150.*mm/2.,
-                                       2.*mm/2.);
+                                       535.*um/2.);
     G4LogicalVolume* logicLanexSheet = new G4LogicalVolume(solidLanexSheet, g4Gadox, "lLanexSheet");
     G4VPhysicalVolume* physLanexSheet = new G4PVPlacement(0,
                                                           G4ThreeVector(),
@@ -818,7 +823,77 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                           false,
                                                           0,
                                                           checkOverlaps);
+
+    G4Box* solidOvercoatLayer = new G4Box("overcoatLayer",
+                                          300.*mm/2.,
+                                          150.*mm/2.,
+                                          10.*um/2.);
+    G4LogicalVolume* logicOvercoatLayer = new G4LogicalVolume(solidOvercoatLayer, g4Acetate, "lOvercoatLayer");
+    G4VPhysicalVolume* physOvercoatLayer = new G4PVPlacement(0,
+                                                             G4ThreeVector(0, 0, -262.5*um),
+                                                             logicOvercoatLayer,
+                                                             "OvercoatLayer",
+                                                             logicLanexSheet,
+                                                             false,
+                                                             0,
+                                                             checkOverlaps);
+
+    G4Box* solidPhosphorLayer = new G4Box("phosphorLayer",
+                                          300.*mm/2.,
+                                          150.*mm/2.,
+                                          300.*um/2.);
+    G4LogicalVolume* logicPhosphorLayer = new G4LogicalVolume(solidPhosphorLayer, g4Gadox, "lPhosphorLayer");
+    G4VPhysicalVolume* physPhosphorLayer = new G4PVPlacement(0,
+                                                             G4ThreeVector(0, 0, -107.5*um),
+                                                             logicPhosphorLayer,
+                                                             "PhosphorLayer",
+                                                             logicLanexSheet,
+                                                             false,
+                                                             0,
+                                                             checkOverlaps);
+
+    G4Box* solidReflectLayer = new G4Box("reflectLayer",
+                                          300.*mm/2.,
+                                          150.*mm/2.,
+                                          5.*um/2.);
+    G4LogicalVolume* logicReflectLayer = new G4LogicalVolume(solidReflectLayer, g4TiO2, "lReflectLayer");
+    G4VPhysicalVolume* physReflectLayer = new G4PVPlacement(0,
+                                                             G4ThreeVector(0, 0, 45.*um),
+                                                             logicReflectLayer,
+                                                             "ReflectLayer",
+                                                             logicLanexSheet,
+                                                             false,
+                                                             0,
+                                                             checkOverlaps);
+
+    G4Box* solidSupportLayer = new G4Box("supportLayer",
+                                          300.*mm/2.,
+                                          150.*mm/2.,
+                                          170.*um/2.);
+    G4LogicalVolume* logicSupportLayer = new G4LogicalVolume(solidSupportLayer, g4Polyethylene, "lSupportLayer");
+    G4VPhysicalVolume* physSupportLayer = new G4PVPlacement(0,
+                                                             G4ThreeVector(0, 0, 132.5*um),
+                                                             logicSupportLayer,
+                                                             "SupportLayer",
+                                                             logicLanexSheet,
+                                                             false,
+                                                             0,
+                                                             checkOverlaps);
     
+    G4Box* solidAntiCurlLayer = new G4Box("antiCurlLayer",
+                                          300.*mm/2.,
+                                          150.*mm/2.,
+                                          50.*um/2.);
+    G4LogicalVolume* logicAntiCurlLayer = new G4LogicalVolume(solidAntiCurlLayer, g4Polystyrene, "lAntiCurlLayer");
+    G4VPhysicalVolume* physAntiCurlLayer = new G4PVPlacement(0,
+                                                             G4ThreeVector(0, 0, 242.5*um),
+                                                             logicAntiCurlLayer,
+                                                             "AntiCurlLayer",
+                                                             logicLanexSheet,
+                                                             false,
+                                                             0,
+                                                             checkOverlaps);
+
     // Assign magnetic fields to logical volumes
     fLogicChamberMagField = logicMagField;
     fLogicSpecMagField    = logicGSpecMagGap;
@@ -851,7 +926,7 @@ void DetectorConstruction::ConstructSDandField() {
     // Setting sensitive volumes
     SetSensitiveDetector("lYagScreen", sd, true);
     SetSensitiveDetector("lCr39", sd, true);
-    SetSensitiveDetector("lLanexSheet", sd, true);
+    SetSensitiveDetector("lPhosphorLayer", sd, true);
 
     // Add magnetic fields
     G4MagneticField* chamberMagField = new G4UniformMagField(G4ThreeVector(0., 1.7*tesla, 0.));
