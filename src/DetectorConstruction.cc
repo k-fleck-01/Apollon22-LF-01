@@ -850,7 +850,7 @@ void DetectorConstruction::ConstructSDandField() {
     
     // Setting sensitive volumes
     SetSensitiveDetector("lYagScreen", sd, true);
-    SetSensitiveDetector("lStack", sd, true);
+    SetSensitiveDetector("lCr39", sd, true);
     SetSensitiveDetector("lLanexSheet", sd, true);
 
     // Add magnetic fields

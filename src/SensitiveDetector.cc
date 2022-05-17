@@ -51,13 +51,13 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
     if (logicName == "lYagScreen") {
         ldet = 1000;
     }
-    else if (logicName == "lStack") {
+    else if (logicName == "lCr39") {
         ldet = 2000;
     }
     else if (logicName == "lLanexSheet") {
         ldet = 3000;
     }
-    G4int detid = ldet + theTouchable->GetCopyNumber();
+    G4int detid = ldet + 100*(theTouchable->GetCopyNumber(1)) + theTouchable->GetCopyNumber();
 
     // Position of hit
     G4ThreeVector prePosition = preStepPoint->GetPosition();

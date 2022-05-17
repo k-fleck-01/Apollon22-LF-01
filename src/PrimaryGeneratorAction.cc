@@ -70,9 +70,9 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
     // Adding primary information to tree
     G4RootAnalysisManager* analysisManager = G4RootAnalysisManager::Instance();
 
-    analysisManager->FillNtupleDColumn(3, 0, x0/cm);
-    analysisManager->FillNtupleDColumn(3, 1, y0/cm);
-    analysisManager->FillNtupleDColumn(3, 2, z0/cm);
+    analysisManager->FillNtupleDColumn(3, 0, x0/mm);
+    analysisManager->FillNtupleDColumn(3, 1, y0/mm);
+    analysisManager->FillNtupleDColumn(3, 2, z0/mm);
     analysisManager->FillNtupleDColumn(3, 3, energy/MeV);
     analysisManager->FillNtupleDColumn(3, 4, theta/mrad);
     analysisManager->FillNtupleDColumn(3, 5, phi/rad);
