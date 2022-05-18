@@ -125,8 +125,8 @@ int apollon_hits_process(std::string fnamelist) {
     TH1D* bdx_energy_fluence_muminus = new TH1D("bdx_energy_fluence_muminus", "", nEnergyBins, 0., 2000.);
     TH1D* bdx_energy_fluence_muplus = new TH1D("bdx_energy_fluence_muplus", "", nEnergyBins, 0., 2000.);
 
-    TH1I* bdx_creation_process = new TH1I("bdx_creation_process", "", 25, 2000, 2025);
-    TH1I* bdx_pdg = new TH1I("bdx_pdg", "", 40, -15, 25);
+    TH1I* bdx_creation_process = new TH1I("bdx_creation_process", "", 215, 0, 215);
+    TH1I* bdx_pdg = new TH1I("bdx_pdg", "", 2525, -25, 2500);
 
     // ************************************************************************
     // Processing hits TChain

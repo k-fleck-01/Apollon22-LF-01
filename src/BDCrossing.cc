@@ -10,7 +10,6 @@
 #include "BDCrossing.hh"
 
 #include "G4VProcess.hh"
-#include "G4EmProcessSubType.hh"
 
 BDCrossing::BDCrossing(): fPdg(0), fDetid(0), fVertex(0), fPosition(0),
              fEnergy(0.), fMomentum(0), fAngle(0.), fFluence(0.), fProcid(0)

@@ -88,7 +88,7 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
         G4double areaS = 0.5*theTouchable->GetSolid()->GetSurfaceArea()/mm2;
 
         // Creator process
-        G4int procid = 2000;
+        G4int procid = 0;
         if (track->GetCreatorProcess()) {
             procid += track->GetCreatorProcess()->GetProcessSubType();
         }
