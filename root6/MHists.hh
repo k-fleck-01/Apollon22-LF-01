@@ -28,6 +28,8 @@ class MHists {
         void FillHistW(std::string, int, double, double);
         void FillHistW(std::string, int, double, double, double);
         void FillHistW(std::string, int, double, double, double, double);
+
+        void SaveHists(std::string);
     private:
         std::vector<std::string> fNameList;
         std::vector<std::vector<TH1*>> fHistList;

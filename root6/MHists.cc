@@ -8,12 +8,15 @@
 // Created: 19/05/2022
 // Last edited: 19/05/2022
 //
+#include <iostream>
+#include <algorithm>
 
 #include "MHists.hh"
 
 #include "TH1.h"
 #include "TH2.h"
 #include "TH3.h"
+#include "TFile.h"
 
 MHists::MHists(): fNameList(0), fHistList(0)
 {}
@@ -120,4 +123,11 @@ void MHists::FillHistW(std::string hprefix, int ndet, double value1, double valu
     }
     TH3D* hh = dynamic_cast<TH3D*>(fHistList[hindex][ndet - 1]);
     hh->Fill(value1, value2, value3, value4);
+}
+//
+//
+void MHists::SaveHists(std::string filename) {
+    TFile* rfile = new TFile(filename.c_str(), "RECREATE");
+    rfile->Write();
+    rfile->Close();
 }
