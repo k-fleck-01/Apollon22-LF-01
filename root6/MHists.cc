@@ -128,6 +128,9 @@ void MHists::FillHistW(std::string hprefix, int ndet, double value1, double valu
 //
 void MHists::SaveHists(std::string filename) {
     TFile* rfile = new TFile(filename.c_str(), "RECREATE");
-    rfile->Write();
+    
+    for (HistV& histv : fHistList) {
+        std::for_each(histv.begin(), histv.end(), [rfile](const auto hh){ rfile->WriteObject(hh, hh->GetName()); });
+    }
     rfile->Close();
 }
