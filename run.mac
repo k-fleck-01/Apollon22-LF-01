@@ -10,11 +10,6 @@
 /control/verbose 1
 /run/verbose 1
 
-# Set up spectrometer variables
-# If not provided, defaults are used
-/spectrometer/SetMagnetStrength 2 tesla
-/spectrometer/SetMagnetLength 20 cm
-
 # Initialise run manager
 /run/initialize
 

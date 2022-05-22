@@ -7,15 +7,15 @@
 //
 
 #include "PhysListMessenger.hh"
-#include "PhysListEmStandard.hh"
+#include "PhysListEmExtended.hh"
 
 #include "G4UIdirectory.hh"
 #include "G4UIcommand.hh"
 #include "G4UIparameter.hh"
 #include "G4UIcmdWithADouble.hh"
 
-PhysListMessenger::PhysListMessenger(PhysListEmStandard* physlist) : G4UImessenger(), 
-                                                        fPhysListEmStandard(physlist) {
+PhysListMessenger::PhysListMessenger(PhysListEmExtended* physlist) : G4UImessenger(), 
+                                                        fPhysListEmExtended(physlist) {
 
     fDirectory = new G4UIdirectory("/physlist/");
     fDirectory->SetGuidance("Directory containing commands to apply cross section biasing to muon production.");
@@ -29,7 +29,7 @@ PhysListMessenger::PhysListMessenger(PhysListEmStandard* physlist) : G4UImesseng
 }
 
 PhysListMessenger::~PhysListMessenger() {
-    delete fPhysListEmStandard;
+    delete fPhysListEmExtended;
     delete fDirectory;
     delete fSetMuonFactorCmd;
 }
@@ -37,7 +37,7 @@ PhysListMessenger::~PhysListMessenger() {
 void PhysListMessenger::SetNewValue(G4UIcommand* command, G4String newValue) {
 
     if (command == fSetMuonFactorCmd) { 
-        fPhysListEmStandard->SetMuonScaleFactor(fSetMuonFactorCmd->GetNewDoubleValue(newValue));
+        fPhysListEmExtended->SetMuonScaleFactor(fSetMuonFactorCmd->GetNewDoubleValue(newValue));
     }
 
 }

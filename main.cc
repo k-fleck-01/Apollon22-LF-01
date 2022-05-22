@@ -15,8 +15,7 @@
 #include "G4VisManager.hh"
 
 #include "DetectorConstruction.hh"
-#include "PhysicsList.hh"
-#include "QGSP_BERT.hh"
+#include "QGSP_BERT_EXT.hh"
 #include "ActionInitialization.hh"
 #include "PrimaryGeneratorAction.hh"
 
@@ -38,8 +37,7 @@ int main(int argc, char** argv) {
 #endif
 
     runManager->SetUserInitialization(new DetectorConstruction);
-    //runManager->SetUserInitialization(new PhysicsList);
-	runManager->SetUserInitialization(new QGSP_BERT);
+	runManager->SetUserInitialization(new QGSP_BERT_EXT);
     runManager->SetUserInitialization(new ActionInitialization);
 
 	G4VisManager* visManager = nullptr;

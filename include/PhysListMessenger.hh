@@ -11,20 +11,20 @@
 #include "globals.hh"
 #include "G4UImessenger.hh"
 
-class PhysListEmStandard;
+class PhysListEmExtended;
 class G4UIdirectory;
 class G4UIcmdWithADouble;
 
 class PhysListMessenger : public G4UImessenger {
     public:
-        PhysListMessenger(PhysListEmStandard*);
+        PhysListMessenger(PhysListEmExtended*);
         ~PhysListMessenger();
 
     public:
         virtual void SetNewValue(G4UIcommand*, G4String);
 
     private:
-        PhysListEmStandard* fPhysListEmStandard;
+        PhysListEmExtended* fPhysListEmExtended;
         G4UIdirectory* fDirectory;
         G4UIcmdWithADouble* fSetMuonFactorCmd;
 };
