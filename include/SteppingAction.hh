@@ -1,5 +1,5 @@
-#ifndef _STEPPING_ACTION_H_
-#define _STEPPING_ACTION_H_
+#ifndef STEPPING_ACTION_H
+#define STEPPING_ACTION_H 1
 //
 // GEANT4 simulation of the Apollon 2022 experiment.
 // Geometry has been derived from the FLUKA simulation of the same experiment.

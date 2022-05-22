@@ -1,5 +1,5 @@
-#ifndef _HIT_H_
-#define _HIT_H_
+#ifndef HIT_H 
+#define HIT_H 1
 //
 // GEANT4 simulation of the Apollon 2022 experiment.
 // Geometry has been derived from the FLUKA simulation of the same experiment.

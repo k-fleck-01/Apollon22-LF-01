@@ -1,5 +1,5 @@
-#ifndef _PHYSLIST_MESSENGER_H_
-#define _PHYSLIST_MESSENGER_H_
+#ifndef PHYSLIST_MESSENGER_H
+#define PHYSLIST_MESSENGER_H 1
 //
 // GEANT4 simulation of the Apollon 2022 experiment.
 // Geometry has been derived from the FLUKA simulation of the same experiment.

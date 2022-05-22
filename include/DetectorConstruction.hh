@@ -1,5 +1,5 @@
-#ifndef _DETECTOR_CONSTRUCTION_H_
-#define _DETECTOR_CONSTRUCTION_H_
+#ifndef DETECTOR_CONSTRUCTION_H
+#define DETECTOR_CONSTRUCTION_H 1
 //
 // GEANT4 simulation of the Apollon 2022 experiment.
 // Geometry has been derived from the FLUKA simulation of the same experiment.

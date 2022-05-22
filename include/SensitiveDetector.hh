@@ -1,5 +1,5 @@
-#ifndef _SENSITIVE_DETECTOR_H_
-#define _SENSITIVE_DETECTOR_H_
+#ifndef SENSITIVE_DETECTOR_H
+#define SENSITIVE_DETECTOR_H 1
 //
 // GEANT4 simulation of the Apollon 2022 experiment.
 // Geometry has been derived from the FLUKA simulation of the same experiment.

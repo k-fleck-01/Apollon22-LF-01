@@ -1,5 +1,5 @@
-#ifndef _PRIMARY_GENERATOR_ACTION_H_
-#define _PRIMARY_GENERATOR_ACTION_H_
+#ifndef PRIMARY_GENERATOR_ACTION_H
+#define PRIMARY_GENERATOR_ACTION_H 1
 
 //
 // GEANT4 simulation of the Apollon 2022 experiment.

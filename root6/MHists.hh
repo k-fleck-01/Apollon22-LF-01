@@ -1,5 +1,5 @@
-#ifndef _MHISTS_HH_
-#define _MHISTS_HH_
+#ifndef MHISTS_H
+#define MHISTS_H 1
 //
 // GEANT4 simulation of the Apollon 2022 experiment.
 // Geometry has been derived from the FLUKA simulation of the same experiment.

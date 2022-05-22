@@ -1,5 +1,5 @@
-#ifndef _ACTION_INITIALIZATION_H_
-#define _ACTION_INITIALIZATION_H_
+#ifndef ACTION_INITIALIZATION_H
+#define ACTION_INITIALIZATION_H 1
 //
 // GEANT4 simulation of the Apollon 2022 experiment.
 // Geometry has been derived from the FLUKA simulation of the same experiment.
