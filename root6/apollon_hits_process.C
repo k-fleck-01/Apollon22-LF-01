@@ -95,9 +95,16 @@ int run_apollon_process_hits(const char* fnamelist) {
             mh->FillHistW("cr39_hits_edep_xy", ndet, xx+180., yy, edep);
             mh->FillHistW("cr39_hits_edep", ndet, edep);
             mh->FillHistW("cr39_hits_e_edep", ndet, eneg, edep);
+            mh->FillHistW("cr39_hits_edep_z", 1, zz + 1025., edep);
 
-            if (pdg == 13 || pdg == -13) mh->FillHistW("cr39_hits_edep_muon", ndet, edep);
-            if (pdg == 2112) mh->FillHistW("cr39_hits_edep_neutron", ndet, edep);
+            if (pdg == 13 || pdg == -13) {
+                mh->FillHistW("cr39_hits_edep_muon", ndet, edep);
+                mh->FillHistW("cr39_hits_edep_z_muon", 1, zz + 1025., edep);
+            }
+            if (pdg == 2112) {
+                mh->FillHistW("cr39_hits_edep_neutron", ndet, edep);
+                mh->FillHistW("cr39_hits_edep_z_neutron", 1, zz + 1025., edep);
+            }
         }
         else if (detid == 3000) { // LANEX screens
             ndet = detid - 2999;
@@ -106,11 +113,24 @@ int run_apollon_process_hits(const char* fnamelist) {
             mh->FillHistW("lanex_hits_edep_xy", ndet, xx, yy, edep);
             mh->FillHistW("lanex_hits_edep", ndet, edep);
             mh->FillHistW("lanex_hits_e_edep", ndet, eneg, edep);
+            mh->FillHistW("lanex_hits_edep_z", ndet, zz - 49.7425, edep);
 
-            if (pdg == 11) mh->FillHistW("lanex_hits_edep_electron", ndet, edep);
-            if (pdg == -11) mh->FillHistW("lanex_hits_edep_positron", ndet, edep);
-            if (pdg == 22) mh->FillHistW("lanex_hits_edep_gamma", ndet, edep);
-            if (pdg == 2112) mh->FillHistW("lanex_hits_edep_neutron", ndet, edep);
+            if (pdg == 11) {
+                mh->FillHistW("lanex_hits_edep_electron", ndet, edep);
+                mh->FillHistW("lanex_hits_edep_z_electron", ndet, zz - 49.7425, edep);
+            }
+            else if (pdg == -11) {
+                mh->FillHistW("lanex_hits_edep_positron", ndet, edep);
+                mh->FillHistW("lanex_hits_edep_z_positron", ndet, zz - 49.7425, edep);
+            }
+            else if (pdg == 22) { 
+                mh->FillHistW("lanex_hits_edep_gamma", ndet, edep);
+                mh->FillHistW("lanex_hits_edep_z_gamma", ndet, zz - 49.7425, edep);
+            }
+            else if (pdg == 2112) {
+                mh->FillHistW("lanex_hits_edep_neutron", ndet, edep);
+                mh->FillHistW("lanex_hits_edep_z_neutron", ndet, zz - 49.7425, edep);
+            }
         }
     }
     // ************************************************************************
@@ -300,19 +320,27 @@ void CreateHistograms(MHists* mh) {
     // Hits histograms
     mh->AddHistograms("lanex_hits_xy", 1, nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
     mh->AddHistograms("lanex_hits_edep_xy", 1, nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
-    mh->AddHistograms("lanex_hits_edep", 1, nEnergyBins, 0., 200.);
-    mh->AddHistograms("lanex_hits_edep_electron", 1, nEnergyBins, 0., 200.);
-    mh->AddHistograms("lanex_hits_edep_positron", 1, nEnergyBins, 0., 200.);
-    mh->AddHistograms("lanex_hits_edep_gamma", 1, nEnergyBins, 0., 200.);
-    mh->AddHistograms("lanex_hits_edep_neutron", 1, nEnergyBins, 0., 200.);
-    mh->AddHistograms("lanex_hits_e_edep", 1, nEnergyBins, 0., 2000., nEnergyBins, 0., 200.);
+    mh->AddHistograms("lanex_hits_edep", 1, nEnergyBins, 0., 10.);
+    mh->AddHistograms("lanex_hits_edep_electron", 1, nEnergyBins, 0., 10.);
+    mh->AddHistograms("lanex_hits_edep_positron", 1, nEnergyBins, 0., 10.);
+    mh->AddHistograms("lanex_hits_edep_gamma", 1, nEnergyBins, 0., 10.);
+    mh->AddHistograms("lanex_hits_edep_neutron", 1, nEnergyBins, 0., 10.);
+    mh->AddHistograms("lanex_hits_edep_z", 1, nSpaceBins, 0., 0.3);
+    mh->AddHistograms("lanex_hits_edep_z_electron", 1, nSpaceBins, 0., 0.3);
+    mh->AddHistograms("lanex_hits_edep_z_positron", 1, nSpaceBins, 0., 0.3);
+    mh->AddHistograms("lanex_hits_edep_z_gamma", 1, nSpaceBins, 0., 0.3);
+    mh->AddHistograms("lanex_hits_edep_z_neutron", 1, nSpaceBins, 0., 0.3);
+    mh->AddHistograms("lanex_hits_e_edep", 1, nEnergyBins, 0., 2000., nEnergyBins, 0., 10.);
 
     mh->AddHistograms("cr39_hits_xy", 20, nSpaceBins, -50., 50., nSpaceBins, -50., 50.);
     mh->AddHistograms("cr39_hits_edep_xy", 20, nSpaceBins, -50., 50., nSpaceBins, -50., 50.);
-    mh->AddHistograms("cr39_hits_edep", 20, nEnergyBins, 0., 200.);
-    mh->AddHistograms("cr39_hits_edep_muon", 20, nEnergyBins, 0., 200.);
-    mh->AddHistograms("cr39_hits_edep_neutron", 20, nEnergyBins, 0., 200.);
-    mh->AddHistograms("cr39_hits_e_edep", 20, nEnergyBins, 0., 2000., nEnergyBins, 0., 200.);
+    mh->AddHistograms("cr39_hits_edep", 20, nEnergyBins, 0., 10.);
+    mh->AddHistograms("cr39_hits_edep_muon", 20, nEnergyBins, 0., 10.);
+    mh->AddHistograms("cr39_hits_edep_neutron", 20, nEnergyBins, 0., 10.);
+    mh->AddHistograms("cr39_hits_edep_z", 1, nSpaceBins, 0., 10.);
+    mh->AddHistograms("cr39_hits_edep_z_muon", 1, nSpaceBins, 0., 10.);
+    mh->AddHistograms("cr39_hits_edep_z_neutron", 1, nSpaceBins, 0., 10.);
+    mh->AddHistograms("cr39_hits_e_edep", 20, nEnergyBins, 0., 2000., nEnergyBins, 0., 10.);
     
     // Primaries histograms
     mh->AddHistograms("primaries_xy", 1, nSpaceBins, -2., 2., nSpaceBins, -2., 2.);
