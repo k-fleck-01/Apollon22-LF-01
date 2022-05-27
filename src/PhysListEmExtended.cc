@@ -200,4 +200,7 @@ void PhysListEmExtended::SetMuonScaleFactor(G4double scale) {
 
     if (GammaToMuPairProcess) GammaToMuPairProcess->SetCrossSecFactor(scale);
     if (AnnihiToMuPairProcess) AnnihiToMuPairProcess->SetCrossSecFactor(scale);
+
+    G4out << "G4GammaConversionToMuons and G4AnnihiToMuPair processes haven been scaled by: " << 
+            scale << G4endl;
 }
