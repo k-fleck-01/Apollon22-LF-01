@@ -67,6 +67,8 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
                                                                                            // a random point along step.
     
     G4Track* track = aStep->GetTrack();
+    G4int trackid = track->GetTrackID();
+
     // PDG code of particle causing hit
     G4int pdgCode = track->GetParticleDefinition()->GetPDGEncoding();
     
@@ -119,6 +121,7 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
     aHit->AddVertexPosition(vpos);
     aHit->AddEnergy(energy);
     aHit->AddDetectorID(detid);
+    aHit->AddTrackID(trackid);
     fHitCollection->insert(aHit);
 
     return true;
@@ -136,6 +139,7 @@ void SensitiveDetector::EndOfEvent(G4HCofThisEvent* HCE) {
         G4int pdg          = hit->GetParticleType();
         G4int procid       = hit->GetProcess();
         G4int detid        = hit->GetDetectorID();
+        G4int trackid      = hit->GetTrackID();
         G4double x         = hit->GetPosition().x();
         G4double y         = hit->GetPosition().y();
         G4double z         = hit->GetPosition().z();
@@ -157,8 +161,10 @@ void SensitiveDetector::EndOfEvent(G4HCofThisEvent* HCE) {
         analysisManager->FillNtupleIColumn(0, 9, pdg);
         analysisManager->FillNtupleIColumn(0, 10, procid);
         analysisManager->FillNtupleIColumn(0, 11, detid);
+        analysisManager->FillNtupleIColumn(0, 12, trackid);
         analysisManager->AddNtupleRow(0);
     }
+    
 
     nhits = fBDXCollection->entries();
     for (G4int ii = 0; ii < nhits; ++ii) {

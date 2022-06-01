@@ -24,6 +24,7 @@ class Hit : public G4VHit {
         G4int GetParticleType() const;
         G4int GetProcess() const;
         G4int GetDetectorID() const;
+        G4int GetTrackID() const;
 
         void AddEdep(G4double);
         void AddEnergy(G4double);
@@ -32,6 +33,7 @@ class Hit : public G4VHit {
         void AddParticleType(G4int);
         void AddProcess(G4int);
         void AddDetectorID(G4int);
+        void AddTrackID(G4int);
 
     private:
         G4double fEdep;
@@ -41,6 +43,7 @@ class Hit : public G4VHit {
         G4int fParticleType;
         G4int fProcess;
         G4int fDetid;
+        G4int fTrackid;
 
 };
 

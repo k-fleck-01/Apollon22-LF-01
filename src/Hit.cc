@@ -16,56 +16,21 @@ Hit::Hit() : G4VHit(), fEdep(0.), fEnergy(0.), fPosition(0), fVertexPosition(0),
 Hit::~Hit()
 {}
 
-G4double Hit::GetEdep() const {
-    return fEdep;
-}
+G4double Hit::GetEdep() const { return fEdep; }
+G4double Hit::GetEnergy() const { return fEnergy; }
+G4ThreeVector Hit::GetPosition() const { return fPosition; }
+G4ThreeVector Hit::GetVertexPosition() const { return fVertexPosition; }
+G4int Hit::GetParticleType() const { return fParticleType; }
+G4int Hit::GetProcess() const { return fProcess; }
+G4int Hit::GetDetectorID() const { return fDetid; }
+G4int Hit::GetTrackID() const { return fTrackid; }
 
-G4double Hit::GetEnergy() const {
-    return fEnergy;
-}
 
-G4ThreeVector Hit::GetPosition() const {
-    return fPosition;
-}
-
-G4ThreeVector Hit::GetVertexPosition() const {
-    return fVertexPosition;
-}
-
-G4int Hit::GetParticleType() const {
-    return fParticleType;
-}
-
-G4int Hit::GetProcess() const {
-    return fProcess;
-}
-
-G4int Hit::GetDetectorID() const {
-    return fDetid;
-}
-
-void Hit::AddEdep(G4double edep) {
-    fEdep = edep;
-}
-
-void Hit::AddEnergy(G4double ekin) {
-    fEnergy = ekin;
-}
-
-void Hit::AddPosition(G4ThreeVector pos) {
-    fPosition = pos;
-}
-
-void Hit::AddVertexPosition(G4ThreeVector vpos) {
-    fVertexPosition = vpos;
-}
-
-void Hit::AddParticleType(G4int pdg) {
-    fParticleType = pdg; 
-}
-void Hit::AddProcess(G4int procid) {
-    fProcess = procid;
-}
-void Hit::AddDetectorID(G4int detid) {
-    fDetid = detid;
-}
+void Hit::AddEdep(G4double edep) { fEdep = edep; }
+void Hit::AddEnergy(G4double eneg) { fEnergy = eneg; }
+void Hit::AddPosition(G4ThreeVector pos) { fPosition = pos; }
+void Hit::AddVertexPosition(G4ThreeVector vpos) { fVertexPosition = vpos; }
+void Hit::AddParticleType(G4int pdg) { fParticleType = pdg;  }
+void Hit::AddProcess(G4int procid) { fProcess = procid; }
+void Hit::AddDetectorID(G4int detid) { fDetid = detid; }
+void Hit::AddTrackID(G4int trackid) { fTrackid = trackid; }

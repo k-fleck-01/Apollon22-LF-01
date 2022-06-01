@@ -35,6 +35,7 @@ void RunAction::BeginOfRunAction(const G4Run*) {
     analysisManager->CreateNtupleIColumn(0, "pdg");
     analysisManager->CreateNtupleIColumn(0, "procid");
     analysisManager->CreateNtupleIColumn(0, "detid");
+    analysisManager->CreateNtupleIColumn(0, "trackid");
     analysisManager->FinishNtuple(0);
 
     analysisManager->CreateNtuple("Events", "Events");
