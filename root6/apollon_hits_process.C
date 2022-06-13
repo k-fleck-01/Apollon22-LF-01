@@ -141,6 +141,41 @@ int run_apollon_process_hits(const char* fnamelist) {
                 mh->FillHistW("lanex_hits_edep_xy_neutron", ndet, xx, yy, edep);
             }
         }
+        else if (detid == 1000) { // YAG screens
+            ndet = detid - 999;
+
+            mh->FillHistW("yag_hits_xy", ndet, xx, yy);
+            mh->FillHistW("yag_hits_edep_xy", ndet, xx, yy, edep);
+            mh->FillHistW("yag_hits_edep", ndet, edep);
+            mh->FillHistW("yag_hits_log_edep", ndet, std::log10(edep)+6);
+            mh->FillHistW("yag_hits_e_edep", ndet, eneg, edep);
+            mh->FillHistW("yag_hits_edep_z", ndet, zz - 49.7425, edep);
+
+            if (pdg == 11) {
+                mh->FillHistW("yag_hits_edep_electron", ndet, edep);
+                mh->FillHistW("yag_hits_log_edep_electron", ndet, std::log10(edep)+6);
+                mh->FillHistW("yag_hits_edep_z_electron", ndet, zz - 49.7425, edep);
+                mh->FillHistW("yag_hits_edep_xy_electron", ndet, xx, yy, edep);
+            }
+            else if (pdg == -11) {
+                mh->FillHistW("yag_hits_edep_positron", ndet, edep);
+                mh->FillHistW("yag_hits_log_edep_positron", ndet, std::log10(edep)+6);
+                mh->FillHistW("yag_hits_edep_z_positron", ndet, zz - 49.7425, edep);
+                mh->FillHistW("yag_hits_edep_xy_positron", ndet, xx, yy, edep);
+            }
+            else if (pdg == 22) { 
+                mh->FillHistW("yag_hits_edep_gamma", ndet, edep);
+                mh->FillHistW("yag_hits_log_edep_gamma", ndet, std::log10(edep)+6);
+                mh->FillHistW("yag_hits_edep_z_gamma", ndet, zz - 49.7425, edep);
+                mh->FillHistW("yag_hits_edep_xy_gamma", ndet, xx, yy, edep);
+            }
+            else if (pdg == 2112) {
+                mh->FillHistW("yag_hits_edep_neutron", ndet, edep);
+                mh->FillHistW("yag_hits_log_edep_neutron", ndet, std::log10(edep)+6);
+                mh->FillHistW("yag_hits_edep_z_neutron", ndet, zz - 49.7425, edep);
+                mh->FillHistW("yag_hits_edep_xy_neutron", ndet, xx, yy, edep);
+            }
+        }
     }
     // ************************************************************************
     // Process primary TChain
@@ -291,6 +326,56 @@ int run_apollon_process_hits(const char* fnamelist) {
                 mh->FillHistW("lanex_bdx_e_other", ndet, eneg);
             }
         }
+        else if (detid == 1000) { // YAG screens
+            ndet = detid - 999;
+
+            mh->FillHistW("yag_bdx_xy", ndet, xx, yy);
+            mh->FillHistW("yag_bdx_vtxx_vtxz", ndet, vtxz, vtxx);
+            mh->FillHistW("yag_bdx_vtxy_vtxz", ndet, vtxz, vtxy);
+            mh->FillHistW("yag_bdx_vtxz", ndet, vtxz);
+            mh->FillHistW("yag_bdx_e", ndet, eneg);
+            mh->FillHistW("yag_bdx_pdg", ndet, pdg);
+            mh->FillHistW("yag_bdx_procid", ndet, procid);
+
+            if (pdg == 11) { // electrons 
+                mh->FillHistW("yag_bdx_xy_electron", ndet, xx, yy);
+                mh->FillHistW("yag_bdx_vtxx_vtxz_electron", ndet, vtxz, vtxx);
+                mh->FillHistW("yag_bdx_vtxy_vtxz_electron", ndet, vtxz, vtxy);
+                mh->FillHistW("yag_bdx_vtxz_electron", ndet, vtxz);
+                mh->FillHistW("yag_bdx_e_electron", ndet, eneg);
+                mh->FillHistW("yag_bdx_e_x_electron", ndet, xx, eneg);
+            }
+            else if (pdg == -11) { // positrons
+                mh->FillHistW("yag_bdx_xy_positron", ndet, xx, yy);
+                mh->FillHistW("yag_bdx_vtxx_vtxz_positron", ndet, vtxz, vtxx);
+                mh->FillHistW("yag_bdx_vtxy_vtxz_positron", ndet, vtxz, vtxy);
+                mh->FillHistW("yag_bdx_vtxz_positron", ndet, vtxz);
+                mh->FillHistW("yag_bdx_e_positron", ndet, eneg);
+                mh->FillHistW("yag_bdx_e_x_positron", ndet, xx, eneg);
+            }
+            else if (pdg == 22) { // photons
+                mh->FillHistW("yag_bdx_xy_gamma", ndet, xx, yy);
+                mh->FillHistW("yag_bdx_vtxx_vtxz_gamma", ndet, vtxz, vtxx);
+                mh->FillHistW("yag_bdx_vtxy_vtxz_gamma", ndet, vtxz, vtxy);
+                mh->FillHistW("yag_bdx_vtxz_gamma", ndet, vtxz);
+                mh->FillHistW("yag_bdx_e_gamma", ndet, eneg);
+            }
+            else if (pdg == 2112) { // neutrons
+                mh->FillHistW("yag_bdx_xy_neutron", ndet, xx, yy);
+                mh->FillHistW("yag_bdx_vtxx_vtxz_neutron", ndet, vtxz, vtxx);
+                mh->FillHistW("yag_bdx_vtxy_vtxz_neutron", ndet, vtxz, vtxy);
+                mh->FillHistW("yag_bdx_vtxz_neutron", ndet, vtxz);
+                mh->FillHistW("yag_bdx_e_neutron", ndet, eneg);
+                mh->FillHistW("yag_bdx_lethargy", ndet, std::log10(eneg-939.565)+6, eneg-939.565);
+            }
+            else {
+                mh->FillHistW("yag_bdx_xy_other", ndet, xx, yy);
+                mh->FillHistW("yag_bdx_vtxx_vtxz_other", ndet, vtxz, vtxx);
+                mh->FillHistW("yag_bdx_vtxy_vtxz_other", ndet, vtxz, vtxy);
+                mh->FillHistW("yag_bdx_vtxz_other", ndet, vtxz);
+                mh->FillHistW("yag_bdx_e_other", ndet, eneg);
+            }
+        }
     }
 
     mh->SaveHists(foutname);
@@ -368,6 +453,29 @@ void CreateHistograms(MHists* mh) {
     mh->AddHistograms("cr39_hits_edep_z_muon", 1, nSpaceBins, 0., 2.);
     mh->AddHistograms("cr39_hits_edep_z_neutron", 1, nSpaceBins, 0., 2.);
     mh->AddHistograms("cr39_hits_e_edep", 20, nEnergyBins, 0., 2000., nEnergyBins, 0., 2.);
+
+    mh->AddHistograms("yag_hits_xy", 1, nSpaceBins, -150., 150., nSpaceBins, -15., 15.);
+    mh->AddHistograms("yag_hits_edep_xy", 1, nSpaceBins, -150., 150., nSpaceBins, -15., 15.);
+    mh->AddHistograms("yag_hits_edep_xy_electron", 1, nSpaceBins, -150., 150., nSpaceBins, -15., 15.);
+    mh->AddHistograms("yag_hits_edep_xy_positron", 1, nSpaceBins, -150., 150., nSpaceBins, -15., 15.);
+    mh->AddHistograms("yag_hits_edep_xy_gamma", 1, nSpaceBins, -150., 150., nSpaceBins, -15., 15.);
+    mh->AddHistograms("yag_hits_edep_xy_neutron", 1, nSpaceBins, -150., 150., nSpaceBins, -15., 15.);
+    mh->AddHistograms("yag_hits_edep", 1, nEnergyBins, 0., 2.);
+    mh->AddHistograms("yag_hits_edep_electron", 1, nEnergyBins, 0., 2.);
+    mh->AddHistograms("yag_hits_edep_positron", 1, nEnergyBins, 0., 2.);
+    mh->AddHistograms("yag_hits_edep_gamma", 1, nEnergyBins, 0., 2.);
+    mh->AddHistograms("yag_hits_edep_neutron", 1, nEnergyBins, 0., 2.);
+    mh->AddHistograms("yag_hits_log_edep", 1, 20, 0., 9.);
+    mh->AddHistograms("yag_hits_log_edep_electron", 1, 20, 0., 9.);
+    mh->AddHistograms("yag_hits_log_edep_positron", 1, 20, 0., 9.);
+    mh->AddHistograms("yag_hits_log_edep_gamma", 1, 20, 0., 9.);
+    mh->AddHistograms("yag_hits_log_edep_neutron", 1, 20, 0., 9.);
+    mh->AddHistograms("yag_hits_edep_z", 1, nSpaceBins, 0., 0.3);
+    mh->AddHistograms("yag_hits_edep_z_electron", 1, nSpaceBins, 0., 0.3);
+    mh->AddHistograms("yag_hits_edep_z_positron", 1, nSpaceBins, 0., 0.3);
+    mh->AddHistograms("yag_hits_edep_z_gamma", 1, nSpaceBins, 0., 0.3);
+    mh->AddHistograms("yag_hits_edep_z_neutron", 1, nSpaceBins, 0., 0.3);
+    mh->AddHistograms("yag_hits_e_edep", 1, nEnergyBins, 0., 2000., nEnergyBins, 0., 2.);
     
     // Primaries histograms
     mh->AddHistograms("primaries_xy", 1, nSpaceBins, -2., 2., nSpaceBins, -2., 2.);
@@ -446,6 +554,48 @@ void CreateHistograms(MHists* mh) {
 
     mh->AddHistograms("cr39_bdx_pdg", 20, 2300, -25., 2325.);
     mh->AddHistograms("cr39_bdx_procid", 20, 220, 0., 220.);
+    //
+    mh->AddHistograms("yag_bdx_xy", 1, nSpaceBins, -150., 150., nSpaceBins, -15., 15.);
+    mh->AddHistograms("yag_bdx_xy_electron", 1, nSpaceBins, -150., 150., nSpaceBins, -15., 15.);
+    mh->AddHistograms("yag_bdx_xy_positron", 1, nSpaceBins, -150., 150., nSpaceBins, -15., 15.);
+    mh->AddHistograms("yag_bdx_xy_gamma", 1, nSpaceBins, -150., 150., nSpaceBins, -15., 15.);
+    mh->AddHistograms("yag_bdx_xy_neutron", 1, nSpaceBins, -150., 150., nSpaceBins, -15., 15.);
+    mh->AddHistograms("yag_bdx_xy_other", 1, nSpaceBins, -150., 150., nSpaceBins, -15., 15.);
+
+    mh->AddHistograms("yag_bdx_e_x_electron", 1, nSpaceBins, -150., 150., nEnergyBins, 0., 2000.);
+    mh->AddHistograms("yag_bdx_e_x_positron", 1, nSpaceBins, -150., 150., nEnergyBins, 0., 2000.);
+    mh->AddHistograms("yag_bdx_lethargy", 1, 20, 0., 9.);
+
+    mh->AddHistograms("yag_bdx_vtxx_vtxz", 1, nSpaceBins, -2575, 100., nSpaceBins, -100., 100.);
+    mh->AddHistograms("yag_bdx_vtxx_vtxz_electron", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+    mh->AddHistograms("yag_bdx_vtxx_vtxz_positron", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+    mh->AddHistograms("yag_bdx_vtxx_vtxz_gamma", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+    mh->AddHistograms("yag_bdx_vtxx_vtxz_neutron", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+    mh->AddHistograms("yag_bdx_vtxx_vtxz_other", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+
+    mh->AddHistograms("yag_bdx_vtxy_vtxz", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+    mh->AddHistograms("yag_bdx_vtxy_vtxz_electron", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+    mh->AddHistograms("yag_bdx_vtxy_vtxz_positron", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+    mh->AddHistograms("yag_bdx_vtxy_vtxz_gamma", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+    mh->AddHistograms("yag_bdx_vtxy_vtxz_neutron", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+    mh->AddHistograms("yag_bdx_vtxy_vtxz_other", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+
+    mh->AddHistograms("yag_bdx_vtxz", 1, nSpaceBins, -2575, 100.);
+    mh->AddHistograms("yag_bdx_vtxz_electron", 1, nSpaceBins, -2575, 100.);
+    mh->AddHistograms("yag_bdx_vtxz_positron", 1, nSpaceBins, -2575, 100.);
+    mh->AddHistograms("yag_bdx_vtxz_gamma", 1, nSpaceBins, -2575, 100.);
+    mh->AddHistograms("yag_bdx_vtxz_neutron", 1, nSpaceBins, -2575, 100.);
+    mh->AddHistograms("yag_bdx_vtxz_other", 1, nSpaceBins, -2575, 100.);
+
+    mh->AddHistograms("yag_bdx_e", 1, nEnergyBins, 0., 2000.);
+    mh->AddHistograms("yag_bdx_e_electron", 1, nEnergyBins, 0., 2000.);
+    mh->AddHistograms("yag_bdx_e_positron", 1, nEnergyBins, 0., 2000.);
+    mh->AddHistograms("yag_bdx_e_gamma", 1, nEnergyBins, 0., 2000.);
+    mh->AddHistograms("yag_bdx_e_neutron", 1, nEnergyBins, 0., 2000.);
+    mh->AddHistograms("yag_bdx_e_other", 1, nEnergyBins, 0., 2000.);
+
+    mh->AddHistograms("yag_bdx_pdg", 1, 2300, -25., 2325.);
+    mh->AddHistograms("yag_bdx_procid", 1, 220, 0., 220.);
 }
 
 #endif
