@@ -36,9 +36,10 @@ int main(int argc, char** argv) {
     G4RunManager* runManager = new G4RunManager;
 #endif
 
-    runManager->SetUserInitialization(new DetectorConstruction);
+	DetectorConstruction* det = new DetectorConstruction();
+    runManager->SetUserInitialization(det);
 	runManager->SetUserInitialization(new QGSP_BERT_EXT);
-    runManager->SetUserInitialization(new ActionInitialization);
+    runManager->SetUserInitialization(new ActionInitialization(det));
 
 	G4VisManager* visManager = nullptr;
 	G4UImanager* UImanager = G4UImanager::GetUIpointer();

@@ -10,14 +10,19 @@
 
 #include "G4VUserActionInitialization.hh"
 
+class DetectorConstruction;
+
 class ActionInitialization : public G4VUserActionInitialization {
     public:
-        ActionInitialization();
+        ActionInitialization(DetectorConstruction*);
         ~ActionInitialization();
 
     public:
         virtual void BuildForMaster() const;
         virtual void Build() const;
+
+    private:
+        DetectorConstruction* fDetector;
 };
 
 #endif

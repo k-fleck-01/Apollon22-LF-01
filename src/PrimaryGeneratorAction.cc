@@ -7,6 +7,8 @@
 //
 
 #include "PrimaryGeneratorAction.hh"
+#include "DetectorConstruction.hh"
+//#include "PrimaryGeneratorMessenger.hh"
 
 #include "G4ParticleGun.hh"
 #include "G4Event.hh"
@@ -15,9 +17,16 @@
 #include "Randomize.hh"
 
 #include "G4RootAnalysisManager.hh"
+#include "G4RootAnalysisReader.hh"
 
-PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction(), fParticleGun(0) {
-
+PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det) : 
+        G4VUserPrimaryGeneratorAction(),  
+        fParticleGun(0),
+        fDetectorConstruction(det),
+        fBeamMode(-1),
+        fTrackEntries(0),
+        fSpectrumId(-1) {
+    
     // Generate one particle per event
     fParticleGun = new G4ParticleGun(1);
 
@@ -26,56 +35,48 @@ PrimaryGeneratorAction::PrimaryGeneratorAction() : G4VUserPrimaryGeneratorAction
 	G4String particleName;
 	G4ParticleDefinition* particle = particleTable->FindParticle(particleName="e-");
 	fParticleGun->SetParticleDefinition(particle); // Setting particle type
+    
+    fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0., 1.));
+    fParticleGun->SetParticleEnergy(1.*GeV);
+    fParticleGun->SetParticlePosition(G4ThreeVector(0., 0., -2575.*mm));
 
+    //fMessenger = new PrimaryGeneratorMessenger(this);
 }
 
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction() {
     delete fParticleGun;
+    //delete fMessenger;
 }
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
+    // Select generation based on beam mode
+    switch(fBeamMode) {
+        case 0:
+            // Default beam
+            break;
+        case 1:
+            // Beam imported from file
+            G4int evid = anEvent->GetEventID();
+            if(evid > fTrackEntries) {
+                // Event ID greater than number of sampled particles
+                fParticleGun->SetParticleDefinition(G4ParticleTable::GetParticleTable()->FindParticle("geantino"));
+                fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0., -1.));
+            }
 
-    // Generates a primary particle with random position about centre
-    // r0 small -> effective point source
-    
-    G4double r0 = 2.*nm; 
-    G4double radius = r0*(2.0*G4UniformRand() - 1.0);
-    G4double angle =  2*3.1415926545*G4UniformRand();
+            G4ThreeVector pPos = fParticleGun->GetParticlePosition();
+            pPos += GetImportBeamPos(evid);
+            fParticleGun->SetParticlePosition(pPos);
+            fParticleGun->SetParticleEnergy(GetImportBeamEnergy(evid));
 
-    G4double x0 = radius*cos(angle);
-    G4double y0 = radius*sin(angle);
-    G4double z0 = -2575.*mm;        // Centre of gas cell
-    //G4double z0 = -2500.*mm;        // Matches Niall's simulations
+            G4double theta = GetImportBeamDiv(evid);
+            G4double phi   = 2.*3.14159265*G4UniformRandom();
+            G4ThreeVector momentum_dir(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta));
+            fParticleGun->SetParticleMomentumDirection(momentum_dir.unit());
 
-    fParticleGun->SetParticlePosition(G4ThreeVector(x0, y0, z0));
+            fParticleGun->GeneratePrimaryVertex(anEvent);
+    }
 
-/*
-    // Sampling energy from a flat distribution
-    G4double Elower = 0.;
-    G4double Eupper = 2.*GeV;
-
-    G4double energy = (Eupper - Elower)*G4UniformRand() + Elower;
-    fParticleGun->SetParticleEnergy(energy);
-
-    // Setting momentum direction (including beam divergence)
-    G4double thetaMax = 1.*mrad;
-    G4double theta = thetaMax*G4UniformRand();
-    G4double phi   = 2.*3.1459265*G4UniformRand()*rad;
-    G4ThreeVector momentum(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta));
-	fParticleGun->SetParticleMomentumDirection(momentum); // Setting momentum direction
-*/
-
-    // Sampling from experimental spectrum
-    G4double energy = this->SampleEnergyValue();
-    fParticleGun->SetParticleEnergy(energy);
-
-    G4double theta = pow((0.6/(energy/GeV)), 1.4)*mrad;
-    G4double phi   = 2.*3.1459265*G4UniformRand()*rad;
-    G4ThreeVector momentum(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta));
-	fParticleGun->SetParticleMomentumDirection(momentum); // Setting momentum direction
-
-    fParticleGun->GeneratePrimaryVertex(anEvent);
 
     // Adding primary information to tree
     G4RootAnalysisManager* analysisManager = G4RootAnalysisManager::Instance();
@@ -90,43 +91,53 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
 }
 
-G4double PrimaryGeneratorAction::SampleEnergyValue() {
+void PrimaryGeneratorAction::ImportBeamFromFile(G4String& fname) {
+    // Create or get analysis reader
+    G4RootAnalysisReader* analysisReader = G4RootAnalysisReader::Instance();
+    analysisReader->SetFileName(fname);
+    G4String vName[] = {"pos_x", "pos_y", "pos_z", "energy", "div"};
+    const int nvars = 5;
+    G4double vars[nvars];
+    G4int trackEntry = 0;
 
-    // Following values taken from numerical fitting of
-    // experimental spectrum.
-    G4double fitCoefficients[6] = {0.0029295798536937375,
-                                -1.966250866302375e-06,
-                                -1.1132757750710963e-08,
-                                2.0221298798397796e-11,
-                                -1.2508534257254872e-14,
-                                2.7354212401810846e-18};
-    G4double scaleC = 3.1523775432003887;
-    G4double energyMax = 1609.0090089999999*MeV;
-    G4double energyMin = 200.*MeV;
-
-    auto f = [fitCoefficients] (G4double xx) {
-        G4double sum = 0.;
-        for (int ii = 0; ii < 6; ++ii) {
-            sum += fitCoefficients[ii]*pow(xx, ii);
-        }
-        return sum;
-    };
-
-    // Sampling energy using acceptance-rejection method
-    G4bool acceptValue = false;
-    G4int counter = 0;
-    while (not acceptValue) {
-        G4double uu = G4UniformRand();
-        G4double xx = (energyMax - energyMin)*G4UniformRand() + energyMin;
-        G4double rr = f(xx)*(energyMax - energyMin)/scaleC;
-
-        if (uu <= rr) return xx;
-        ++counter;
-
-        if (counter > 10000) {
-            G4cout << "Failed to sample a value - returning minium energy." << G4endl;
+    G4String tName;
+    switch(fSpectrumId) {
+        case 1:
+            tName = "dNdE_1";
             break;
-        }
+        case 2:
+            tName = "dNdE_2";
+            break;
+        case 3:
+            tName = "dNdE_3";
+            break;
+        default:
+            tName = "dNdE_1";
     }
-    return energyMin;
+
+    G4int ntupleId = analysisReader->GetNtuple(tName);
+    if(ntupleId >= 0) {
+        bool check = false;
+        for(int ii = 0; ii < nvars; ++ii) check |= analysisReader->SetNtupleDcolumn(vName[ii], vars[ii]);
+        
+        if(!check) {
+            G4Exception("PrimaryGeneratorAction:ImportBeamFromFile", "Unable to set branch addresses", FatalException, "");
+        }
+        else {
+            G4cout << "Branch addresses set successfully!" << G4endl;
+        }
+
+        // Reading ntuple
+        while(analysisReader->GetNtupleRow()) {
+            trackEntry++;
+            
+            fImportPos.push_back(G4ThreeVector(vars[0]*um, vars[1]*um, vars[2]*um));
+            fImportEnergy.push_back(vars[3]*GeV);
+            fImportDiv.push_back(vars[4]*mrad);
+        }
+
+        // Set beam mode to "import from file"
+        fBeamMode = 1; 
+        fTrackEntries = trackEntry;
+    }
 }
