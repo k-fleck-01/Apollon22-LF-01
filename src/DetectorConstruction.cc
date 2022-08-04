@@ -927,6 +927,7 @@ void DetectorConstruction::ConstructSDandField() {
     SetSensitiveDetector("lYagScreen", sd, true);
     SetSensitiveDetector("lCr39", sd, true);
     SetSensitiveDetector("lPhosphorLayer", sd, true);
+    SetSensitiveDetector("lGSpecConverter", sd, true);
 
     // Add magnetic fields
     G4MagneticField* chamberMagField = new G4UniformMagField(G4ThreeVector(0., 1.7*tesla, 0.));

@@ -58,6 +58,9 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
     else if (logicName == "lPhosphorLayer") {
         ldet = 3000;
     }
+    else if (logicName == "lGSpecConverter") {
+        ldet = 4000;
+    }
     G4int detid = ldet + 100*(theTouchable->GetCopyNumber(1)) + theTouchable->GetCopyNumber();
 
     // Position of hit
