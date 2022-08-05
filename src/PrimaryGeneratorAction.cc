@@ -8,7 +8,7 @@
 
 #include "PrimaryGeneratorAction.hh"
 #include "DetectorConstruction.hh"
-//#include "PrimaryGeneratorMessenger.hh"
+#include "PrimaryGeneratorMessenger.hh"
 
 #include "G4ParticleGun.hh"
 #include "G4Event.hh"
@@ -40,13 +40,13 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det) :
     fParticleGun->SetParticleEnergy(1.*GeV);
     fParticleGun->SetParticlePosition(G4ThreeVector(0., 0., -2575.*mm));
 
-    //fMessenger = new PrimaryGeneratorMessenger(this);
+    fMessenger = new PrimaryGeneratorMessenger(this);
 }
 
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction() {
     delete fParticleGun;
-    //delete fMessenger;
+    delete fMessenger;
 }
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
@@ -70,7 +70,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
             fParticleGun->SetParticleEnergy(GetImportBeamEnergy(evid));
 
             G4double theta = GetImportBeamDiv(evid);
-            G4double phi   = 2.*3.14159265*G4UniformRandom();
+            G4double phi   = 2.*3.14159265*G4UniformRand();
             G4ThreeVector momentum_dir(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta));
             fParticleGun->SetParticleMomentumDirection(momentum_dir.unit());
 
@@ -79,7 +79,15 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
 
     // Adding primary information to tree
+    G4double x0 = fParticleGun->GetParticlePosition().x();
+    G4double y0 = fParticleGun->GetParticlePosition().y();
+    G4double z0 = fParticleGun->GetParticlePosition().z();
+    G4double energy = fParticleGun->GetParticleEnergy();
+    G4ThreeVector pvec = fParticleGun->GetParticleMomentumDirection();
+    G4double phi = atan2(pvec.y(), pvec.x());
+    G4double theta = acos(pvec.z());
     G4RootAnalysisManager* analysisManager = G4RootAnalysisManager::Instance();
+
 
     analysisManager->FillNtupleDColumn(3, 0, x0/mm);
     analysisManager->FillNtupleDColumn(3, 1, y0/mm);
@@ -118,7 +126,7 @@ void PrimaryGeneratorAction::ImportBeamFromFile(G4String& fname) {
     G4int ntupleId = analysisReader->GetNtuple(tName);
     if(ntupleId >= 0) {
         bool check = false;
-        for(int ii = 0; ii < nvars; ++ii) check |= analysisReader->SetNtupleDcolumn(vName[ii], vars[ii]);
+        for(int ii = 0; ii < nvars; ++ii) check |= analysisReader->SetNtupleDColumn(vName[ii], vars[ii]);
         
         if(!check) {
             G4Exception("PrimaryGeneratorAction:ImportBeamFromFile", "Unable to set branch addresses", FatalException, "");
@@ -126,7 +134,7 @@ void PrimaryGeneratorAction::ImportBeamFromFile(G4String& fname) {
         else {
             G4cout << "Branch addresses set successfully!" << G4endl;
         }
-
+        
         // Reading ntuple
         while(analysisReader->GetNtupleRow()) {
             trackEntry++;

@@ -35,7 +35,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction {
     private:
         G4ParticleGun* fParticleGun;
         DetectorConstruction* fDetectorConstruction;
-        //PrimaryGeneratorMessenger* fMessenger;
+        PrimaryGeneratorMessenger* fMessenger;
 
         G4int fBeamMode;
         G4int fTrackEntries;
@@ -51,8 +51,6 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction {
         G4double GetImportBeamEnergy(int evid) const { return fImportEnergy[evid]; };
         G4double GetImportBeamDiv(int evid) const { return fImportDiv[evid]; };
         
-
-
 };
 
 #endif
