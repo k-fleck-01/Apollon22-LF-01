@@ -23,7 +23,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det) :
         G4VUserPrimaryGeneratorAction(),  
         fParticleGun(0),
         fDetectorConstruction(det),
-        fBeamMode(-1),
+        fBeamMode(0),
         fTrackEntries(0),
         fSpectrumId(-1) {
     
