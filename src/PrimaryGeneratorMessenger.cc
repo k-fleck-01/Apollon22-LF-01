@@ -22,13 +22,13 @@ PrimaryGeneratorMessenger::PrimaryGeneratorMessenger(PrimaryGeneratorAction* pgA
             fImportBeamCmd = new G4UIcmdWithAString("/primary/importBeam", this);
             fImportBeamCmd->SetGuidance("Import beam from file");
             fImportBeamCmd->SetParameterName("fileName", false);
-            fImportBeamCmd->AvailableForStates(G4State_PreInit);
+            fImportBeamCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 
             fSpectrumInputCmd = new G4UIcmdWithAnInteger("/primary/setSpectrumInput", this);
             fSpectrumInputCmd->SetGuidance("Sets beam mode to use default or from file");
             fSpectrumInputCmd->SetParameterName("spectrumFlag", false);
             fSpectrumInputCmd->SetRange("spectrumFlag ==1 || spectrumFlag == 2 || spectrumFlag == 3");
-            fSpectrumInputCmd->AvailableForStates(G4State_PreInit);
+            fSpectrumInputCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
 }
 
 PrimaryGeneratorMessenger::~PrimaryGeneratorMessenger() {
