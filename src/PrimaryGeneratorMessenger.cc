@@ -24,20 +24,20 @@ PrimaryGeneratorMessenger::PrimaryGeneratorMessenger(PrimaryGeneratorAction* pgA
             fImportBeamCmd->SetParameterName("fileName", false);
             fImportBeamCmd->AvailableForStates(G4State_PreInit);
 
-            fBeamModeCmd = new G4UIcmdWithAnInteger("/primary/setBeamMode", this);
-            fBeamModeCmd->SetGuidance("Sets beam mode to use default or from file");
-            fBeamModeCmd->SetParameterName("mode", false);
-            fBeamModeCmd->SetRange("mode >= 0 && mode <= 1");
-            fBeamModeCmd->AvailableForStates(G4State_PreInit);
+            fSpectrumInputCmd = new G4UIcmdWithAnInteger("/primary/setSpectrumInput", this);
+            fSpectrumInputCmd->SetGuidance("Sets beam mode to use default or from file");
+            fSpectrumInputCmd->SetParameterName("spectrumFlag", false);
+            fSpectrumInputCmd->SetRange("spectrumFlag > 0 && spectrumFlag < 4");
+            fSpectrumInputCmd->AvailableForStates(G4State_PreInit);
 }
 
 PrimaryGeneratorMessenger::~PrimaryGeneratorMessenger() {
     delete fPrimaryDir;
     delete fImportBeamCmd;
-    delete fBeamModeCmd;
+    delete fSpectrumInputCmd;
 }
 
 void PrimaryGeneratorMessenger::SetNewValue(G4UIcommand* command, G4String newValue) {
     if(command == fImportBeamCmd) fAction->SetInputBeamFile(newValue);
-    if(command == fBeamModeCmd) fAction->SetInputSpectrumFlag(fBeamModeCmd->GetNewIntValue(newValue));
+    if(command == fSpectrumInputCmd) fAction->SetInputSpectrumFlag(fSpectrumInputCmd->GetNewIntValue(newValue));
 }

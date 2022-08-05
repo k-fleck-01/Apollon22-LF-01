@@ -27,7 +27,7 @@ class PrimaryGeneratorMessenger : public G4UImessenger {
         PrimaryGeneratorAction* fAction;
         G4UIdirectory* fPrimaryDir;
         G4UIcmdWithAString* fImportBeamCmd;
-        G4UIcmdWithAnInteger* fBeamModeCmd;
+        G4UIcmdWithAnInteger* fSpectrumInputCmd;
 };
 
 #endif
