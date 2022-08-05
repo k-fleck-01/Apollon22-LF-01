@@ -27,7 +27,7 @@ PrimaryGeneratorMessenger::PrimaryGeneratorMessenger(PrimaryGeneratorAction* pgA
             fSpectrumInputCmd = new G4UIcmdWithAnInteger("/primary/setSpectrumInput", this);
             fSpectrumInputCmd->SetGuidance("Sets beam mode to use default or from file");
             fSpectrumInputCmd->SetParameterName("spectrumFlag", false);
-            fSpectrumInputCmd->SetRange("spectrumFlag > 0 && spectrumFlag < 4");
+            fSpectrumInputCmd->SetRange("spectrumFlag ==1 || spectrumFlag == 2 || spectrumFlag == 3");
             fSpectrumInputCmd->AvailableForStates(G4State_PreInit);
 }
 
