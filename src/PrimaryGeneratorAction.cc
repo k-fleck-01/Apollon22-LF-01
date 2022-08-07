@@ -18,6 +18,9 @@
 
 #include "G4RootAnalysisManager.hh"
 #include "G4RootAnalysisReader.hh"
+#include "G4AutoLock.hh"
+
+namespace {G4Mutex rootPrimGenMutex = G4MUTEX_INITIALIZER; }
 
 PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det) : 
         G4VUserPrimaryGeneratorAction(),  
@@ -64,19 +67,25 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
                 fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0., -1.));
             }
 
+            #ifdef G4MULTITHREADED
+                G4AutoLock lock(&rootPrimGenMutex);
+            #endif
             G4ThreeVector pPos = fParticleGun->GetParticlePosition();
-            pPos += GetImportBeamPos(evid);
+            pPos += this->GetImportBeamPos(evid);
             fParticleGun->SetParticlePosition(pPos);
             fParticleGun->SetParticleEnergy(GetImportBeamEnergy(evid));
 
-            G4double theta = GetImportBeamDiv(evid);
+            G4double theta = this->GetImportBeamDiv(evid);
             G4double phi   = 2.*3.14159265*G4UniformRand();
             G4ThreeVector momentum_dir(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta));
             fParticleGun->SetParticleMomentumDirection(momentum_dir.unit());
-
-            fParticleGun->GeneratePrimaryVertex(anEvent);
+            break;
     }
-
+    
+    #ifdef G4MULTITHREADED
+        G4AutoLock lock(&rootPrimGenMutex);
+    #endif
+    fParticleGun->GeneratePrimaryVertex(anEvent);
 
     // Adding primary information to tree
     G4double x0 = fParticleGun->GetParticlePosition().x();
@@ -138,7 +147,6 @@ void PrimaryGeneratorAction::ImportBeamFromFile(G4String& fname) {
         // Reading ntuple
         while(analysisReader->GetNtupleRow()) {
             trackEntry++;
-            
             fImportPos.push_back(G4ThreeVector(vars[0]*um, vars[1]*um, vars[2]*um));
             fImportEnergy.push_back(vars[3]*GeV);
             fImportDiv.push_back(vars[4]*mrad);
