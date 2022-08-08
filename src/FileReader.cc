@@ -10,7 +10,10 @@
 
 #include "FileReader.hh"
 
-FileReader::FileReader(G4String& fname, G4int& spid) : fFileName(fname), fSpectrumId(spid) { ImportBeamFromFile(); }
+FileReader::FileReader(G4String& fname, G4int& spid) : fFileName(fname), fSpectrumId(spid) { 
+    ImportBeamFromFile(); 
+    G4cout << "Read " << fTrackEntries << " from file " << fFileName << G4endl;
+}
 
 FileReader::~FileReader()
 {}

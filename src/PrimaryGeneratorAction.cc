@@ -48,8 +48,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det) :
 PrimaryGeneratorAction::~PrimaryGeneratorAction() {
     delete fParticleGun;
     delete fMessenger;
-    delete fFileReader
-    
+    delete fFileReader;
 }
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
