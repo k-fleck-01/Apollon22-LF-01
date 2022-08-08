@@ -37,7 +37,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction {
         G4ParticleGun* fParticleGun;
         DetectorConstruction* fDetectorConstruction;
         PrimaryGeneratorMessenger* fMessenger;
-        static FileReader* fFileReader;
+        FileReader* fFileReader;
 
         G4int fBeamMode;
         G4int fSpectrumId;
