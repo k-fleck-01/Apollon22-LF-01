@@ -20,7 +20,7 @@ FileReader::~FileReader()
 {}
 
 void FileReader::ImportBeamFromFile() {
-       // Create or get analysis reader
+    // Create or get analysis reader
     G4RootAnalysisReader* analysisReader = G4RootAnalysisReader::Instance();
     analysisReader->SetFileName(fFileName);
     G4String vName[] = {"pos_x", "pos_y", "pos_z", "energy", "div"};

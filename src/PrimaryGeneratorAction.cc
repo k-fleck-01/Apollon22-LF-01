@@ -13,7 +13,6 @@
 #include "Randomize.hh"
 #include "G4RootAnalysisManager.hh"
 #include "G4RootAnalysisReader.hh"
-#include "G4AutoLock.hh"
 
 #include "DetectorConstruction.hh"
 #include "PrimaryGeneratorMessenger.hh"
@@ -21,14 +20,11 @@
 
 #include "PrimaryGeneratorAction.hh"
 
-namespace {G4Mutex rootPrimGenMutex = G4MUTEX_INITIALIZER; }
-
-FileReader* PrimaryGeneratorAction::fFileReader = 0;
-
 PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det) : 
         G4VUserPrimaryGeneratorAction(),  
         fParticleGun(0),
         fDetectorConstruction(det),
+        fFileReader(0),
         fBeamMode(0),
         fSpectrumId(-1) {
     
@@ -112,10 +108,6 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 }
 
 void PrimaryGeneratorAction::SetInputBeamFile(G4String& fname) {
-    // Create a mutex protected file reader
-    #ifdef G4MULTITHREADED
-        G4AutoLock lock(&rootPrimGenMutex);
-    #endif
     if(!fFileReader) fFileReader = new FileReader(fname, fSpectrumId);
     fBeamMode = 1;
 }
