@@ -48,10 +48,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det) :
 PrimaryGeneratorAction::~PrimaryGeneratorAction() {
     delete fParticleGun;
     delete fMessenger;
-
-    #ifdef G4MULTITHREADED
-        G4AutoLock lock(&rootPrimGenMutex);
-     #endif
+    
     if(fFileReader) { delete fFileReader; fFileReader = 0; } 
     
 }
