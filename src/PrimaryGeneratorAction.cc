@@ -16,7 +16,6 @@
 #include "G4RootAnalysisManager.hh"
 #include "G4RootAnalysisReader.hh"
 #include "G4AutoLock.hh"
-#include "G4Threading.hh"
 
 #include "DetectorConstruction.hh"
 #include "PrimaryGeneratorMessenger.hh"
@@ -112,4 +111,5 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 void PrimaryGeneratorAction::SetInputBeamFile(G4String& fname) { 
     G4AutoLock lock(&rootPrimGenMutex);
     if(!fFileReader) fFileReader = new FileReader(fname, fSpectrumId); 
-    fBeamMode = 1; }
+    fBeamMode = 1; 
+}
