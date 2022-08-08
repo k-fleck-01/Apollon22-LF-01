@@ -67,9 +67,6 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
                 fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0., -1.));
             }
 
-            #ifdef G4MULTITHREADED
-                G4AutoLock lock(&rootPrimGenMutex);
-            #endif
             G4ThreeVector pPos = fParticleGun->GetParticlePosition();
             pPos += this->GetImportBeamPos(evid);
             fParticleGun->SetParticlePosition(pPos);
@@ -82,9 +79,6 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
             break;
     }
     
-    #ifdef G4MULTITHREADED
-        G4AutoLock lock(&rootPrimGenMutex);
-    #endif
     fParticleGun->GeneratePrimaryVertex(anEvent);
 
     // Adding primary information to tree
@@ -143,7 +137,9 @@ void PrimaryGeneratorAction::ImportBeamFromFile(G4String& fname) {
         else {
             G4cout << "Branch addresses set successfully!" << G4endl;
         }
-        
+        #ifdef G4MULTITHREADED
+            G4AutoLock lock(&rootPrimGenMutex);
+        #endif
         // Reading ntuple
         while(analysisReader->GetNtupleRow()) {
             trackEntry++;
@@ -151,9 +147,12 @@ void PrimaryGeneratorAction::ImportBeamFromFile(G4String& fname) {
             fImportEnergy.push_back(vars[3]*GeV);
             fImportDiv.push_back(vars[4]*mrad);
         }
-
-        // Set beam mode to "import from file"
+        #ifdef G4MULTITHREADED
+            G4AutoLock unlock(&rootPrimGenMutex);
+        #endif
+    }
+    
+    // Set beam mode to "import from file"
         fBeamMode = 1; 
         fTrackEntries = trackEntry;
-    }
 }
