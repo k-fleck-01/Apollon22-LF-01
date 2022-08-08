@@ -56,7 +56,7 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction() {
     #ifdef G4MULTITHREADED
         G4AutoLock lock(&rootPrimGenMutex);
      #endif
-    if(fFileReader) delete fFileReader; 
+    if(fFileReader) { delete fFileReader; fFileReader = 0; } 
     
 }
 
