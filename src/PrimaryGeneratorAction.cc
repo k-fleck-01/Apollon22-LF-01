@@ -6,28 +6,30 @@
 // Last edited: 11/02/2022
 //
 
-#include "PrimaryGeneratorAction.hh"
-#include "DetectorConstruction.hh"
-#include "PrimaryGeneratorMessenger.hh"
-
 #include "G4ParticleGun.hh"
 #include "G4Event.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4ParticleTable.hh"
 #include "Randomize.hh"
-
 #include "G4RootAnalysisManager.hh"
 #include "G4RootAnalysisReader.hh"
 #include "G4AutoLock.hh"
 
+#include "DetectorConstruction.hh"
+#include "PrimaryGeneratorMessenger.hh"
+#include "FileReader.hh"
+
+#include "PrimaryGeneratorAction.hh"
+
 namespace {G4Mutex rootPrimGenMutex = G4MUTEX_INITIALIZER; }
+
+FileReader* PrimaryGeneratorAction::fFileReader = 0;
 
 PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det) : 
         G4VUserPrimaryGeneratorAction(),  
         fParticleGun(0),
         fDetectorConstruction(det),
         fBeamMode(0),
-        fTrackEntries(0),
         fSpectrumId(-1) {
     
     // Generate one particle per event
@@ -50,6 +52,12 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det) :
 PrimaryGeneratorAction::~PrimaryGeneratorAction() {
     delete fParticleGun;
     delete fMessenger;
+
+    #ifdef G4MULTITHREADED
+        G4AutoLock lock(&rootPrimGenMutex);
+     #endif
+    if(fFileReader) delete fFileReader; 
+    
 }
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
@@ -61,18 +69,19 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
         case 1:
             // Beam imported from file
             G4int evid = anEvent->GetEventID();
-            if(evid > fTrackEntries) {
+            long long int trackEntries = fFileReader->GetTrackEntries();
+            if(evid > trackEntries) {
                 // Event ID greater than number of sampled particles
                 fParticleGun->SetParticleDefinition(G4ParticleTable::GetParticleTable()->FindParticle("geantino"));
                 fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0., -1.));
             }
 
             G4ThreeVector pPos = fParticleGun->GetParticlePosition();
-            pPos += this->GetImportBeamPos(evid);
+            pPos += fFileReader->GetImportBeamPos(evid);
             fParticleGun->SetParticlePosition(pPos);
-            fParticleGun->SetParticleEnergy(GetImportBeamEnergy(evid));
+            fParticleGun->SetParticleEnergy(fFileReader->GetImportBeamEnergy(evid));
 
-            G4double theta = this->GetImportBeamDiv(evid);
+            G4double theta = fFileReader->GetImportBeamDiv(evid);
             G4double phi   = 2.*3.14159265*G4UniformRand();
             G4ThreeVector momentum_dir(sin(theta)*cos(phi), sin(theta)*sin(phi), cos(theta));
             fParticleGun->SetParticleMomentumDirection(momentum_dir.unit());
@@ -102,57 +111,11 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
 }
 
-void PrimaryGeneratorAction::ImportBeamFromFile(G4String& fname) {
-    // Create or get analysis reader
-    G4RootAnalysisReader* analysisReader = G4RootAnalysisReader::Instance();
-    analysisReader->SetFileName(fname);
-    G4String vName[] = {"pos_x", "pos_y", "pos_z", "energy", "div"};
-    const int nvars = 5;
-    G4double vars[nvars];
-    G4int trackEntry = 0;
-
-    G4String tName;
-    switch(fSpectrumId) {
-        case 1:
-            tName = "dNdE_1";
-            break;
-        case 2:
-            tName = "dNdE_2";
-            break;
-        case 3:
-            tName = "dNdE_3";
-            break;
-        default:
-            tName = "dNdE_1";
-    }
-
-    G4int ntupleId = analysisReader->GetNtuple(tName);
-    if(ntupleId >= 0) {
-        bool check = false;
-        for(int ii = 0; ii < nvars; ++ii) check |= analysisReader->SetNtupleDColumn(vName[ii], vars[ii]);
-        
-        if(!check) {
-            G4Exception("PrimaryGeneratorAction:ImportBeamFromFile", "Unable to set branch addresses", FatalException, "");
-        }
-        else {
-            G4cout << "Branch addresses set successfully!" << G4endl;
-        }
-        #ifdef G4MULTITHREADED
-            G4AutoLock lock(&rootPrimGenMutex);
-        #endif
-        // Reading ntuple
-        while(analysisReader->GetNtupleRow()) {
-            trackEntry++;
-            fImportPos.push_back(G4ThreeVector(vars[0]*um, vars[1]*um, vars[2]*um));
-            fImportEnergy.push_back(vars[3]*GeV);
-            fImportDiv.push_back(vars[4]*mrad);
-        }
-        #ifdef G4MULTITHREADED
-            G4AutoLock unlock(&rootPrimGenMutex);
-        #endif
-    }
-    
-    // Set beam mode to "import from file"
-        fBeamMode = 1; 
-        fTrackEntries = trackEntry;
+void PrimaryGeneratorAction::SetInputBeamFile(G4String& fname) {
+    // Create a mutex protected file reader
+    #ifdef G4MULTITHREADED
+        G4AutoLock lock(&rootPrimGenMutex);
+    #endif
+    if(!fFileReader) fFileReader = new FileReader(fname, fSpectrumId);
+    fBeamMode = 1;
 }
