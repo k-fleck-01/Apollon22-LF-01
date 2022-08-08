@@ -48,8 +48,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det) :
 PrimaryGeneratorAction::~PrimaryGeneratorAction() {
     delete fParticleGun;
     delete fMessenger;
-    
-    if(fFileReader) { delete fFileReader; fFileReader = 0; } 
+    delete fFileReader
     
 }
 
@@ -91,9 +90,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
     G4ThreeVector pvec = fParticleGun->GetParticleMomentumDirection();
     G4double phi = atan2(pvec.y(), pvec.x());
     G4double theta = acos(pvec.z());
+
     G4RootAnalysisManager* analysisManager = G4RootAnalysisManager::Instance();
-
-
     analysisManager->FillNtupleDColumn(3, 0, x0/mm);
     analysisManager->FillNtupleDColumn(3, 1, y0/mm);
     analysisManager->FillNtupleDColumn(3, 2, z0/mm);
@@ -104,7 +102,4 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
 }
 
-void PrimaryGeneratorAction::SetInputBeamFile(G4String& fname) {
-    if(!fFileReader) fFileReader = new FileReader(fname, fSpectrumId);
-    fBeamMode = 1;
-}
+void PrimaryGeneratorAction::SetInputBeamFile(G4String& fname) { fFileReader = new FileReader(fname, fSpectrumId); fBeamMode = 1; }
