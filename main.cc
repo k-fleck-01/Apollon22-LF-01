@@ -13,7 +13,6 @@
 #include "G4UImanager.hh"
 #include "G4VisExecutive.hh"
 #include "G4VisManager.hh"
-#include "G4RootAnalysisReader.hh"
 
 #include "DetectorConstruction.hh"
 #include "QGSP_BERT_EXT.hh"
@@ -28,9 +27,6 @@ int main(int argc, char** argv) {
 
     // Initialise the run manager
 #ifdef G4MULTITHREADED
-	// Create a master instance of the G4RootAnalysisManager
-	auto analysisReader = G4RootAnalysisReader::Instance();
-
 	G4MTRunManager* runManager = new G4MTRunManager;
 	G4int nThreads = std::min(G4Threading::G4GetNumberOfCores(), 8);
 	if (argc == 3) nThreads = G4UIcommand::ConvertToInt(argv[2]);
