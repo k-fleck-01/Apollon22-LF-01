@@ -24,12 +24,12 @@
 #include "PrimaryGeneratorAction.hh"
 
 namespace { G4Mutex rootPrimGenMutex = G4MUTEX_INITIALIZER; }
+FileReader* PrimaryGeneratorAction::fFileReader = 0;
 
 PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction* det) : 
         G4VUserPrimaryGeneratorAction(),  
         fParticleGun(0),
         fDetectorConstruction(det),
-        fFileReader(0),
         fBeamMode(0),
         fSpectrumId(-1) {
     
@@ -72,6 +72,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
                 // Event ID greater than number of sampled particles
                 fParticleGun->SetParticleDefinition(G4ParticleTable::GetParticleTable()->FindParticle("geantino"));
                 fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0., -1.));
+                break;
             }
 
             G4ThreeVector pPos = fParticleGun->GetParticlePosition();
