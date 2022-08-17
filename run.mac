@@ -9,9 +9,14 @@
 # Set verbosity level
 /control/verbose 1
 /run/verbose 1
+#
 
 # Initialise run manager
 /run/initialize
+
+# Importing beam from file
+#/primary/setSpectrumInput  1
+#/primary/importBeam  
 
 # Activate visualisation for tracks/hits
 #/control/execute vis.mac
