@@ -75,8 +75,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
                 break;
             }
 
-            G4ThreeVector pPos = fParticleGun->GetParticlePosition();
-            pPos += fFileReader->GetImportBeamPos(evid);
+            pPos = G4ThreeVector(0., 0., -2575.*mm) + fFileReader->GetImportBeamPos(evid);
             fParticleGun->SetParticlePosition(pPos);
             fParticleGun->SetParticleEnergy(fFileReader->GetImportBeamEnergy(evid));
 
@@ -111,6 +110,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
 void PrimaryGeneratorAction::SetInputBeamFile(G4String& fname) { 
     G4AutoLock lock(&rootPrimGenMutex);
-    if(!fFileReader) fFileReader = new FileReader(fname, fSpectrumId); 
-    fBeamMode = 1; 
+    if (G4Threading::GetTreadID() == 0) {
+        if(!fFileReader) fFileReader = new FileReader(fname, fSpectrumId); 
+        fBeamMode = 1; 
+    }
 }
