@@ -15,6 +15,7 @@
 #include "Randomize.hh"
 #include "G4RootAnalysisManager.hh"
 #include "G4RootAnalysisReader.hh"
+#include "G4Threading.hh"
 #include "G4AutoLock.hh"
 
 #include "DetectorConstruction.hh"
@@ -75,7 +76,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
                 break;
             }
 
-            pPos = G4ThreeVector(0., 0., -2575.*mm) + fFileReader->GetImportBeamPos(evid);
+            G4ThreeVector pPos = G4ThreeVector(0., 0., -2575.*mm) + fFileReader->GetImportBeamPos(evid);
             fParticleGun->SetParticlePosition(pPos);
             fParticleGun->SetParticleEnergy(fFileReader->GetImportBeamEnergy(evid));
 
@@ -110,7 +111,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
 void PrimaryGeneratorAction::SetInputBeamFile(G4String& fname) { 
     G4AutoLock lock(&rootPrimGenMutex);
-    if (G4Threading::GetTreadID() == 0) {
+    if (G4Threading::G4GetThreadID() == 0) {
         if(!fFileReader) fFileReader = new FileReader(fname, fSpectrumId); 
         fBeamMode = 1; 
     }
