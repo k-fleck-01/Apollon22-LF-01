@@ -99,7 +99,9 @@ int run_apollon_process_hits(const char* fnamelist) {
             mh->FillHistW("lanex_hits_e_edep", ndet, eneg, edep);
             mh->FillHistW("lanex_hits_edep_z", ndet, zz - 49.7425, edep);
 
-            if (std::abs(yy) <= 10.) mh->FillHistW("lanex_hits_edep_xy_cut", ndet, xx, edep);
+            if (std::abs(yy) <= 7.65) {
+                mh->FillHistW("lanex_hits_edep_xy_cut", ndet, xx, yy, edep);
+            }
 
             if (pdg == 11) {
                 mh->FillHistW("lanex_hits_edep_electron", ndet, edep);
@@ -107,7 +109,10 @@ int run_apollon_process_hits(const char* fnamelist) {
                 mh->FillHistW("lanex_hits_edep_xy_electron", ndet, xx, yy, edep);
                 mh->FillHistW("lanex_hits_edep_x_electron", ndet, xx, edep);
                 mh->FillHistW("lanex_hits_edep_y_electron", ndet, yy, edep);
-                if (std::abs(yy) <= 10.) mh->FillHistW("lanex_hits_edep_xy_cut_electron", ndet, xx, edep);
+                if (std::abs(yy) <= 7.65) {
+                    mh->FillHistW("lanex_hits_edep_xy_cut_electron", ndet, xx, yy, edep);
+                    mh->FillHistW("lanex_hits_xy_cut_electron", ndet, xx, yy);
+                }
             }
             else if (pdg == -11) {
                 mh->FillHistW("lanex_hits_edep_positron", ndet, edep);
@@ -115,7 +120,10 @@ int run_apollon_process_hits(const char* fnamelist) {
                 mh->FillHistW("lanex_hits_edep_xy_positron", ndet, xx, yy, edep);
                 mh->FillHistW("lanex_hits_edep_x_positron", ndet, xx, edep);
                 mh->FillHistW("lanex_hits_edep_y_positron", ndet, yy, edep);
-                if (std::abs(yy) <= 10.) mh->FillHistW("lanex_hits_edep_xy_cut_electron", ndet, xx, edep);
+                if (std::abs(yy) <= 7.65) {
+                    mh->FillHistW("lanex_hits_edep_xy_cut_positron", ndet, xx, yy, edep);
+                    mh->FillHistW("lanex_hits_xy_cut_positron", ndet, xx, yy);
+                }
             }
             else if (pdg == 22) { 
                 mh->FillHistW("lanex_hits_edep_gamma", ndet, edep);
@@ -123,7 +131,10 @@ int run_apollon_process_hits(const char* fnamelist) {
                 mh->FillHistW("lanex_hits_edep_xy_gamma", ndet, xx, yy, edep);
                 mh->FillHistW("lanex_hits_edep_x_gamma", ndet, xx, edep);
                 mh->FillHistW("lanex_hits_edep_y_gamma", ndet, yy, edep);
-                if (std::abs(yy) <= 10.) mh->FillHistW("lanex_hits_edep_xy_cut_gamma", ndet, xx, edep);
+                if (std::abs(yy) <= 7.65) {
+                    mh->FillHistW("lanex_hits_edep_xy_cut_gamma", ndet, xx, yy, edep);
+                    mh->FillHistW("lanex_hits_xy_cut_gamma", ndet, xx, yy);
+                }
             }
         }
     }
@@ -204,13 +215,22 @@ int run_apollon_process_hits(const char* fnamelist) {
                 mh->FillHistW("lanex_bdx_vtxy_vtxz_electron", ndet, vtxz, vtxy);
                 mh->FillHistW("lanex_bdx_vtxz_electron", ndet, vtxz);
                 mh->FillHistW("lanex_bdx_e_electron", ndet, eneg);
-                mh->FillHistW("lanex_bdx_e_x_electron", ndet, xx, eneg);
+
+                if (std::abs(yy) <= 7.65) {
+                    mh->FillHistW("lanex_bdx_e_x_electron", ndet, xx, eneg);
+                    mh->FillHistW("lanex_bdx_e_poscut_electron", ndet, eneg);
+                }
 
                 if (std::abs(vtxz + 985.1125) <= 0.1125 && 
                     std::abs(vtxx) <= 10. &&
                     std::abs(vtxy) <= 10.) { // positrons produced in GRS converter
                         mh->FillHistW("lanex_bdx_e_converter_electron", ndet, eneg);
                     }
+
+                if (std::abs(xx) <= 5. && std::abs(yy) <= 7.) { // on axis central spike
+                    mh->FillHistW("lanex_bdx_vtxy_vtxz_cut_electron", ndet, vtxz, vtxy);
+                    mh->FillHistW("lanex_bdx_vtxx_vtxz_cut_electron", ndet, vtxz, vtxx);
+                }
             }
             else if (pdg == -11) { // positrons
                 mh->FillHistW("lanex_bdx_xy_positron", ndet, xx, yy);
@@ -218,13 +238,22 @@ int run_apollon_process_hits(const char* fnamelist) {
                 mh->FillHistW("lanex_bdx_vtxy_vtxz_positron", ndet, vtxz, vtxy);
                 mh->FillHistW("lanex_bdx_vtxz_positron", ndet, vtxz);
                 mh->FillHistW("lanex_bdx_e_positron", ndet, eneg);
-                mh->FillHistW("lanex_bdx_e_x_positron", ndet, xx, eneg);
+
+                if (abs(yy) <= 7.65) {
+                    mh->FillHistW("lanex_bdx_e_x_positron", ndet, xx, eneg);
+                    mh->FillHistW("lanex_bdx_e_poscut_positron", ndet, eneg);
+                }
 
                 if (std::abs(vtxz + 985.1125) <= 0.1125 && 
                     std::abs(vtxx) <= 10. &&
                     std::abs(vtxy) <= 10.) { // positrons produced in GRS converter
                         mh->FillHistW("lanex_bdx_e_converter_positron", ndet, eneg);
                     }
+
+                if (std::abs(xx) <= 5. && std::abs(yy) <= 7.) { // on axis central spike
+                    mh->FillHistW("lanex_bdx_vtxy_vtxz_cut_positron", ndet, vtxz, vtxy);
+                    mh->FillHistW("lanex_bdx_vtxx_vtxz_cut_positron", ndet, vtxz, vtxx);
+                }
             }
             else if (pdg == 22) { // photons
                 mh->FillHistW("lanex_bdx_xy_gamma", ndet, xx, yy);
@@ -232,6 +261,11 @@ int run_apollon_process_hits(const char* fnamelist) {
                 mh->FillHistW("lanex_bdx_vtxy_vtxz_gamma", ndet, vtxz, vtxy);
                 mh->FillHistW("lanex_bdx_vtxz_gamma", ndet, vtxz);
                 mh->FillHistW("lanex_bdx_e_gamma", ndet, eneg);
+
+                if (std::abs(xx) <= 5. && std::abs(yy) <= 7.) { // on axis central spike
+                    mh->FillHistW("lanex_bdx_vtxy_vtxz_cut_gamma", ndet, vtxz, vtxy);
+                    mh->FillHistW("lanex_bdx_vtxx_vtxz_cut_gamma", ndet, vtxz, vtxx);
+                }
             }
             else {
                 mh->FillHistW("lanex_bdx_xy_other", ndet, xx, yy);
@@ -241,7 +275,18 @@ int run_apollon_process_hits(const char* fnamelist) {
                 mh->FillHistW("lanex_bdx_e_other", ndet, eneg);
             }
         }
-        
+        else if (detid == 4000) {
+            ndet = detid - 3999;
+            if (pdg == 11) {
+                mh->FillHistW("converter_bdx_e_electron", ndet, eneg);
+            }
+            else if (pdg == -11) {
+                mh->FillHistW("converter_bdx_e_positron", ndet, eneg);
+            }
+            else if (pdg == 22) {
+                mh->FillHistW("converter_bdx_e_gamma", ndet, eneg);
+            }
+        }
     }
 
     mh->SaveHists(foutname);
@@ -293,6 +338,9 @@ void CreateHistograms(MHists* mh) {
 
     // Hits histograms
     mh->AddHistograms("lanex_hits_xy", 1, nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
+    mh->AddHistograms("lanex_hits_xy_cut_electron", 1, nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
+    mh->AddHistograms("lanex_hits_xy_cut_positron", 1, nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
+    mh->AddHistograms("lanex_hits_xy_cut_gamma", 1, nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
     mh->AddHistograms("lanex_hits_edep_xy", 1, nSpaceBins, -150., 150., nSpaceBins, -80., 80.);
     mh->AddHistograms("lanex_hits_edep_x", 1, nSpaceBins, -150., 150.);
     mh->AddHistograms("lanex_hits_edep_y", 1, nSpaceBins, -80., 80.);
@@ -327,8 +375,8 @@ void CreateHistograms(MHists* mh) {
 
     mh->AddHistograms("lanex_bdx_e_x_electron", 1, nSpaceBins, -150., 150., nEnergyBins, 0., 2000.);
     mh->AddHistograms("lanex_bdx_e_x_positron", 1, nSpaceBins, -150., 150., nEnergyBins, 0., 2000.);
-    mh->AddHistograms("lanex_bdx_e_converter_electron", 1, nEnergyBins, 0., 2000.);
-    mh->AddHistograms("lanex_bdx_e_converter_positron", 1, nEnergyBins, 0., 2000.);
+    mh->AddHistograms("lanex_bdx_e_poscut_electron", 1, nEnergyBins, 0., 2000.);
+    mh->AddHistograms("lanex_bdx_e_poscut_positron", 1, nEnergyBins, 0., 2000.);
 
     mh->AddHistograms("lanex_bdx_vtxx_vtxz", 1, nSpaceBins, -2575, 100., nSpaceBins, -100., 100.);
     mh->AddHistograms("lanex_bdx_vtxx_vtxz_electron", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
@@ -340,6 +388,16 @@ void CreateHistograms(MHists* mh) {
     mh->AddHistograms("lanex_bdx_vtxy_vtxz_positron", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
     mh->AddHistograms("lanex_bdx_vtxy_vtxz_gamma", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
 
+    mh->AddHistograms("lanex_bdx_vtxx_vtxz_cut", 1, nSpaceBins, -2575, 100., nSpaceBins, -100., 100.);
+    mh->AddHistograms("lanex_bdx_vtxx_vtxz_cut_electron", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+    mh->AddHistograms("lanex_bdx_vtxx_vtxz_cut_positron", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+    mh->AddHistograms("lanex_bdx_vtxx_vtxz_cut_gamma", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+
+    mh->AddHistograms("lanex_bdx_vtxy_vtxz_cut", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+    mh->AddHistograms("lanex_bdx_vtxy_vtxz_cut_electron", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+    mh->AddHistograms("lanex_bdx_vtxy_vtxz_cut_positron", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+    mh->AddHistograms("lanex_bdx_vtxy_vtxz_cut_gamma", 1, nSpaceBins, -2575, 100., nSpaceBins, -600., 600.);
+
     mh->AddHistograms("lanex_bdx_vtxz", 1, nSpaceBins, -2575, 100.);
     mh->AddHistograms("lanex_bdx_vtxz_electron", 1, nSpaceBins, -2575, 100.);
     mh->AddHistograms("lanex_bdx_vtxz_positron", 1, nSpaceBins, -2575, 100.);
@@ -349,9 +407,13 @@ void CreateHistograms(MHists* mh) {
     mh->AddHistograms("lanex_bdx_e_electron", 1, nEnergyBins, 0., 2000.);
     mh->AddHistograms("lanex_bdx_e_positron", 1, nEnergyBins, 0., 2000.);
     mh->AddHistograms("lanex_bdx_e_gamma", 1, nEnergyBins, 0., 2000.);
-
+    
     mh->AddHistograms("lanex_bdx_pdg", 1, 2300, -25., 2325.);
     mh->AddHistograms("lanex_bdx_procid", 1, 220, 0., 220.);
+
+    mh->AddHistograms("converter_bdx_e_electron", 1, nEnergyBins, 0., 2000.);
+    mh->AddHistograms("converter_bdx_e_positron", 1, nEnergyBins, 0., 2000.);
+    mh->AddHistograms("converter_bdx_e_gamma", 1, nEnergyBins, 0., 2000.);
     
 }
 

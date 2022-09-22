@@ -113,6 +113,6 @@ void PrimaryGeneratorAction::SetInputBeamFile(G4String& fname) {
     G4AutoLock lock(&rootPrimGenMutex);
     if (G4Threading::G4GetThreadId() == 0) {
         if(!fFileReader) fFileReader = new FileReader(fname, fSpectrumId); 
-        fBeamMode = 1; 
     }
+    fBeamMode = 1;
 }
