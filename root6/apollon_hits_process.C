@@ -25,6 +25,7 @@ void apollon_hits_process(std::string fnamelist)
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <cmath>
 
 #include "TTree.h"
 #include "TChain.h"
