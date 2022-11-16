@@ -36,32 +36,63 @@ int apollon_tracks_process(std::string fnamelist) {
     // *
     // Defining histograms
     // *
+    // Particle types
     int nbins = 50;
-    TH1D* track_pdg = new TH1D("track_pdg", "", nbins, -25, 25);
+    TH1D* track_pdg = new TH1D("track_pdg", "", nbins, -25, 25); 
 
+    // Creation processes
     nbins = 25;
-    TH1D* track_procid = new TH1D("track_procid", "", nbins, 2000, 2025);
+    TH1D* track_procid = new TH1D("track_procid", "", nbins, 2000, 2025); 
 
-    nbins = 400;
-    const double zmin = -150.0; //cm
-    const double zmax = 250.0;  //cm
-    TH2D* track_procid_vtxz = new TH2D("track_procid_vtxz", "", nbins, zmin, zmax, 25, 2000, 2025);
-    
-    const double xmin = -100.0; //cm
-    const double xmax = 100.0;  //cm
-    TH2D* track_vtxx_vtxz_all = new TH2D("track_vtxx_vtxz_all", "", nbins, zmin, zmax, nbins, xmin, xmax);
-    TH2D* track_vtxx_vtxz_electron = new TH2D("track_vtxx_vtxz_electron", "", nbins, zmin, zmax, nbins, xmin, xmax);
-    TH2D* track_vtxx_vtxz_positron = new TH2D("track_vtxx_vtxz_positron", "", nbins, zmin, zmax, nbins, xmin, xmax);
-    TH2D* track_vtxx_vtxz_gamma = new TH2D("track_vtxx_vtxz_gamma", "", nbins, zmin, zmax, nbins, xmin, xmax);
-    TH2D* track_vtxx_vtxz_muminus = new TH2D("track_vtxx_vtxz_muminus", "", nbins, zmin, zmax, nbins, xmin, xmax);
-    TH2D* track_vtxx_vtxz_muplus = new TH2D("track_vtxx_vtxz_muplus", "", nbins, zmin, zmax, nbins, xmin, xmax);
+    // Energy spectra
+    nbins = 100;
+    TH1D* track_vertex_kenergy = new TH1D("track_vertex_kenergy", "", nbins, 0., 1600.);
+    TH1D* track_vertex_kenergy_electron = new TH1D("track_vertex_kenergy_electron", "", nbins, 0., 1600.);
+    TH1D* track_vertex_kenergy_positron = new TH1D("track_vertex_kenergy_positron", "", nbins, 0., 1600.);
 
-    TH2D* track_endx_endz_all = new TH2D("track_endx_endz_all", "", nbins, zmin, zmax, nbins, xmin, xmax);
-    TH2D* track_endx_endz_electron = new TH2D("track_endx_endz_electron", "", nbins, zmin, zmax, nbins, xmin, xmax);
-    TH2D* track_endx_endz_positron = new TH2D("track_endx_endz_positron", "", nbins, zmin, zmax, nbins, xmin, xmax);
-    TH2D* track_endx_endz_gamma = new TH2D("track_endx_endz_gamma", "", nbins, zmin, zmax, nbins, xmin, xmax);
-    TH2D* track_endx_endz_muminus = new TH2D("track_endx_endz_muminus", "", nbins, zmin, zmax, nbins, xmin, xmax);
-    TH2D* track_endx_endz_muplus = new TH2D("track_endx_endz_muplus", "", nbins, zmin, zmax, nbins, xmin, xmax);
+    // Creation vertices
+    nbins = 200;
+    const double VTXXMIN = -10.; // mm
+    const double VTXXMAX = 10.;  // mm
+    const double VTXYMIN = -10.; // mm
+    const double VTXYMAX = 10.;  // mm
+    const double VTXZMIN = -985.225; // mm
+    const double VTXZMAX = -984.975; // mm
+
+    TH2D* track_vtxx_vtxz = new TH2D("track_vtxx_vtxz", "", nbins, VTXXMIN, VTXXMAX, nbins, VTXZMIN, VTXZMAX);
+    TH2D* track_vtxy_vtxz = new TH2D("track_vtxy_vtxz", "", nbins, VTXYMIN, VTXYMAX, nbins, VTXZMIN, VTXZMAX);
+    TH1D* track_vtxz = new TH1D("track_vtxz", "", nbins, VTXZMIN, VTXZMAX);
+    TH2D* track_vtxx_vtxz_electron = new TH2D("track_vtxx_vtxz_electron", "", nbins, VTXXMIN, VTXXMAX, nbins, VTXZMIN, VTXZMAX);
+    TH2D* track_vtxy_vtxz_electron = new TH2D("track_vtxy_vtxz_electron", "", nbins, VTXYMIN, VTXYMAX, nbins, VTXZMIN, VTXZMAX);
+    TH1D* track_vtxz_electron = new TH1D("track_vtxz_electron", "", nbins, VTXZMIN, VTXZMAX);
+    TH2D* track_vtxx_vtxz_positron = new TH2D("track_vtxx_vtxz_positron", "", nbins, VTXXMIN, VTXXMAX, nbins, VTXZMIN, VTXZMAX);
+    TH2D* track_vtxy_vtxz_positron = new TH2D("track_vtxy_vtxz_positron", "", nbins, VTXYMIN, VTXYMAX, nbins, VTXZMIN, VTXZMAX);
+    TH1D* track_vtxz_positron = new TH1D("track_vtxz_positron", "", nbins, VTXZMIN, VTXZMAX);
+
+    // End vertices
+    nbins = 200;
+    const double ENDXMIN = -10.; // mm
+    const double ENDXMAX = 10.;  // mm
+    const double ENDYMIN = -10.; // mm
+    const double ENDYMAX = 10.;  // mm
+    const double ENDZMIN = -985.225; // mm
+    const double ENDZMAX = -984.975; // mm
+
+    TH2D* track_endx_endz = new TH2D("track_endx_endz", "", nbins, ENDXMIN, ENDXMAX, nbins, ENDZMIN, ENDZMAX);
+    TH2D* track_endy_endz = new TH2D("track_endy_endz", "", nbins, ENDYMIN, ENDYMAX, nbins, ENDZMIN, ENDZMAX);
+    TH1D* track_endz = new TH1D("track_endz", "", nbins, ENDZMIN, ENDZMAX);
+    TH2D* track_endx_endz_electron = new TH2D("track_endx_endz_electron", "", nbins, ENDXMIN, ENDXMAX, nbins, ENDZMIN, ENDZMAX);
+    TH2D* track_endy_endz_electron = new TH2D("track_endy_endz_electron", "", nbins, ENDYMIN, ENDYMAX, nbins, ENDZMIN, ENDZMAX);
+    TH1D* track_endz_electron = new TH1D("track_endz_electron", "", nbins, ENDZMIN, ENDZMAX);
+    TH2D* track_endx_endz_positron = new TH2D("track_endx_endz_positron", "", nbins, ENDXMIN, ENDXMAX, nbins, ENDZMIN, ENDZMAX);
+    TH2D* track_endy_endz_positron = new TH2D("track_endy_endz_positron", "", nbins, ENDYMIN, ENDYMAX, nbins, ENDZMIN, ENDZMAX);
+    TH1D* track_endz_positron = new TH1D("track_endz_positron", "", nbins, ENDZMIN, ENDZMAX);
+
+    // e+e- pairs generated by pair production
+    nbins = 100;
+    TH1D* track_vertex_kenergy_pairprod_electron = new TH1D("track_vertex_kenergy_pairprod_electron", "", nbins, 0., 1600.);
+    TH1D* track_vertex_kenergy_pairprod_positron = new TH1D("track_vertex_kenergy_pairprod_positron", "", nbins, 0., 1600.);
+
     // *
     // Processing TChain
     // *
@@ -98,29 +129,31 @@ int apollon_tracks_process(std::string fnamelist) {
 
         track_pdg->Fill(pdg);
         track_procid->Fill(procid);
-        track_procid_vtxz->Fill(procid, vtxz);
-        track_vtxx_vtxz_all->Fill(vtxz, vtxx);
-        track_endx_endz_all->Fill(endx, endz);
+        track_vtxz->Fill(vtxz);
+        track_vtxx_vtxz->Fill(vtxz, vtxx);
+        track_vtxy_vtxz->Fill(vtxz, vtxy);
+        track_endx_endz->Fill(endx, endz);
+        track_vertex_kenergy->Fill(ekin);
 
         if (pdg == 11) { // electrons
             track_vtxx_vtxz_electron->Fill(vtxz, vtxx);
+            track_vtxy_vtxz_electron->Fill(vtxz, vtxy);
+            track_vtxz_electron->Fill(vtxz);
             track_endx_endz_electron->Fill(endz, endx);
+            track_endy_endz_electron->Fill(endz, endy);
+            track_endz_electron->Fill(endz);
+            track_vertex_kenergy_electron->Fill(ekin);
+            if (procid==2014) track_vertex_kenergy_pairprod_electron->Fill(ekin);
         }
         else if (pdg == -11) { // positrons
             track_vtxx_vtxz_positron->Fill(vtxz, vtxx);
+            track_vtxy_vtxz_positron->Fill(vtxz, vtxy);
+            track_vtxz_positron->Fill(vtxz);
             track_endx_endz_positron->Fill(endz, endx);
-        }
-        else if (pdg == 22) { // photons
-            track_vtxx_vtxz_gamma->Fill(vtxz, vtxx);
-            track_endx_endz_gamma->Fill(endz, endx);
-        }
-        else if (pdg == 13) { // muon-
-            track_vtxx_vtxz_muminus->Fill(vtxz, vtxx);
-            track_endx_endz_muminus->Fill(endz, endx);
-        }
-        else if (pdg == -13) { // muon+
-            track_vtxx_vtxz_muplus->Fill(vtxz, vtxx);
-            track_endx_endz_muplus->Fill(endz, endx);
+            track_endy_endz_positron->Fill(endz, endy);
+            track_endz_positron->Fill(endz);
+            track_vertex_kenergy_positron->Fill(ekin);
+            if (procid==2014) track_vertex_kenergy_pairprod_positron->Fill(ekin);
         }
     }
 
