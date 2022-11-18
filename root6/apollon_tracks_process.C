@@ -71,12 +71,12 @@ int apollon_tracks_process(std::string fnamelist) {
 
     // End vertices
     nbins = 200;
-    const double ENDXMIN = -10.; // mm
-    const double ENDXMAX = 10.;  // mm
-    const double ENDYMIN = -10.; // mm
-    const double ENDYMAX = 10.;  // mm
-    const double ENDZMIN = -985.225; // mm
-    const double ENDZMAX = -984.975; // mm
+    const double ENDXMIN = -6000.; // mm
+    const double ENDXMAX =  6000.; // mm
+    const double ENDYMIN = -6000.; // mm
+    const double ENDYMAX =  6000.; // mm
+    const double ENDZMIN = -6000.; // mm
+    const double ENDZMAX =  6000.; // mm
 
     TH2D* track_endx_endz = new TH2D("track_endx_endz", "", nbins, ENDXMIN, ENDXMAX, nbins, ENDZMIN, ENDZMAX);
     TH2D* track_endy_endz = new TH2D("track_endy_endz", "", nbins, ENDYMIN, ENDYMAX, nbins, ENDZMIN, ENDZMAX);
