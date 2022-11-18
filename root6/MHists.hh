@@ -32,7 +32,7 @@ class MHists {
         void SaveHists(std::string);
     private:
         std::vector<std::string> fNameList;
-        std::vector<std::vector<TH1*>> fHistList;
+        std::vector< std::vector<TH1*> > fHistList;
 };
 
 typedef std::vector<TH1*> HistV;
