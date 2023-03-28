@@ -61,6 +61,6 @@ void FileReader::ImportBeamFromFile() {
             fImportDiv.push_back(vars[4]*mrad);
         }
     }
- 
+
     fTrackEntries = trackEntry;
 }

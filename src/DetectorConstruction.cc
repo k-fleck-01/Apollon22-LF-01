@@ -274,7 +274,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                           1.*mm/2.);
     G4LogicalVolume* logicScorePlane = new G4LogicalVolume(solidScorePlane, g4Vacuum, "lScorePlane");
     G4VPhysicalVolume* physScorePlane = new G4PVPlacement(0,
-                                                            G4ThreeVector(0., 0., relToChamberWall + 0.5*mm + 1050.*mm),
+                                                            G4ThreeVector(0., 0., relToChamberWall + 0.5*mm + 1045.*mm),
                                                             logicScorePlane,
                                                             "ScorePlane",
                                                             logicChamberInner,
@@ -553,18 +553,34 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                              0,
                                                              checkOverlaps);
 
-    // Kapton window for chamber
+    // Window for chamber
     G4Box* solidWindow = new G4Box("window",
+                                   945.*mm/2.,
+                                   40.*mm/2.,
+                                   30.*mm/2.);
+
+    G4LogicalVolume* logicWindow = new G4LogicalVolume(solidWindow, g4Vacuum, "lWindow");
+    G4VPhysicalVolume* physWindow = new G4PVPlacement(0,
+                                                      G4ThreeVector(0., 0., 1060.*mm),
+                                                      logicWindow,
+                                                      "Window",
+                                                      logicChamberOuter,
+                                                      false,
+                                                      0,
+                                                      checkOverlaps);
+
+    // Kapton layer for window
+    G4Box* solidKaptonLayer = new G4Box("kaptonLayer",
                                    945.*mm/2.,
                                    40.*mm/2.,
                                    200.*um/2.);
 
-    G4LogicalVolume* logicWindow = new G4LogicalVolume(solidWindow, g4Kapton, "lWindow");
-    G4VPhysicalVolume* physWindow = new G4PVPlacement(0,
-                                                      G4ThreeVector(0., 0., 1074.9*mm),
+    G4LogicalVolume* logicKaptonLayer = new G4LogicalVolume(solidKaptonLayer, g4Kapton, "lKaptonLayer");
+    G4VPhysicalVolume* physKaptonLayer = new G4PVPlacement(0,
+                                                      G4ThreeVector(0., 0., 14.9*mm),
+                                                      logicKaptonLayer,
+                                                      "KaptonLayer",
                                                       logicWindow,
-                                                      "Window",
-                                                      logicChamberOuter,
                                                       false,
                                                       0,
                                                       checkOverlaps);
@@ -932,9 +948,9 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 
     // Exporting geometry to GDML
-    //G4GDMLParser* gdmlParser = new G4GDMLParser();
-    //gdmlParser->Write("apollon_g4geometry_v4.2.gdml", physWorld);
-    //delete gdmlParser;
+    // G4GDMLParser* gdmlParser = new G4GDMLParser();
+    // gdmlParser->Write("apollon_g4geometry_v4.3.gdml", physWorld);
+    // delete gdmlParser;
     
     return physWorld;
 
