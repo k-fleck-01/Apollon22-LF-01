@@ -259,7 +259,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                           1.*mm/2.);
     G4LogicalVolume* logicFlatConverter = new G4LogicalVolume(solidFlatConverter, g4Lead, "lFlatConverter");
     G4VPhysicalVolume* physFlatConverter = new G4PVPlacement(0,
-                                                            G4ThreeVector(0., 0., relToChamberWall + 0.5*mm + 1018.*mm),
+                                                            G4ThreeVector(0., 0., relToChamberWall + 0.5*mm + 1041.4*mm),
                                                             logicFlatConverter,
                                                             "FlatConverter",
                                                             logicChamberInner,
@@ -274,7 +274,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                           1.*mm/2.);
     G4LogicalVolume* logicScorePlane = new G4LogicalVolume(solidScorePlane, g4Vacuum, "lScorePlane");
     G4VPhysicalVolume* physScorePlane = new G4PVPlacement(0,
-                                                            G4ThreeVector(0., 0., relToChamberWall + 0.5*mm + 1025.*mm),
+                                                            G4ThreeVector(0., 0., relToChamberWall + 0.5*mm + 1050.*mm),
                                                             logicScorePlane,
                                                             "ScorePlane",
                                                             logicChamberInner,
@@ -293,7 +293,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4RotationMatrix* kSheetRotMatrix = new G4RotationMatrix();
     kSheetRotMatrix->rotateY(-45.*deg);
     G4VPhysicalVolume* physKaptonSheet = new G4PVPlacement(kSheetRotMatrix,
-                                                           G4ThreeVector(0., 0., relToChamberWall + 0.5*mm + 1029.5*mm),
+                                                           G4ThreeVector(0., 0., relToChamberWall + 0.5*mm + 1055.*mm),
                                                            logicKaptonSheet,
                                                            "KaptonSheet",
                                                            logicChamberInner,
