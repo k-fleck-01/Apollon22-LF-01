@@ -231,26 +231,56 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
                                                                 checkOverlaps);
 
     // Converter wedge
-    G4Trap* solidWedge = new G4Trap("wedge",  // Full lengths are used in G4Trap - right angular trapezoid
-                                    20.0*mm,  // Depth of wedge (along z)
-                                    24.4*mm,  // Length along y
-                                    50.0*mm,  // Widest part along x
-                                    25.0*mm); // Shortest side along x
+    // G4Trap* solidWedge = new G4Trap("wedge",  // Full lengths are used in G4Trap - right angular trapezoid
+    //                                 20.0*mm,  // Depth of wedge (along z)
+    //                                 24.4*mm,  // Length along y
+    //                                 50.0*mm,  // Widest part along x
+    //                                 25.0*mm); // Shortest side along x
 
-    G4LogicalVolume* logicWedge = new G4LogicalVolume(solidWedge, g4Tantalum, "lWedge");
+    // G4LogicalVolume* logicWedge = new G4LogicalVolume(solidWedge, g4Tantalum, "lWedge");
 
-    // Rotation matrix to correctly align wedge
-    G4RotationMatrix* wedgeRotMatrix = new G4RotationMatrix();
-    wedgeRotMatrix->rotateX(90.*deg);
-    wedgeRotMatrix->rotateY(180.*deg);
-    G4VPhysicalVolume* physWedge = new G4PVPlacement(wedgeRotMatrix,
-                                                     G4ThreeVector(10.*mm, 0., relToChamberWall + 12.2*mm + 1018.*mm),
-                                                     logicWedge,
-                                                     "Wedge",
-                                                     logicChamberInner,
-                                                     false,
-                                                     0,
-                                                     checkOverlaps);
+    // // Rotation matrix to correctly align wedge
+    // G4RotationMatrix* wedgeRotMatrix = new G4RotationMatrix();
+    // wedgeRotMatrix->rotateX(90.*deg);
+    // wedgeRotMatrix->rotateY(180.*deg);
+    // G4VPhysicalVolume* physWedge = new G4PVPlacement(wedgeRotMatrix,
+    //                                                  G4ThreeVector(10.*mm, 0., relToChamberWall + 12.2*mm + 1018.*mm),
+    //                                                  logicWedge,
+    //                                                  "Wedge",
+    //                                                  logicChamberInner,
+    //                                                  false,
+    //                                                  0,
+    //                                                  checkOverlaps);
+
+    // Alternate flat converter
+    G4Box* solidFlatConverter = new G4Box("flatConverter",
+                                          40.*mm/2.,
+                                          50.*mm/2.,
+                                          1.*mm/2.);
+    G4LogicalVolume* logicFlatConverter = new G4LogicalVolume(solidFlatConverter, g4Lead, "lFlatConverter");
+    G4VPhysicalVolume* physFlatConverter = new G4PVPlacement(0,
+                                                            G4ThreeVector(0., 0., relToChamberWall + 0.5*mm + 1018.*mm),
+                                                            logicFlatConverter,
+                                                            "FlatConverter",
+                                                            logicChamberInner,
+                                                            false,
+                                                            0,
+                                                            checkOverlaps);
+
+    // Additional scoring plane
+    G4Box* solidScorePlane = new G4Box("scorePlane",
+                                          40.*mm/2.,
+                                          50.*mm/2.,
+                                          1.*mm/2.);
+    G4LogicalVolume* logicScorePlane = new G4LogicalVolume(solidScorePlane, g4Vacuum, "lScorePlane");
+    G4VPhysicalVolume* physScorePlane = new G4PVPlacement(0,
+                                                            G4ThreeVector(0., 0., relToChamberWall + 0.5*mm + 1025.*mm),
+                                                            logicScorePlane,
+                                                            "ScorePlane",
+                                                            logicChamberInner,
+                                                            false,
+                                                            0,
+                                                            checkOverlaps);
 
 
     // Kapton sheet
@@ -263,7 +293,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4RotationMatrix* kSheetRotMatrix = new G4RotationMatrix();
     kSheetRotMatrix->rotateY(-45.*deg);
     G4VPhysicalVolume* physKaptonSheet = new G4PVPlacement(kSheetRotMatrix,
-                                                           G4ThreeVector(0., 0., relToChamberWall + 0.5*mm + 1009.5*mm),
+                                                           G4ThreeVector(0., 0., relToChamberWall + 0.5*mm + 1029.5*mm),
                                                            logicKaptonSheet,
                                                            "KaptonSheet",
                                                            logicChamberInner,
@@ -527,11 +557,11 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes() {
     G4Box* solidWindow = new G4Box("window",
                                    945.*mm/2.,
                                    40.*mm/2.,
-                                   30.*mm/2.);
+                                   200.*um/2.);
 
     G4LogicalVolume* logicWindow = new G4LogicalVolume(solidWindow, g4Kapton, "lWindow");
     G4VPhysicalVolume* physWindow = new G4PVPlacement(0,
-                                                      G4ThreeVector(0., 0., 1060.*mm),
+                                                      G4ThreeVector(0., 0., 1074.9*mm),
                                                       logicWindow,
                                                       "Window",
                                                       logicChamberOuter,
@@ -924,10 +954,11 @@ void DetectorConstruction::ConstructSDandField() {
     SDManager->AddNewDetector(sd);
     
     // Setting sensitive volumes
-    SetSensitiveDetector("lYagScreen", sd, true);
-    SetSensitiveDetector("lCr39", sd, true);
-    SetSensitiveDetector("lPhosphorLayer", sd, true);
+    //SetSensitiveDetector("lYagScreen", sd, true);
+    //SetSensitiveDetector("lCr39", sd, true);
+    SetSensitiveDetector("lScorePlane", sd, true);
     SetSensitiveDetector("lGSpecConverter", sd, true);
+    SetSensitiveDetector("lPhosphorLayer", sd, true);
 
     // Add magnetic fields
     G4MagneticField* chamberMagField = new G4UniformMagField(G4ThreeVector(0., 1.7*tesla, 0.));

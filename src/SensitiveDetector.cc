@@ -3,7 +3,7 @@
 // Geometry has been derived from the FLUKA simulation of the same experiment.
 // 
 // Source file for SensitiveDetector class
-// Last edited: 07/02/2022
+// Last edited: 28/03/2023
 //
 
 #include "SensitiveDetector.hh"
@@ -49,17 +49,14 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
     const G4String& logicName = theTouchable->GetVolume()->GetLogicalVolume()->GetName();
     G4int ldet = 0;
     G4int detidx = 0;
-    if (logicName == "lYagScreen") {
+    if (logicName == "lScorePlane") {
         ldet = 1000;
     }
-    else if (logicName == "lCr39") {
+    else if (logicName == "lGSpecConverter") {
         ldet = 2000;
     }
     else if (logicName == "lPhosphorLayer") {
         ldet = 3000;
-    }
-    else if (logicName == "lGSpecConverter") {
-        ldet = 4000;
     }
     G4int detid = ldet + 100*(theTouchable->GetCopyNumber(1)) + theTouchable->GetCopyNumber();
 
@@ -81,7 +78,7 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* aToucha
     // Total energy of particle depositing energy
     G4double energy = track->GetTotalEnergy();
 
-     //
+    //
     // Boundary crossing scoring 
     //
     if (preStepPoint->GetStepStatus() == fGeomBoundary) {
