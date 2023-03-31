@@ -133,6 +133,10 @@ int main(int argc, char** argv) {
                 }
             }
         }
+        else if (detid == 2000) { // Gamma spectrometer converter
+            ndet = detid - 1999;
+            if (pdg == 22) mh->FillHistW("converter_hits_e_xy_gamma", ndet, xx, yy, edep);
+        }
     }
     // ************************************************************************
     // Process primary TChain
@@ -285,7 +289,6 @@ int main(int argc, char** argv) {
         }
         else if (detid == 2000) { // Gamma spectrometer converter
             ndet = detid - 1999;
-            const double sarea = 2. * 2.; // cm^2, gamma spectrometer converter surface area
             if (pdg == 11) {
                 mh->FillHistW("converter_bdx_e_electron", ndet, eneg);
             }
@@ -294,12 +297,7 @@ int main(int argc, char** argv) {
             }
             else if (pdg == 22) {
                 mh->FillHistW("converter_bdx_e_gamma", ndet, eneg);
-                // Fluence estimation
-                double cos_angle = std::cos(theta);
-                double surf_fluence = 1. / cos_angle / sarea;
-                double surf_efluence = eneg * surf_fluence;
-                mh->FillHistW("converter_bdx_fluence_gamma", ndet, xx, yy, surf_fluence);
-                mh->FillHistW("converter_bdx_efluence_gamma", ndet, xx, yy, surf_efluence);
+                mh->FillHistW("converter_bdx_e_xy_gamma", ndet, xx, yy, eneg);
             }
         }
         else if (detid == 1000) { // Scoring plane after gas cell converter
@@ -443,8 +441,8 @@ void CreateHistograms(MHists* mh) {
     mh->AddHistograms("converter_bdx_e_positron", 1, nEnergyBins, 0., 2000.);
     mh->AddHistograms("converter_bdx_e_gamma", 1, nEnergyBins, 0., 2000.);
 
-    mh->AddHistograms("converter_bdx_fluence_gamma", 1, nSpaceBins, -10., 10., nSpaceBins, -10., 10.);
-    mh->AddHistograms("converter_bdx_efluence_gamma", 1, nSpaceBins, -10., 10., nSpaceBins, -10., 10.); 
+    mh->AddHistograms("converter_bdx_e_xy_gamma", 1, nSpaceBins, -10., 10., nSpaceBins, -10., 10.);
+    mh->AddHistograms("converter_hits_e_xy_gamma", 1, nSpaceBins, -10., 10., nSpaceBins, -10., 10.); 
 
     // Post-gas cell converter scoring plane
     mh->AddHistograms("scoreplane_bdx_e_gamma", 1, nEnergyBins, 0., 2000.);
